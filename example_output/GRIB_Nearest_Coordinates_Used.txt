@@ -1,0 +1,10 @@
+/media/joshua/Elements/GRIB/HRRR/hrrr/20220101/subset_04ef8119__hrrr.t00z.wrfnatf00.grib2 36.249235516648554 -86.58269224114156
+/media/joshua/Elements/GRIB/HRRR/hrrr/20220101/subset_5aef8119__hrrr.t01z.wrfnatf00.grib2 36.249235516648554 -86.58269224114156
+/media/joshua/Elements/GRIB/HRRR/hrrr/20220101/subset_72ef8119__hrrr.t02z.wrfnatf00.grib2 36.249235516648554 -86.58269224114156
+/media/joshua/Elements/GRIB/HRRR/hrrr/20220101/subset_abef8119__hrrr.t03z.wrfnatf00.grib2 36.249235516648554 -86.58269224114156
+/media/joshua/Elements/GRIB/HRRR/hrrr/20220101/subset_58ef8119__hrrr.t04z.wrfnatf00.grib2 36.249235516648554 -86.58269224114156
+/media/joshua/Elements/GRIB/HRRR/hrrr/20220101/subset_d1ef8119__hrrr.t05z.wrfnatf00.grib2 36.249235516648554 -86.58269224114156
+/media/joshua/Elements/GRIB/HRRR/hrrr/20220101/subset_1bef8119__hrrr.t06z.wrfnatf00.grib2 36.249235516648554 -86.58269224114156
+/media/joshua/Elements/GRIB/HRRR/hrrr/20220101/subset_a9ef8119__hrrr.t07z.wrfnatf00.grib2 36.249235516648554 -86.58269224114156
+/media/joshua/Elements/GRIB/HRRR/hrrr/20220101/subset_abef8119__hrrr.t08z.wrfnatf00.grib2 36.249235516648554 -86.58269224114156
+/media/joshua/Elements/GRIB/HRRR/hrrr/20220101/subset_97ef8119__hrrr.t09z.wrfnatf00.grib2 36.249235516648554 -86.58269224114156
