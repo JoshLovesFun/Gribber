@@ -1,0 +1,114 @@
+Latitude: 36.25
+Longitude: -86.57
+Boundary Layer Height?: no              # Options are "yes" or "no"
+U and V Wind Component?: no             # Options are "yes" or "no"
+Wind Height Level 1: yes                # Options are "yes" or "no"
+Wind Height Level 2: yes                # Options are "yes" or "no"
+Wind Height Level 3: yes                # Options are "yes" or "no"
+Wind Height Level 4: yes                # Options are "yes" or "no"
+Wind Height Level 5: yes                # Options are "yes" or "no"
+Wind Height Level 6: yes                # Options are "yes" or "no"
+Wind Height Level 7: yes                # Options are "yes" or "no"
+Wind Height Level 8: yes                # Options are "yes" or "no"
+Wind Height Level 9: yes                # Options are "yes" or "no"
+Wind Height Level 10: yes               # Options are "yes" or "no"
+Wind Height Level 11: yes               # Options are "yes" or "no"
+Wind Height Level 12: yes               # Options are "yes" or "no"
+Temperature?: yes                       # Options are "yes" or "no"
+Temperature Height Level 1: yes         # Options are "yes" or "no"
+Temperature Height Level 2: yes         # Options are "yes" or "no"
+Temperature Height Level 3: yes         # Options are "yes" or "no"
+Temperature Height Level 4: yes         # Options are "yes" or "no"
+Temperature Height Level 5: yes         # Options are "yes" or "no"
+Temperature Height Level 6: yes         # Options are "yes" or "no"
+Temperature Height Level 7: yes         # Options are "yes" or "no"
+Temperature Height Level 8: yes         # Options are "yes" or "no"
+Temperature Height Level 9: yes         # Options are "yes" or "no"
+Temperature Height Level 10: yes        # Options are "yes" or "no"
+Temperature Height Level 11: yes        # Options are "yes" or "no"
+Temperature Height Level 12: yes        # Options are "yes" or "no"
+Turbulent Kinetic Energy?: no           # Options are "yes" or "no"
+Turbulent Kinetic Energy Level 1: yes   # Options are "yes" or "no"
+Turbulent Kinetic Energy Level 2: yes   # Options are "yes" or "no"
+Turbulent Kinetic Energy Level 3: yes   # Options are "yes" or "no"
+Turbulent Kinetic Energy Level 4: yes   # Options are "yes" or "no"
+Turbulent Kinetic Energy Level 5: yes   # Options are "yes" or "no"
+Turbulent Kinetic Energy Level 6: yes   # Options are "yes" or "no"
+Turbulent Kinetic Energy Level 7: yes   # Options are "yes" or "no"
+Turbulent Kinetic Energy Level 8: yes   # Options are "yes" or "no"
+Turbulent Kinetic Energy Level 9: yes   # Options are "yes" or "no"
+Turbulent Kinetic Energy Level 10: yes  # Options are "yes" or "no"
+Turbulent Kinetic Energy Level 11: yes  # Options are "yes" or "no"
+Turbulent Kinetic Energy Level 12: yes  # Options are "yes" or "no"
+Pressure?: no                           # Options are "yes" or "no"
+Pressure Level 1: yes                   # Options are "yes" or "no"
+Pressure Level 2: yes                   # Options are "yes" or "no"
+Pressure Level 3: yes                   # Options are "yes" or "no"
+Pressure Level 4: yes                   # Options are "yes" or "no"
+Pressure Level 5: yes                   # Options are "yes" or "no"
+Pressure Level 6: yes                   # Options are "yes" or "no"
+Pressure Level 7: yes                   # Options are "yes" or "no"
+Pressure Level 8: yes                   # Options are "yes" or "no"
+Pressure Level 9: yes                   # Options are "yes" or "no"
+Pressure Level 10: yes                  # Options are "yes" or "no"
+Pressure Level 11: yes                  # Options are "yes" or "no"
+Pressure Level 12: yes                  # Options are "yes" or "no"
+Specific Humidity?: no                  # Options are "yes" or "no"
+Specific Humidity Level 1: yes          # Options are "yes" or "no"
+Specific Humidity Level 2: yes          # Options are "yes" or "no"
+Specific Humidity Level 3: yes          # Options are "yes" or "no"
+Specific Humidity Level 4: yes          # Options are "yes" or "no"
+Specific Humidity Level 5: yes          # Options are "yes" or "no"
+Specific Humidity Level 6: yes          # Options are "yes" or "no"
+Specific Humidity Level 7: yes          # Options are "yes" or "no"
+Specific Humidity Level 8: yes          # Options are "yes" or "no"
+Specific Humidity Level 9: yes          # Options are "yes" or "no"
+Specific Humidity Level 10: yes         # Options are "yes" or "no"
+Specific Humidity Level 11: yes         # Options are "yes" or "no"
+Specific Humidity Level 12: yes         # Options are "yes" or "no"
+
+Start Date: 2022-01-01                  # Start date of data request.
+End Date: 2023-01-01                    # End date of data request. (inclusive)
+Herbie Already Done?: yes               # Options are "yes" or "no"
+
+# Since HRRR GRIB files cover the contiguous U.S., lat. and long. values should represent those areas.
+# However, GRIB longitude values are in "degrees east of the Prime Meridian". This is corrected in the code.
+# So in this file, the latitude and longitude of Cleveland, Ohio for example, should be entered as follows:
+# Example latitude: 41.4993
+# Example longitude: -81.6944
+
+# If u and v wind component is requested, one or more wind levels must be requested.
+# If temperature is requested, one or more temperature levels must be requested.
+# If turbulent kinetic energy is requested, one or more turbulent kinetic energy levels must be requested.
+# If pressure is requested, one or more pressure levels must be requested.
+# If specific humidity is requested, one or more specific humidity levels must be requested.
+
+# The height of each level varies based on location and weather.
+# The approximate heights above ground level are as follows:
+# Level 1:  10.8 meters
+# Level 2:    40 meters
+# Level 3:    91 meters
+# Level 4:   176 meters
+# Level 5:   299 meters
+# Level 6:   460 meters
+# Level 7:   654 meters
+# Level 8:   875 meters
+# Level 9:  1110 meters
+# Level 10: 1390 meters
+# Level 11: 1710 meters
+# Level 12: 2080 meters
+
+# More levels requested = longer download time.
+
+# Date format examples for start or end date: 2022-01-01, 2022-07-27, 2019-11-15
+
+# With typical internet speed and let's say you download 1 variable at
+# 2 different heights, it should take about 1 minute to download 1 day of data.
+# The size of that daily folder would be about 50 MB.
+
+# If you run herbie to extract different/more variables than the previous run,
+# new files will be created. The old files are not deleted, so the GRIB output
+# will not make sense unless the old files are moved or deleted before you start herbie.
+
+# If you already have all the GRIB data you need and the files have the
+# correct Herbie directory structure, "Herbie Already Done?" should be "yes".
