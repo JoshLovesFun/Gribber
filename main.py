@@ -1,5 +1,7 @@
 ###********************* This is the main file *********************###
 
+# Actively being developed! Please contribute if you want to help improve the program!
+
 # Run this file in terminal using command: python3 main.py
 # All the packages are in the Anaconda environment. Type the following in the terminal: conda activate GRIBTEST1
 # Designed for Linux but can work on Windows 10.
