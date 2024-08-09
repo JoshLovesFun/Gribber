@@ -1,6 +1,6 @@
 **Program Overview:**
 
-This Python program utilizes [Herbie]([https://link-to-herbie-repo.com](https://github.com/blaylockbk/Herbie)) to automate the download and extraction of meteorological model data. The process involves two main steps:
+This Python program utilizes [Herbie]([https://github.com/blaylockbk/Herbie]) to automate the download and extraction of meteorological model data. The process involves two main steps:
 
 
 **Downloading Data:**
