@@ -1,0 +1,6 @@
+[default]
+model = "hrrr"
+fxx = 0
+save_dir = "/home/joshua/WindowsShareGRIB/HRRR"
+overwrite = false
+verbose = true
