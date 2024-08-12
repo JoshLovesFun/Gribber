@@ -1,3 +1,5 @@
+![Logo](images/monkey.png)
+
 **Gribber Status:**
 
 Gribber hasn't been extensively tested and hasn't been tested since 2023. However, it does work. I may need to make some changes to improve usability.
