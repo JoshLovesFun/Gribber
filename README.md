@@ -24,7 +24,7 @@ Gribber utilizes [Herbie](https://github.com/blaylockbk/Herbie) to automate the 
 
 **How to run Gribber:**
 
-1. First we need to install the required packages. Sometimes it is difficult to install these packages, especially on Windows.
+**1.** First we need to install the required packages. Sometimes it is difficult to install these packages, especially on Windows.
 
    Right now, the easiest way to install all the required packages and dependencies is with Conda from conda-forge.
 
