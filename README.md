@@ -34,7 +34,7 @@ Gribber utilizes [Herbie](https://github.com/blaylockbk/Herbie) to automate the 
    Both herbie-data and eccodes are absolutely essential and there is no path forward without these packages.
 An optional package is wgrib2. This package is not currently used by Gribber, but I would like it to be used in the future.
 This package might be very difficult to install on Windows.
-2. Now that the packages are installed, run the program from the main.py file. Don't worry about updating the code now.
+**2.** Now that the packages are installed, run the program from the main.py file. Don't worry about updating the code now.
 We will do that later. After running the program, execution will likely fail as expected. However, this step generates the
 default config.toml file. On Windows, it will be here: C:\Users\<YourUsername>\.config\herbie
 
@@ -44,5 +44,5 @@ default config.toml file. On Windows, it will be here: C:\Users\<YourUsername>\.
 
    You can edit this file as needed. Right now, Gribber is only designed to handle HRRR data. We really want it to be able
 to handle RRFS data.
-3. Now we only need to modify the code in the input file. Maybe later we can fix this, so we only need to modify the
+**3.** Now we only need to modify the code in the input file. Maybe later we can fix this, so we only need to modify the
 control.txt file. We just need to change 2 variables:
