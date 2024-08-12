@@ -1,4 +1,6 @@
-![Logo](images/monkey.png)
+<p align="center">
+  <img src="images/monkey.png" alt="Logo" />
+</p>
 
 **Gribber Status:**
 
