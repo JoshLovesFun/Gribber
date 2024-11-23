@@ -43,3 +43,5 @@ Gribber utilizes [Herbie](https://github.com/blaylockbk/Herbie) to automate the 
    You can edit this file as needed. Right now, Gribber is only designed to handle HRRR data. We really want it to be able to handle RRFS data.
 
 **3.** Now we only need to modify the code in the input file. Maybe later we can fix this, so we only need to modify the control.txt file. We just need to change 2 variables:
+
+**More to come soon!**
