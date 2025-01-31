@@ -1,6 +1,7 @@
-###********************* This is the main file *********************###
+# ********************* This is the main file *********************#
 
-# Actively being developed! Please contribute if you want to help improve Gribber!
+# Actively being developed!
+# Please contribute if you want to help improve Gribber!
 
 # Run this file in terminal using command: python3 main.py
 # All the packages are in the Anaconda environment. Type the following in the terminal: conda activate GRIBTEST1
