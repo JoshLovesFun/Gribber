@@ -58,6 +58,7 @@ def match_strings_and_add_dummy_files(working_directory_grib):
     "t13z", "t14z", "t15z", "t16z", "t17z", "t18z", "t19z", "t20z", "t21z", "t22z", "t23z"
     ]
 
+    dummy_files_made = False
     for root, dirs, files in os.walk(working_directory_grib):
         for subdir in dirs:
             subdir_path = os.path.join(root, subdir)
@@ -69,11 +70,19 @@ def match_strings_and_add_dummy_files(working_directory_grib):
             # Add missing strings to the subdirectory
             for missing_string in missing_strings:
                 # Create a new file with the missing string
-                file_name = f"{missing_string}_missing_file.grib2"
+                file_name = f"{missing_string.replace('z', 'NoData')}_missing_file.grib2"
                 file_path = os.path.join(subdir_path, file_name)
                 with open(file_path, 'w') as dummy_file:
                     dummy_file.write("This is a dummy file that serves as a placeholder for a missing GRIB file.")
 
+                dummy_files_made = True
+    if dummy_files_made:
+        print("WARNING: DUMMY FILE(S) MADE!\n")
+        print("There is currently no way to proceed without having\n"
+              "all the required files and/or have them named properly.\n"
+              "This likely means Herbie failed to download a file,\n"
+              "but I am not sure.")
+        sys.exit(1)
 
 def delete_coordinates_file(working_directory_main):
     coordinates_filename = "GRIB_Nearest_Coordinates_Used.txt"

@@ -38,6 +38,10 @@ def process_control_data(control_data):
         calclong = None
 
     processed_data = {
+        'main_output': control_data.get('Main output file name', None),
+        'Input_Out_File': control_data.get('Inputs Used Outfile Name', None),
+        'output_directory': control_data.get('Output Directory', None),
+        'GRIB_files_location': control_data.get('GRIB files location', None),
         'latitude': lat,
         'inputlongitude': inputlong,
         'calculatedlongitude': calclong,

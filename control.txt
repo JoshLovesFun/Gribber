@@ -1,3 +1,7 @@
+Output Directory: C:\Code\GitHub\Gribber\example_output\testing
+GRIB files location: C:\Other\GRIB\Test\hrrr\
+Inputs Used Outfile Name: inputs_used_outfile_test.txt
+Main output file name: All_output.csv
 Latitude: 36.25
 Longitude: -86.57
 Boundary Layer Height?: no              # Options are "yes" or "no"
@@ -16,17 +20,17 @@ Wind Height Level 11: yes               # Options are "yes" or "no"
 Wind Height Level 12: yes               # Options are "yes" or "no"
 Temperature?: yes                       # Options are "yes" or "no"
 Temperature Height Level 1: yes         # Options are "yes" or "no"
-Temperature Height Level 2: yes         # Options are "yes" or "no"
-Temperature Height Level 3: yes         # Options are "yes" or "no"
-Temperature Height Level 4: yes         # Options are "yes" or "no"
-Temperature Height Level 5: yes         # Options are "yes" or "no"
-Temperature Height Level 6: yes         # Options are "yes" or "no"
-Temperature Height Level 7: yes         # Options are "yes" or "no"
-Temperature Height Level 8: yes         # Options are "yes" or "no"
-Temperature Height Level 9: yes         # Options are "yes" or "no"
-Temperature Height Level 10: yes        # Options are "yes" or "no"
-Temperature Height Level 11: yes        # Options are "yes" or "no"
-Temperature Height Level 12: yes        # Options are "yes" or "no"
+Temperature Height Level 2: no          # Options are "yes" or "no"
+Temperature Height Level 3: no          # Options are "yes" or "no"
+Temperature Height Level 4: no          # Options are "yes" or "no"
+Temperature Height Level 5: no          # Options are "yes" or "no"
+Temperature Height Level 6: no          # Options are "yes" or "no"
+Temperature Height Level 7: no          # Options are "yes" or "no"
+Temperature Height Level 8: no          # Options are "yes" or "no"
+Temperature Height Level 9: no          # Options are "yes" or "no"
+Temperature Height Level 10: no         # Options are "yes" or "no"
+Temperature Height Level 11: no         # Options are "yes" or "no"
+Temperature Height Level 12: no         # Options are "yes" or "no"
 Turbulent Kinetic Energy?: no           # Options are "yes" or "no"
 Turbulent Kinetic Energy Level 1: yes   # Options are "yes" or "no"
 Turbulent Kinetic Energy Level 2: yes   # Options are "yes" or "no"
@@ -67,9 +71,9 @@ Specific Humidity Level 10: yes         # Options are "yes" or "no"
 Specific Humidity Level 11: yes         # Options are "yes" or "no"
 Specific Humidity Level 12: yes         # Options are "yes" or "no"
 
-Start Date: 2022-01-01                  # Start date of data request.
-End Date: 2023-01-01                    # End date of data request. (inclusive)
-Herbie Already Done?: yes               # Options are "yes" or "no"
+Start Date: 2021-12-31                  # Start date of data request.
+End Date: 2021-12-31                    # End date of data request. (inclusive)
+Herbie Already Done?: no                # Options are "yes" or "no"
 
 # Since HRRR GRIB files cover the contiguous U.S., lat. and long. values should represent those areas.
 # However, GRIB longitude values are in "degrees east of the Prime Meridian". This is corrected in the code.
@@ -81,7 +85,7 @@ Herbie Already Done?: yes               # Options are "yes" or "no"
 # If temperature is requested, one or more temperature levels must be requested.
 # If turbulent kinetic energy is requested, one or more turbulent kinetic energy levels must be requested.
 # If pressure is requested, one or more pressure levels must be requested.
-# If specific humidity is requested, one or more specific humidity levels must be requested.
+# If you request specific humidity, you must also request one or more specific humidity levels. (active voice)
 
 # The height of each level varies based on location and weather.
 # The approximate heights above ground level are as follows:
