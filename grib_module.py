@@ -6,7 +6,11 @@
 # Key/Value: level/1, shortName/pres,
 # Key/Value: packingType/grid_complex_spatial_differencing
 
-from eccodes import *  # bad practice
+
+from eccodes import (
+    codes_grib_new_from_file, codes_grib_find_nearest,
+    codes_get, codes_get_array, codes_release, CodesInternalError
+)
 import os
 import re
 import sys
