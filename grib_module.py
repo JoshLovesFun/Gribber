@@ -67,7 +67,6 @@ def match_strings_and_add_dummy_files(working_directory_grib):
 
     dummy_files_made = False
     for root, dirs, files in os.walk(working_directory_grib):
-        print(working_directory_grib)
         for subdir in dirs:
             subdir_path = os.path.join(root, subdir)
             files_in_subdir = os.listdir(subdir_path)
@@ -168,7 +167,7 @@ def process_grib_files(working_directory_main, processed_data, all_files):
         resultsGRIBsetup.append((nearest_lat, nearest_lon, nearest_distance,
                                  nearest_index))
         print(f"File: {file_path} --> Data is {rounded_distance}"
-              f"kilometers from the requested location and the chosen"
+              f" kilometers from the requested location and the chosen "
               f"grid cell is: {nearest_index}")
 
         # This is for coordinates output file.
@@ -911,11 +910,11 @@ def extract_value_at_grid_index(all_files, grid_cell_data,
                                         file_path, level, shortName,
                                         value_at_index, time, data_date))
                                     print(f'File: {file_path}'
-                                          f'Date: {data_date}'
-                                          f'Time: {time}'
-                                          f'Variable: {shortName}'
-                                          f'Level: {level}'
-                                          f'Value: {value_at_index}')
+                                          f' Date: {data_date}'
+                                          f' Time: {time}'
+                                          f' Variable: {shortName}'
+                                          f' Level: {level}'
+                                          f' Value: {value_at_index}')
 
                             # Flag to track whether the tuple was found in
                             # the GRIB file.
