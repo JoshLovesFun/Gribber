@@ -73,4 +73,4 @@ SPFHHeightLevel11: yes
 SPFHHeightLevel12: yes
 StartDate: 2021-12-31
 EndDate: 2021-12-31
-HerbieAlreadyDone: no
+HerbieAlreadyDone: yes

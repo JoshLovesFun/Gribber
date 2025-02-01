@@ -732,7 +732,6 @@ def grib_dictionary_from_inputs(processed_data):
                         Dictionary_for_GRIB[key] = []
                     Dictionary_for_GRIB[key].append(value)
 
-
     if strSPFH == "yes":
         specific_humidity_height_levels = ["1", "2", "3", "4", "5",
                                            "6", "7", "8", "9", "10",
@@ -748,7 +747,6 @@ def grib_dictionary_from_inputs(processed_data):
                         Dictionary_for_GRIB[key] = []
                     Dictionary_for_GRIB[key].append(value)
 
-
     if strTKE == "yes":
         TKE_height_levels = ["1", "2", "3", "4", "5", "6",
                              "7", "8", "9", "10", "11", "12"]
@@ -762,7 +760,6 @@ def grib_dictionary_from_inputs(processed_data):
                     if key not in Dictionary_for_GRIB:
                         Dictionary_for_GRIB[key] = []
                     Dictionary_for_GRIB[key].append(value)
-
 
     if strPRES == "yes":
         PRES_height_levels = ["1", "2", "3", "4", "5", "6",
