@@ -1,15 +1,16 @@
 # Goal: Extract what we want from the GRIB files.
-# HRRR GRIB INFO EXAMPLE:
-# KEY:   edition      centre       date         dataType     gridType     stepRange    typeOfLevel  level        shortName    packingType
-# VALUE: 2            kwbc         20220105     fc           lambert      0            hybrid       1            pres         grid_complex_spatial_differencing
 
-from eccodes import *
+# HRRR GRIB Info Example:
+# Key/Value: edition/2, centre/kwbc, date/20220105, dataType/fc,
+# Key/Value: gridType/lambert, stepRange/0 typeOfLevel/hybrid,
+# Key/Value: level/1, shortName/pres,
+# Key/Value: packingType/grid_complex_spatial_differencing
+
+from eccodes import *  # bad practice
 import os
 import re
 import sys
 import traceback
-
-from read_control_module import process_control_data
 
 
 def extract_hour_from_filename(file_name):
@@ -33,7 +34,8 @@ def files_to_do_work_for(working_directory_grib, processed_data):
         subdirs_to_remove = []
         for dir_name in dirs:
 
-            if int(dir_name) > ForGRIB_EndDateNodash or int(dir_name) < ForGRIB_StartDateNodash:
+            if (int(dir_name) > ForGRIB_EndDateNodash or
+                    int(dir_name) < ForGRIB_StartDateNodash):
                 subdirs_to_remove.append(dir_name)
 
         for subdir in subdirs_to_remove:
@@ -44,8 +46,11 @@ def files_to_do_work_for(working_directory_grib, processed_data):
                 file_path = os.path.join(root, file)
                 all_files.append(file_path)
 
-        # Sort all files based on the date and hour components in the directory and file names
-        all_files.sort(key=lambda x: (os.path.basename(os.path.dirname(x)), extract_hour_from_filename(os.path.basename(x))))
+        # Sort all files based on the date and hour components in the
+        # directory and file names
+        all_files.sort(
+            key=lambda x: (os.path.basename(os.path.dirname(x)),
+                           extract_hour_from_filename(os.path.basename(x))))
         # Print for debugging
         # print(all_files)
 
@@ -54,26 +59,35 @@ def files_to_do_work_for(working_directory_grib, processed_data):
 
 def match_strings_and_add_dummy_files(working_directory_grib):
     # Define the strings to match
-    strings_to_match = ["t00z", "t01z", "t02z", "t03z", "t04z", "t05z", "t06z", "t07z", "t08z", "t09z", "t10z", "t11z", "t12z",
-    "t13z", "t14z", "t15z", "t16z", "t17z", "t18z", "t19z", "t20z", "t21z", "t22z", "t23z"
-    ]
+    strings_to_match = ["t00z", "t01z", "t02z", "t03z", "t04z", "t05z",
+                        "t06z", "t07z", "t08z", "t09z", "t10z", "t11z",
+                        "t12z", "t13z", "t14z", "t15z", "t16z", "t17z",
+                        "t18z", "t19z", "t20z",
+                        "t21z", "t22z", "t23z"]
 
     dummy_files_made = False
     for root, dirs, files in os.walk(working_directory_grib):
+        print(working_directory_grib)
         for subdir in dirs:
             subdir_path = os.path.join(root, subdir)
             files_in_subdir = os.listdir(subdir_path)
 
-            # Check if any of the strings are present in the file names using regular expressions
-            missing_strings = [string for string in strings_to_match if not any(re.search(rf"{string}", file) for file in files_in_subdir)]
+            # Check if any of the strings are present in the file names
+            # using regular expressions
+            missing_strings = [string for string in strings_to_match
+                               if not any(re.search(rf"{string}", file)
+                                          for file in files_in_subdir)]
 
             # Add missing strings to the subdirectory
             for missing_string in missing_strings:
                 # Create a new file with the missing string
-                file_name = f"{missing_string.replace('z', 'NoData')}_missing_file.grib2"
+                file_name = f"{missing_string.replace(
+                    'z', 'NoData')}_missing_file.grib2"
                 file_path = os.path.join(subdir_path, file_name)
                 with open(file_path, 'w') as dummy_file:
-                    dummy_file.write("This is a dummy file that serves as a placeholder for a missing GRIB file.")
+                    dummy_file.write("This is a dummy file that"
+                                     "serves as a placeholder"
+                                     "for a missing GRIB file.")
 
                 dummy_files_made = True
     if dummy_files_made:
@@ -84,32 +98,38 @@ def match_strings_and_add_dummy_files(working_directory_grib):
               "but I am not sure.")
         sys.exit(1)
 
+
 def delete_coordinates_file(working_directory_main):
     coordinates_filename = "GRIB_Nearest_Coordinates_Used.txt"
-    coordinates_file_path = os.path.join(working_directory_main, coordinates_filename)
+    coordinates_file_path = os.path.join(working_directory_main,
+                                         coordinates_filename)
 
     # Check if the file exists, and if it does, delete it
     if os.path.exists(coordinates_file_path):
         os.remove(coordinates_file_path)
 
 
-# This function gives the GRIB coordinates used, and sends them to an output file.
-# We can check this output file to see the exact latitude and longitude that was
-# chosen for each GRIB file. We would expect this value to be the same unless there
-# was a change in the HRRR (or other model) grid cell locations or model resolution.
-def nearest_coordinates_from_GRIB_files(working_directory_main, all_files, nearest_lat, nearest_lon):
+# This function gives the GRIB coordinates used, and sends them to
+# an output file. We can check this output file to see the exact latitude
+# and longitude that was chosen for each GRIB file. We would expect this
+# value to be the same unless there was a change in the HRRR (or other model)
+# grid cell locations or model resolution.
+def nearest_coordinates_from_GRIB_files(working_directory_main, all_files,
+                                        nearest_lat, nearest_lon):
     if nearest_lon == -999:
         nearest_lon_converted = nearest_lon
     else:
         nearest_lon_converted = nearest_lon - 360.0
 
     coordinates_filename = "GRIB_Nearest_Coordinates_Used.txt"
-    coordinates_file_path = os.path.join(working_directory_main, coordinates_filename)
+    coordinates_file_path = os.path.join(working_directory_main,
+                                         coordinates_filename)
 
     # Open the file in append mode ('a') to write new data
     with open(coordinates_file_path, 'a') as file:
         for f in all_files:
-            formatted_line = "{:<10} {:<10} {:<10}".format(f, nearest_lat, nearest_lon_converted)
+            formatted_line = "{:<10} {:<10} {:<10}".format(
+                f, nearest_lat, nearest_lon_converted)
             # Print for debugging
             # print(formatted_line)
             file.write(formatted_line + '\n')
@@ -134,7 +154,9 @@ def process_grib_files(working_directory_main, processed_data, all_files):
             with open(file_path, 'rb') as f:
                 grib_message_handle = codes_grib_new_from_file(f)
 
-                Nearestinfo = codes_grib_find_nearest(grib_message_handle, ForGRIB_latitude, ForGRIB_calculatedlongitude, is_lsm=False, npoints=1)
+                Nearestinfo = codes_grib_find_nearest(
+                    grib_message_handle,ForGRIB_latitude,
+                    ForGRIB_calculatedlongitude, is_lsm=False, npoints=1)
                 NearestinfoDict = Nearestinfo[0]
 
                 nearest_lat = NearestinfoDict['lat']
@@ -143,14 +165,19 @@ def process_grib_files(working_directory_main, processed_data, all_files):
                 nearest_index = NearestinfoDict['index']
 
         rounded_distance = round(nearest_distance, 3)
-        resultsGRIBsetup.append((nearest_lat, nearest_lon, nearest_distance, nearest_index))
-        print(f"File: {file_path} --> Data is {rounded_distance} kilometers from the requested location and the chosen grid cell is: {nearest_index}")
+        resultsGRIBsetup.append((nearest_lat, nearest_lon, nearest_distance,
+                                 nearest_index))
+        print(f"File: {file_path} --> Data is {rounded_distance}"
+              f"kilometers from the requested location and the chosen"
+              f"grid cell is: {nearest_index}")
 
         # This is for coordinates output file.
-        coordinates = nearest_coordinates_from_GRIB_files(working_directory_main, [file_path], nearest_lat, nearest_lon)
+        # Call the function without assigning its result to a variable.
+        nearest_coordinates_from_GRIB_files(
+            working_directory_main, [file_path],
+            nearest_lat, nearest_lon)
 
-    print("")
-    print("")
+    print("\n\n")
 
     return [item[3] for item in resultsGRIBsetup]
 
@@ -224,8 +251,6 @@ def grib_dictionary_from_inputs(processed_data):
     SPFHHeightLevel10GRIB = processed_data.get('SPFHHeightLevel10')
     SPFHHeightLevel11GRIB = processed_data.get('SPFHHeightLevel11')
     SPFHHeightLevel12GRIB = processed_data.get('SPFHHeightLevel12')
-
-
 
     if U_and_V_WindComponentGRIB == "yes":
         strUandV = "yes"
@@ -398,13 +423,13 @@ def grib_dictionary_from_inputs(processed_data):
 
     # Below variables are assigned only if they were requested
 
-    # Boundary Layer Height**************************************************************
+    # Boundary Layer Height****************************************************
 
     if BoundaryLayerHeightGRIB == "yes":
         BLH = "blh"
         LBLH = "0"
 
-    # WIND**************************************************************
+    # WIND*********************************************************************
 
     if WindHeightLevel1GRIB == "yes" and strUandV == "yes":
         UWHGT1 = "u"
@@ -516,7 +541,7 @@ def grib_dictionary_from_inputs(processed_data):
         THGT12 = "t"
         LTHGT12 = "12"
 
-    # TKE**************************************************************
+    # TKE**********************************************************************
 
     if TKEHeightLevel1GRIB == "yes" and strTKE == "yes":
         TKEHGT1 = "tke"
@@ -566,7 +591,7 @@ def grib_dictionary_from_inputs(processed_data):
         TKEHGT12 = "tke"
         LTKEHGT12 = "12"
 
-    # Pressure**************************************************************
+    # Pressure*****************************************************************
 
     if PRESHeightLevel1GRIB == "yes" and strPRES == "yes":
         PRESHGT1 = "pres"
@@ -616,7 +641,7 @@ def grib_dictionary_from_inputs(processed_data):
         PRESHGT12 = "pres"
         LPRESHGT12 = "12"
 
-    # Specific Humidity**************************************************************
+    # Specific Humidity********************************************************
 
     if SPFHHeightLevel1GRIB == "yes" and strSPFH == "yes":
         SPFHHGT1 = "q"
@@ -679,7 +704,8 @@ def grib_dictionary_from_inputs(processed_data):
 
 
     if strUandV == "yes":
-        wind_height_levels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+        wind_height_levels = ["1", "2", "3", "4", "5", "6",
+                              "7", "8", "9", "10", "11", "12"]
 
         for level in wind_height_levels:
             if eval(f"WindHeightLevel{level}GRIB") == "yes":
@@ -694,7 +720,8 @@ def grib_dictionary_from_inputs(processed_data):
 
 
     if strTMP == "yes":
-        temp_height_levels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+        temp_height_levels = ["1", "2", "3", "4", "5", "6",
+                              "7", "8", "9", "10", "11", "12"]
 
         for level in temp_height_levels:
             if eval(f"TemperatureHeightLevel{level}GRIB") == "yes":
@@ -708,7 +735,9 @@ def grib_dictionary_from_inputs(processed_data):
 
 
     if strSPFH == "yes":
-        specific_humidity_height_levels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+        specific_humidity_height_levels = ["1", "2", "3", "4", "5",
+                                           "6", "7", "8", "9", "10",
+                                           "11", "12"]
 
         for level in specific_humidity_height_levels:
             if eval(f"SPFHHeightLevel{level}GRIB") == "yes":
@@ -722,7 +751,8 @@ def grib_dictionary_from_inputs(processed_data):
 
 
     if strTKE == "yes":
-        TKE_height_levels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+        TKE_height_levels = ["1", "2", "3", "4", "5", "6",
+                             "7", "8", "9", "10", "11", "12"]
 
         for level in TKE_height_levels:
             if eval(f"TKEHeightLevel{level}GRIB") == "yes":
@@ -736,7 +766,8 @@ def grib_dictionary_from_inputs(processed_data):
 
 
     if strPRES == "yes":
-        PRES_height_levels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+        PRES_height_levels = ["1", "2", "3", "4", "5", "6",
+                              "7", "8", "9", "10", "11", "12"]
 
         for level in PRES_height_levels:
             if eval(f"PRESHeightLevel{level}GRIB") == "yes":
@@ -748,8 +779,6 @@ def grib_dictionary_from_inputs(processed_data):
                         Dictionary_for_GRIB[key] = []
                     Dictionary_for_GRIB[key].append(value)
 
-
-
     # Now we are making 2 lists that populate based on the dictionary created.
 
     GRIB_shortName = []
@@ -760,13 +789,12 @@ def grib_dictionary_from_inputs(processed_data):
             for value in values:
                 GRIB_shortName.append(key)
                 GRIB_level.append(value)
-                # print(f'GRIB_shortName: {GRIB_shortName}, GRIB_level: {GRIB_level}')
-    print("")
-    print("")
+                # print(f'GRIB_shortName:'
+                #       f'{GRIB_shortName}, GRIB_level: {GRIB_level}')
+    print("\n\n")
     print(f'GRIB shortName list requested: {GRIB_shortName}')
     print(f'GRIB level list requested:     {GRIB_level}')
-    print("")
-    print("")
+    print("\n\n")
 
     return GRIB_shortName, GRIB_level
 
@@ -793,10 +821,14 @@ def dict_constructor():
 
 
 # The code for this function is somewhat messy, but it functions as intended.
-# If future improvements are planned, it would be advisable to explore alternative approaches.
-def extract_value_at_grid_index(all_files, grid_cell_data, GRIB_shortName, GRIB_level, extracted_time_values, build_dict):
+# If future improvements are planned, it would be advisable to explore
+# alternative approaches.
+def extract_value_at_grid_index(all_files, grid_cell_data,
+                                GRIB_shortName, GRIB_level,
+                                extracted_time_values, build_dict):
     """
-    Extracts values at a given grid index from GRIB files and populates a dictionary.
+    Extracts values at a given grid index from GRIB files and
+    populates a dictionary.
 
     Args:
         all_files (list): List of file paths.
@@ -811,7 +843,9 @@ def extract_value_at_grid_index(all_files, grid_cell_data, GRIB_shortName, GRIB_
     """
 
     VERBOSE = 1  # verbose error reporting
-    skip_file_path = "missing_file" # This is used to handle "fake" (non-binary) GRIB files.
+    # This is used to handle "fake" (non-binary) GRIB files.
+    # I think we can delete this
+    skip_file_path = "missing_file"
 
     GRIB_level_str = GRIB_level
     GRIB_level_int = []
@@ -824,7 +858,8 @@ def extract_value_at_grid_index(all_files, grid_cell_data, GRIB_shortName, GRIB_
             print(f"Unable to convert {item} to an integer")
 
     for idx, file_path in enumerate(all_files):
-        time, data_date = extracted_time_values[idx]  # Access time and data_date from the extracted_time_values list
+        # Access time and data_date from the extracted_time_values list
+        time, data_date = extracted_time_values[idx]
 
         if skip_file_path in file_path:
             for shortName, level in zip(GRIB_shortName, GRIB_level_int):
@@ -833,19 +868,25 @@ def extract_value_at_grid_index(all_files, grid_cell_data, GRIB_shortName, GRIB_
                     build_dict[(shortName, level)] = []
 
                 # Assign a string of "missing" without processing the file
-                build_dict[(shortName, level)].append((file_path, level, shortName, str("missing"), time, data_date))
+                build_dict[(shortName, level)].append((file_path,
+                                                       level, shortName,
+                                                       str("missing"), time,
+                                                       data_date))
         else:
             f = open(file_path, 'rb')
             keys = [
                 'level',
                 'shortName',
             ]
-            grid_index = grid_cell_data[idx]  # Get the grid_index for the current file
+            # Get the grid_index for the current file
+            grid_index = grid_cell_data[idx]
 
             for shortName, level in zip(GRIB_shortName, GRIB_level_int):
                 try:
 
-                    info_found = False  # Flag to track whether the tuple was found in the GRIB file.
+                    # Flag to track whether the tuple was found in
+                    # the GRIB file.
+                    info_found = False
                     f.seek(0)  # Reset the file pointer to the beginning
                     while 1:
                         gid = codes_grib_new_from_file(f)
@@ -858,15 +899,27 @@ def extract_value_at_grid_index(all_files, grid_cell_data, GRIB_shortName, GRIB_
                         if (codes_get(gid, 'level') == int(level) and
                             codes_get(gid, 'shortName') == shortName):
 
-                            values = codes_get_array(gid, 'values')  # Get the values as a list
+                            # Get the values as a list
+                            values = codes_get_array(gid, 'values')
 
                             if grid_index >= 0 and grid_index < len(values):
                                 value_at_index = values[grid_index]
-                                if (file_path, level, shortName, value_at_index, time, data_date) not in build_dict[(shortName, level)]:
-                                    build_dict[(shortName, level)].append((file_path, level, shortName, value_at_index, time, data_date))
-                                    print(f'File: {file_path} Date: {data_date} Time: {time} Variable: {shortName} Level: {level} Value: {value_at_index}')
+                                if ((file_path, level, shortName,
+                                     value_at_index, time, data_date) not in
+                                        build_dict[(shortName, level)]):
+                                    build_dict[(shortName, level)].append((
+                                        file_path, level, shortName,
+                                        value_at_index, time, data_date))
+                                    print(f'File: {file_path}'
+                                          f'Date: {data_date}'
+                                          f'Time: {time}'
+                                          f'Variable: {shortName}'
+                                          f'Level: {level}'
+                                          f'Value: {value_at_index}')
 
-                            info_found = True  # Flag to track whether the tuple was found in the GRIB file.
+                            # Flag to track whether the tuple was found in
+                            # the GRIB file.
+                            info_found = True
                         codes_release(gid)
 
                 except CodesInternalError as err:
@@ -877,8 +930,12 @@ def extract_value_at_grid_index(all_files, grid_cell_data, GRIB_shortName, GRIB_
 
                 if not info_found:
                     value_at_index = -9999.999
-                if (file_path, level, shortName, value_at_index, time, data_date) not in build_dict[(shortName, level)]:
-                    build_dict[(shortName, level)].append((file_path, level, shortName, value_at_index, time, data_date))
+                if ((file_path, level, shortName,
+                     value_at_index, time, data_date) not in
+                        build_dict[(shortName, level)]):
+                    build_dict[(shortName, level)].append((
+                        file_path, level, shortName, value_at_index,
+                        time, data_date))
 
             f.close()
     extracted_values_dict = build_dict
@@ -913,6 +970,7 @@ def extract_time_info_from_grib_files(all_files):
                     sys.stderr.write(err.msg + '\n')
 
         extracted_time_values.append((time, data_date))
-        print(f"File: {file_path} --> The date is: {data_date} --> The time is: {time}")
+        print(f"File: {file_path} --> The date is: {data_date}"
+              f"--> The time is: {time}")
 
     return extracted_time_values

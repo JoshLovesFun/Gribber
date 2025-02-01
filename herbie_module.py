@@ -422,7 +422,7 @@ def fetch_herbie_data(date_str, processed_data):
     ]
 
     # Note there is an important file here: /home/joshua/.config/herbie/config.toml
-    # It has the following contents:
+    # It has the following contents (as an example):
 
     # [default]
     # model = "hrrr"

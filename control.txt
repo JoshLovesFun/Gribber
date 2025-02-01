@@ -1,4 +1,4 @@
-Output Directory: C:\Code\GitHub\Gribber\example_output\testing
+Output Directory: C:\Code\GitHub\Gribber\example_output\testing\
 GRIB files location: C:\Other\GRIB\Test\hrrr\
 # For now, the above path should include the "hrrr" part.
 Inputs Used Outfile Name: inputs_used_outfile_test.txt

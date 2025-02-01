@@ -1,6 +1,6 @@
 main_output: All_output.csv
 Input_Out_File: inputs_used_outfile_test.txt
-output_directory: C:\Code\GitHub\Gribber\example_output\testing
+output_directory: C:\Code\GitHub\Gribber\example_output\testing\
 GRIB_files_location: C:\Other\GRIB\Test\hrrr\
 latitude: 36.25
 inputlongitude: -86.57
