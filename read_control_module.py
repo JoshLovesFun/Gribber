@@ -1,4 +1,4 @@
-# Goal: Read from "control.txt" file.
+# Goal: Read from the input file, called "Control.txt" by default.
 
 import os
 
@@ -45,8 +45,10 @@ def process_control_data(control_data):
         'latitude': lat,
         'inputlongitude': inputlong,
         'calculatedlongitude': calclong,
-        'BoundaryLayerHeight': control_data.get('Boundary Layer Height?', None),
-        'U_and_V_WindComponent': control_data.get('U and V Wind Component?', None),
+        'BoundaryLayerHeight': control_data.get('Boundary Layer Height?',
+                                                None),
+        'U_and_V_WindComponent': control_data.get('U and V Wind Component?',
+                                                  None),
         'WindHeightLevel1': control_data.get('Wind Height Level 1', None),
         'WindHeightLevel2': control_data.get('Wind Height Level 2', None),
         'WindHeightLevel3': control_data.get('Wind Height Level 3', None),
@@ -60,31 +62,55 @@ def process_control_data(control_data):
         'WindHeightLevel11': control_data.get('Wind Height Level 11', None),
         'WindHeightLevel12': control_data.get('Wind Height Level 12', None),
         'Temperature': control_data.get('Temperature?', None),
-        'TemperatureHeightLevel1': control_data.get('Temperature Height Level 1', None),
-        'TemperatureHeightLevel2': control_data.get('Temperature Height Level 2', None),
-        'TemperatureHeightLevel3': control_data.get('Temperature Height Level 3', None),
-        'TemperatureHeightLevel4': control_data.get('Temperature Height Level 4', None),
-        'TemperatureHeightLevel5': control_data.get('Temperature Height Level 5', None),
-        'TemperatureHeightLevel6': control_data.get('Temperature Height Level 6', None),
-        'TemperatureHeightLevel7': control_data.get('Temperature Height Level 7', None),
-        'TemperatureHeightLevel8': control_data.get('Temperature Height Level 8', None),
-        'TemperatureHeightLevel9': control_data.get('Temperature Height Level 9', None),
-        'TemperatureHeightLevel10': control_data.get('Temperature Height Level 10', None),
-        'TemperatureHeightLevel11': control_data.get('Temperature Height Level 11', None),
-        'TemperatureHeightLevel12': control_data.get('Temperature Height Level 12', None),
+        'TemperatureHeightLevel1': control_data.get(
+            'Temperature Height Level 1', None),
+        'TemperatureHeightLevel2': control_data.get(
+            'Temperature Height Level 2', None),
+        'TemperatureHeightLevel3': control_data.get(
+            'Temperature Height Level 3', None),
+        'TemperatureHeightLevel4': control_data.get(
+            'Temperature Height Level 4', None),
+        'TemperatureHeightLevel5': control_data.get(
+            'Temperature Height Level 5', None),
+        'TemperatureHeightLevel6': control_data.get(
+            'Temperature Height Level 6', None),
+        'TemperatureHeightLevel7': control_data.get(
+            'Temperature Height Level 7', None),
+        'TemperatureHeightLevel8': control_data.get(
+            'Temperature Height Level 8', None),
+        'TemperatureHeightLevel9': control_data.get(
+            'Temperature Height Level 9', None),
+        'TemperatureHeightLevel10': control_data.get(
+            'Temperature Height Level 10', None),
+        'TemperatureHeightLevel11': control_data.get(
+            'Temperature Height Level 11', None),
+        'TemperatureHeightLevel12': control_data.get(
+            'Temperature Height Level 12', None),
         'TKE': control_data.get('Turbulent Kinetic Energy?', None),
-        'TKEHeightLevel1': control_data.get('Turbulent Kinetic Energy Level 1', None),
-        'TKEHeightLevel2': control_data.get('Turbulent Kinetic Energy Level 2', None),
-        'TKEHeightLevel3': control_data.get('Turbulent Kinetic Energy Level 3', None),
-        'TKEHeightLevel4': control_data.get('Turbulent Kinetic Energy Level 4', None),
-        'TKEHeightLevel5': control_data.get('Turbulent Kinetic Energy Level 5', None),
-        'TKEHeightLevel6': control_data.get('Turbulent Kinetic Energy Level 6', None),
-        'TKEHeightLevel7': control_data.get('Turbulent Kinetic Energy Level 7', None),
-        'TKEHeightLevel8': control_data.get('Turbulent Kinetic Energy Level 8', None),
-        'TKEHeightLevel9': control_data.get('Turbulent Kinetic Energy Level 9', None),
-        'TKEHeightLevel10': control_data.get('Turbulent Kinetic Energy Level 10', None),
-        'TKEHeightLevel11': control_data.get('Turbulent Kinetic Energy Level 11', None),
-        'TKEHeightLevel12': control_data.get('Turbulent Kinetic Energy Level 12', None),
+        'TKEHeightLevel1': control_data.get(
+            'Turbulent Kinetic Energy Level 1', None),
+        'TKEHeightLevel2': control_data.get(
+            'Turbulent Kinetic Energy Level 2', None),
+        'TKEHeightLevel3': control_data.get(
+            'Turbulent Kinetic Energy Level 3', None),
+        'TKEHeightLevel4': control_data.get(
+            'Turbulent Kinetic Energy Level 4', None),
+        'TKEHeightLevel5': control_data.get(
+            'Turbulent Kinetic Energy Level 5', None),
+        'TKEHeightLevel6': control_data.get(
+            'Turbulent Kinetic Energy Level 6', None),
+        'TKEHeightLevel7': control_data.get(
+            'Turbulent Kinetic Energy Level 7', None),
+        'TKEHeightLevel8': control_data.get(
+            'Turbulent Kinetic Energy Level 8', None),
+        'TKEHeightLevel9': control_data.get(
+            'Turbulent Kinetic Energy Level 9', None),
+        'TKEHeightLevel10': control_data.get(
+            'Turbulent Kinetic Energy Level 10', None),
+        'TKEHeightLevel11': control_data.get(
+            'Turbulent Kinetic Energy Level 11', None),
+        'TKEHeightLevel12': control_data.get(
+            'Turbulent Kinetic Energy Level 12', None),
         'PRES': control_data.get('Pressure?', None),
         'PRESHeightLevel1': control_data.get('Pressure Level 1', None),
         'PRESHeightLevel2': control_data.get('Pressure Level 2', None),
@@ -99,18 +125,30 @@ def process_control_data(control_data):
         'PRESHeightLevel11': control_data.get('Pressure Level 11', None),
         'PRESHeightLevel12': control_data.get('Pressure Level 12', None),
         'SPFH': control_data.get('Specific Humidity?', None),
-        'SPFHHeightLevel1': control_data.get('Specific Humidity Level 1', None),
-        'SPFHHeightLevel2': control_data.get('Specific Humidity Level 2', None),
-        'SPFHHeightLevel3': control_data.get('Specific Humidity Level 3', None),
-        'SPFHHeightLevel4': control_data.get('Specific Humidity Level 4', None),
-        'SPFHHeightLevel5': control_data.get('Specific Humidity Level 5', None),
-        'SPFHHeightLevel6': control_data.get('Specific Humidity Level 6', None),
-        'SPFHHeightLevel7': control_data.get('Specific Humidity Level 7', None),
-        'SPFHHeightLevel8': control_data.get('Specific Humidity Level 8', None),
-        'SPFHHeightLevel9': control_data.get('Specific Humidity Level 9', None),
-        'SPFHHeightLevel10': control_data.get('Specific Humidity Level 10', None),
-        'SPFHHeightLevel11': control_data.get('Specific Humidity Level 11', None),
-        'SPFHHeightLevel12': control_data.get('Specific Humidity Level 12', None),
+        'SPFHHeightLevel1': control_data.get('Specific Humidity Level 1',
+                                             None),
+        'SPFHHeightLevel2': control_data.get('Specific Humidity Level 2',
+                                             None),
+        'SPFHHeightLevel3': control_data.get('Specific Humidity Level 3',
+                                             None),
+        'SPFHHeightLevel4': control_data.get('Specific Humidity Level 4',
+                                             None),
+        'SPFHHeightLevel5': control_data.get('Specific Humidity Level 5',
+                                             None),
+        'SPFHHeightLevel6': control_data.get('Specific Humidity Level 6',
+                                             None),
+        'SPFHHeightLevel7': control_data.get('Specific Humidity Level 7',
+                                             None),
+        'SPFHHeightLevel8': control_data.get('Specific Humidity Level 8',
+                                             None),
+        'SPFHHeightLevel9': control_data.get('Specific Humidity Level 9',
+                                             None),
+        'SPFHHeightLevel10': control_data.get('Specific Humidity Level 10',
+                                              None),
+        'SPFHHeightLevel11': control_data.get('Specific Humidity Level 11',
+                                              None),
+        'SPFHHeightLevel12': control_data.get('Specific Humidity Level 12',
+                                              None),
 
         'StartDate': control_data.get('Start Date', None),
         'EndDate': control_data.get('End Date', None),

@@ -1,5 +1,6 @@
 Output Directory: C:\Code\GitHub\Gribber\example_output\testing
 GRIB files location: C:\Other\GRIB\Test\hrrr\
+# For now, the above path should include the "hrrr" part.
 Inputs Used Outfile Name: inputs_used_outfile_test.txt
 Main output file name: All_output.csv
 Latitude: 36.25
@@ -71,21 +72,26 @@ Specific Humidity Level 10: yes         # Options are "yes" or "no"
 Specific Humidity Level 11: yes         # Options are "yes" or "no"
 Specific Humidity Level 12: yes         # Options are "yes" or "no"
 
-Start Date: 2021-12-31                  # Start date of data request.
-End Date: 2021-12-31                    # End date of data request. (inclusive)
-Herbie Already Done?: no                # Options are "yes" or "no"
+Start Date: 2021-12-31                # Start date of data request.
+End Date: 2021-12-31                  # End date of data request. (inclusive)
+Herbie Already Done?: no              # Options are "yes" or "no"
 
-# Since HRRR GRIB files cover the contiguous U.S., lat. and long. values should represent those areas.
-# However, GRIB longitude values are in "degrees east of the Prime Meridian". This is corrected in the code.
-# So in this file, the latitude and longitude of Cleveland, Ohio for example, should be entered as follows:
+# Since HRRR GRIB files cover the contiguous U.S., lat. and long. values
+# should represent those areas. However, GRIB longitude values are
+# in "degrees east of the Prime Meridian". This is corrected in the code.
+# So in this file, the latitude and longitude of Cleveland, Ohio for example,
+# should be entered as follows:
 # Example latitude: 41.4993
 # Example longitude: -81.6944
 
-# If u and v wind component is requested, one or more wind levels must be requested.
-# If temperature is requested, one or more temperature levels must be requested.
-# If turbulent kinetic energy is requested, one or more turbulent kinetic energy levels must be requested.
-# If pressure is requested, one or more pressure levels must be requested.
-# If you request specific humidity, you must also request one or more specific humidity levels. (active voice)
+# If you request u and v wind components, you must also request one or more
+# wind levels. If you request temperature, you must also request one or more
+# temperature levels.
+# If you request turbulent kinetic energy, you must also request one or more
+# turbulent kinetic energy levels.
+# If you request pressure, you must also request one or more pressure levels.
+# If you request specific humidity, you must also request one or more
+# specific humidity levels.
 
 # The height of each level varies based on location and weather.
 # The approximate heights above ground level are as follows:
@@ -104,15 +110,17 @@ Herbie Already Done?: no                # Options are "yes" or "no"
 
 # More levels requested = longer download time.
 
-# Date format examples for start or end date: 2022-01-01, 2022-07-27, 2019-11-15
+# Date format examples for start or end date:
+# 2022-01-01, 2022-07-27, 2019-11-15
 
 # With typical internet speed and let's say you download 1 variable at
-# 2 different heights, it should take about 1 minute to download 1 day of data.
-# The size of that daily folder would be about 50 MB.
+# 2 different heights, it should take about 1 minute to download
+# 1 day of data. The size of that daily folder would be about 50 MB.
 
-# If you run herbie to extract different/more variables than the previous run,
-# new files will be created. The old files are not deleted, so the GRIB output
-# will not make sense unless the old files are moved or deleted before you start herbie.
+# If you run herbie to extract different/more variables than the
+# previous run, new files will be created. The old files are not deleted,
+# so the GRIB output will not make sense unless the old files are moved
+# or deleted before you start herbie.
 
 # If you already have all the GRIB data you need and the files have the
 # correct Herbie directory structure, "Herbie Already Done?" should be "yes".
