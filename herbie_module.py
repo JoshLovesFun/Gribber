@@ -271,44 +271,42 @@ def fetch_herbie_data(date_str, processed_data):
     if WindHeightLevel12_Herbie == "yes" and strUandV == "yes":
         LWHGT12 = ":[U|V]GRD:12 hybrid"
 
-    #if TemperatureHeightLevel1_Herbie == "yes" and strTMP == "yes":
-    #    LTHGT1 = ":TMP:[1] hybrid level"
-
     if TemperatureHeightLevel1_Herbie == "yes" and strTMP == "yes":
         LTHGT1 = grib_dict["NAT"]["temp"]["grib_codes"][0]
 
     if TemperatureHeightLevel2_Herbie == "yes" and strTMP == "yes":
-        LTHGT2 = ":TMP:[2] hybrid level"
+        LTHGT2 = grib_dict["NAT"]["temp"]["grib_codes"][1]
 
     if TemperatureHeightLevel3_Herbie == "yes" and strTMP == "yes":
-        LTHGT3 = ":TMP:[3] hybrid level"
+        LTHGT3 = grib_dict["NAT"]["temp"]["grib_codes"][2]
 
     if TemperatureHeightLevel4_Herbie == "yes" and strTMP == "yes":
-        LTHGT4 = ":TMP:[4] hybrid level"
+        LTHGT4 = grib_dict["NAT"]["temp"]["grib_codes"][3]
 
     if TemperatureHeightLevel5_Herbie == "yes" and strTMP == "yes":
-        LTHGT5 = ":TMP:[5] hybrid level"
+        LTHGT5 = grib_dict["NAT"]["temp"]["grib_codes"][4]
 
     if TemperatureHeightLevel6_Herbie == "yes" and strTMP == "yes":
-        LTHGT6 = ":TMP:[6] hybrid level"
+        LTHGT6 = grib_dict["NAT"]["temp"]["grib_codes"][5]
 
     if TemperatureHeightLevel7_Herbie == "yes" and strTMP == "yes":
-        LTHGT7 = ":TMP:[7] hybrid level"
+        LTHGT7 = grib_dict["NAT"]["temp"]["grib_codes"][6]
 
     if TemperatureHeightLevel8_Herbie == "yes" and strTMP == "yes":
-        LTHGT8 = ":TMP:[8] hybrid level"
+        LTHGT8 = grib_dict["NAT"]["temp"]["grib_codes"][7]
 
     if TemperatureHeightLevel9_Herbie == "yes" and strTMP == "yes":
-        LTHGT9 = ":TMP:[9] hybrid level"
+        LTHGT9 = grib_dict["NAT"]["temp"]["grib_codes"][8]
 
     if TemperatureHeightLevel10_Herbie == "yes" and strTMP == "yes":
-        LTHGT10 = ":TMP:10 hybrid level"
+        LTHGT10 = grib_dict["NAT"]["temp"]["grib_codes"][9]
 
     if TemperatureHeightLevel11_Herbie == "yes" and strTMP == "yes":
-        LTHGT11 = ":TMP:11 hybrid level"
+        LTHGT11 = grib_dict["NAT"]["temp"]["grib_codes"][10]
 
     if TemperatureHeightLevel12_Herbie == "yes" and strTMP == "yes":
-        LTHGT12 = ":TMP:12 hybrid level"
+        LTHGT12 = grib_dict["NAT"]["temp"]["grib_codes"][11]
+
 
     if TKEHeightLevel1_Herbie == "yes" and strTKE == "yes":
         LTKEHGT1 = ":TKE:[1] hybrid level"
