@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from herbie import Herbie
 # We should think about using FastHerbie in the future.
 from grib_codes import create_grib_code_dict
-from read_control_module import process_control_data
 
 
 def fetch_herbie_data(date_str, processed_data):
@@ -81,66 +80,16 @@ def fetch_herbie_data(date_str, processed_data):
     TKE_Herbie = TKE
     PRES_Herbie = PRES
     SPFH_Herbie = SPFH
-    WindHeightLevel1_Herbie = WindHeightLevel1
-    WindHeightLevel2_Herbie = WindHeightLevel2
-    WindHeightLevel3_Herbie = WindHeightLevel3
-    WindHeightLevel4_Herbie = WindHeightLevel4
-    WindHeightLevel5_Herbie = WindHeightLevel5
-    WindHeightLevel6_Herbie = WindHeightLevel6
-    WindHeightLevel7_Herbie = WindHeightLevel7
-    WindHeightLevel8_Herbie = WindHeightLevel8
-    WindHeightLevel9_Herbie = WindHeightLevel9
-    WindHeightLevel10_Herbie = WindHeightLevel10
-    WindHeightLevel11_Herbie = WindHeightLevel11
-    WindHeightLevel12_Herbie = WindHeightLevel12
-    TemperatureHeightLevel1_Herbie = TemperatureHeightLevel1
-    TemperatureHeightLevel2_Herbie = TemperatureHeightLevel2
-    TemperatureHeightLevel3_Herbie = TemperatureHeightLevel3
-    TemperatureHeightLevel4_Herbie = TemperatureHeightLevel4
-    TemperatureHeightLevel5_Herbie = TemperatureHeightLevel5
-    TemperatureHeightLevel6_Herbie = TemperatureHeightLevel6
-    TemperatureHeightLevel7_Herbie = TemperatureHeightLevel7
-    TemperatureHeightLevel8_Herbie = TemperatureHeightLevel8
-    TemperatureHeightLevel9_Herbie = TemperatureHeightLevel9
-    TemperatureHeightLevel10_Herbie = TemperatureHeightLevel10
-    TemperatureHeightLevel11_Herbie = TemperatureHeightLevel11
-    TemperatureHeightLevel12_Herbie = TemperatureHeightLevel12
-    TKEHeightLevel1_Herbie = TKEHeightLevel1
-    TKEHeightLevel2_Herbie = TKEHeightLevel2
-    TKEHeightLevel3_Herbie = TKEHeightLevel3
-    TKEHeightLevel4_Herbie = TKEHeightLevel4
-    TKEHeightLevel5_Herbie = TKEHeightLevel5
-    TKEHeightLevel6_Herbie = TKEHeightLevel6
-    TKEHeightLevel7_Herbie = TKEHeightLevel7
-    TKEHeightLevel8_Herbie = TKEHeightLevel8
-    TKEHeightLevel9_Herbie = TKEHeightLevel9
-    TKEHeightLevel10_Herbie = TKEHeightLevel10
-    TKEHeightLevel11_Herbie = TKEHeightLevel11
-    TKEHeightLevel12_Herbie = TKEHeightLevel12
-    PRESHeightLevel1_Herbie = PRESHeightLevel1
-    PRESHeightLevel2_Herbie = PRESHeightLevel2
-    PRESHeightLevel3_Herbie = PRESHeightLevel3
-    PRESHeightLevel4_Herbie = PRESHeightLevel4
-    PRESHeightLevel5_Herbie = PRESHeightLevel5
-    PRESHeightLevel6_Herbie = PRESHeightLevel6
-    PRESHeightLevel7_Herbie = PRESHeightLevel7
-    PRESHeightLevel8_Herbie = PRESHeightLevel8
-    PRESHeightLevel9_Herbie = PRESHeightLevel9
-    PRESHeightLevel10_Herbie = PRESHeightLevel10
-    PRESHeightLevel11_Herbie = PRESHeightLevel11
-    PRESHeightLevel12_Herbie = PRESHeightLevel12
-    SPFHHeightLevel1_Herbie = SPFHHeightLevel1
-    SPFHHeightLevel2_Herbie = SPFHHeightLevel2
-    SPFHHeightLevel3_Herbie = SPFHHeightLevel3
-    SPFHHeightLevel4_Herbie = SPFHHeightLevel4
-    SPFHHeightLevel5_Herbie = SPFHHeightLevel5
-    SPFHHeightLevel6_Herbie = SPFHHeightLevel6
-    SPFHHeightLevel7_Herbie = SPFHHeightLevel7
-    SPFHHeightLevel8_Herbie = SPFHHeightLevel8
-    SPFHHeightLevel9_Herbie = SPFHHeightLevel9
-    SPFHHeightLevel10_Herbie = SPFHHeightLevel10
-    SPFHHeightLevel11_Herbie = SPFHHeightLevel11
-    SPFHHeightLevel12_Herbie = SPFHHeightLevel12
+
+
+
+
+
+
+
+
+
+
 
 
     if U_and_V_WindComponent_Herbie == "yes":
@@ -168,252 +117,212 @@ def fetch_herbie_data(date_str, processed_data):
     else:
         strSPFH = "no"
 
-    LBLH = ""
-    LWHGT1 = ""
-    LWHGT2 = ""
-    LWHGT3 = ""
-    LWHGT4 = ""
-    LWHGT5 = ""
-    LWHGT6 = ""
-    LWHGT7 = ""
-    LWHGT8 = ""
-    LWHGT9 = ""
-    LWHGT10 = ""
-    LWHGT11 = ""
-    LWHGT12 = ""
-    LTHGT1 = ""
-    LTHGT2 = ""
-    LTHGT3 = ""
-    LTHGT4 = ""
-    LTHGT5 = ""
-    LTHGT6 = ""
-    LTHGT7 = ""
-    LTHGT8 = ""
-    LTHGT9 = ""
-    LTHGT10 = ""
-    LTHGT11 = ""
-    LTHGT12 = ""
-    LTKEHGT1 = ""
-    LTKEHGT2 = ""
-    LTKEHGT3 = ""
-    LTKEHGT4 = ""
-    LTKEHGT5 = ""
-    LTKEHGT6 = ""
-    LTKEHGT7 = ""
-    LTKEHGT8 = ""
-    LTKEHGT9 = ""
-    LTKEHGT10 = ""
-    LTKEHGT11 = ""
-    LTKEHGT12 = ""
-    LPRESHGT1 = ""
-    LPRESHGT2 = ""
-    LPRESHGT3 = ""
-    LPRESHGT4 = ""
-    LPRESHGT5 = ""
-    LPRESHGT6 = ""
-    LPRESHGT7 = ""
-    LPRESHGT8 = ""
-    LPRESHGT9 = ""
-    LPRESHGT10 = ""
-    LPRESHGT11 = ""
-    LPRESHGT12 = ""
-    LSPFHHGT1 = ""
-    LSPFHHGT2 = ""
-    LSPFHHGT3 = ""
-    LSPFHHGT4 = ""
-    LSPFHHGT5 = ""
-    LSPFHHGT6 = ""
-    LSPFHHGT7 = ""
-    LSPFHHGT8 = ""
-    LSPFHHGT9 = ""
-    LSPFHHGT10 = ""
-    LSPFHHGT11 = ""
-    LSPFHHGT12 = ""
+
+
+    LBLH = None
+
+    LWHGT1 = LWHGT2 = LWHGT3 = LWHGT4 = LWHGT5 = LWHGT6 = None
+    LWHGT7 = LWHGT8 = LWHGT9 = LWHGT10 = LWHGT11 = LWHGT12 = None
+
+    LTHGT1 = LTHGT2 = LTHGT3 = LTHGT4 = LTHGT5 = LTHGT6 = None
+    LTHGT7 = LTHGT8 = LTHGT9 = LTHGT10 = LTHGT11 = LTHGT12 = None
+
+    LTKEHGT1 = LTKEHGT2 = LTKEHGT3 = LTKEHGT4 = LTKEHGT5 = LTKEHGT6 = None
+    LTKEHGT7 =LTKEHGT8 = LTKEHGT9 = LTKEHGT10 = LTKEHGT11 = LTKEHGT12 = None
+
+    LPRESHGT1 = LPRESHGT2 = LPRESHGT3 = LPRESHGT4 = None
+    LPRESHGT5 = LPRESHGT6 = LPRESHGT7 = LPRESHGT8 = None
+    LPRESHGT9 = LPRESHGT10 = LPRESHGT11 = LPRESHGT12 = None
+
+    LSPFHHGT1 = LSPFHHGT2 = LSPFHHGT3 = LSPFHHGT4 = None
+    LSPFHHGT5 = LSPFHHGT6 = LSPFHHGT7 = LSPFHHGT8 = None
+    LSPFHHGT9 = LSPFHHGT10 = LSPFHHGT11 = LSPFHHGT12 = None
+
 
     grib_dict = create_grib_code_dict()
 
     if BoundaryLayerHeight_Herbie == "yes":
         LBLH = ":HPBL:surface"
 
-    if WindHeightLevel1_Herbie == "yes" and strUandV == "yes":
+    if WindHeightLevel1 == "yes" and strUandV == "yes":
         LWHGT1 = ":[U|V]GRD:[1] hybrid"
 
-    if WindHeightLevel2_Herbie == "yes" and strUandV == "yes":
+    if WindHeightLevel2 == "yes" and strUandV == "yes":
         LWHGT2 = ":[U|V]GRD:[2] hybrid"
 
-    if WindHeightLevel3_Herbie == "yes" and strUandV == "yes":
+    if WindHeightLevel3 == "yes" and strUandV == "yes":
         LWHGT3 = ":[U|V]GRD:[3] hybrid"
 
-    if WindHeightLevel4_Herbie == "yes" and strUandV == "yes":
+    if WindHeightLevel4 == "yes" and strUandV == "yes":
         LWHGT4 = ":[U|V]GRD:[4] hybrid"
 
-    if WindHeightLevel5_Herbie == "yes" and strUandV == "yes":
+    if WindHeightLevel5 == "yes" and strUandV == "yes":
         LWHGT5 = ":[U|V]GRD:[5] hybrid"
 
-    if WindHeightLevel6_Herbie == "yes" and strUandV == "yes":
+    if WindHeightLevel6 == "yes" and strUandV == "yes":
         LWHGT6 = ":[U|V]GRD:[6] hybrid"
 
-    if WindHeightLevel7_Herbie == "yes" and strUandV == "yes":
+    if WindHeightLevel7 == "yes" and strUandV == "yes":
         LWHGT7 = ":[U|V]GRD:[7] hybrid"
 
-    if WindHeightLevel8_Herbie == "yes" and strUandV == "yes":
+    if WindHeightLevel8 == "yes" and strUandV == "yes":
         LWHGT8 = ":[U|V]GRD:[8] hybrid"
 
-    if WindHeightLevel9_Herbie == "yes" and strUandV == "yes":
+    if WindHeightLevel9 == "yes" and strUandV == "yes":
         LWHGT9 = ":[U|V]GRD:[9] hybrid"
 
-    if WindHeightLevel10_Herbie == "yes" and strUandV == "yes":
+    if WindHeightLevel10 == "yes" and strUandV == "yes":
         LWHGT10 = ":[U|V]GRD:10 hybrid"
 
-    if WindHeightLevel11_Herbie == "yes" and strUandV == "yes":
+    if WindHeightLevel11 == "yes" and strUandV == "yes":
         LWHGT11 = ":[U|V]GRD:11 hybrid"
 
-    if WindHeightLevel12_Herbie == "yes" and strUandV == "yes":
+    if WindHeightLevel12 == "yes" and strUandV == "yes":
         LWHGT12 = ":[U|V]GRD:12 hybrid"
 
-    if TemperatureHeightLevel1_Herbie == "yes" and strTMP == "yes":
+    if TemperatureHeightLevel1 == "yes" and strTMP == "yes":
         LTHGT1 = grib_dict["NAT"]["temp"]["grib_codes"][0]
 
-    if TemperatureHeightLevel2_Herbie == "yes" and strTMP == "yes":
+    if TemperatureHeightLevel2 == "yes" and strTMP == "yes":
         LTHGT2 = grib_dict["NAT"]["temp"]["grib_codes"][1]
 
-    if TemperatureHeightLevel3_Herbie == "yes" and strTMP == "yes":
+    if TemperatureHeightLevel3 == "yes" and strTMP == "yes":
         LTHGT3 = grib_dict["NAT"]["temp"]["grib_codes"][2]
 
-    if TemperatureHeightLevel4_Herbie == "yes" and strTMP == "yes":
+    if TemperatureHeightLevel4 == "yes" and strTMP == "yes":
         LTHGT4 = grib_dict["NAT"]["temp"]["grib_codes"][3]
 
-    if TemperatureHeightLevel5_Herbie == "yes" and strTMP == "yes":
+    if TemperatureHeightLevel5 == "yes" and strTMP == "yes":
         LTHGT5 = grib_dict["NAT"]["temp"]["grib_codes"][4]
 
-    if TemperatureHeightLevel6_Herbie == "yes" and strTMP == "yes":
+    if TemperatureHeightLevel6 == "yes" and strTMP == "yes":
         LTHGT6 = grib_dict["NAT"]["temp"]["grib_codes"][5]
 
-    if TemperatureHeightLevel7_Herbie == "yes" and strTMP == "yes":
+    if TemperatureHeightLevel7 == "yes" and strTMP == "yes":
         LTHGT7 = grib_dict["NAT"]["temp"]["grib_codes"][6]
 
-    if TemperatureHeightLevel8_Herbie == "yes" and strTMP == "yes":
+    if TemperatureHeightLevel8 == "yes" and strTMP == "yes":
         LTHGT8 = grib_dict["NAT"]["temp"]["grib_codes"][7]
 
-    if TemperatureHeightLevel9_Herbie == "yes" and strTMP == "yes":
+    if TemperatureHeightLevel9 == "yes" and strTMP == "yes":
         LTHGT9 = grib_dict["NAT"]["temp"]["grib_codes"][8]
 
-    if TemperatureHeightLevel10_Herbie == "yes" and strTMP == "yes":
+    if TemperatureHeightLevel10 == "yes" and strTMP == "yes":
         LTHGT10 = grib_dict["NAT"]["temp"]["grib_codes"][9]
 
-    if TemperatureHeightLevel11_Herbie == "yes" and strTMP == "yes":
+    if TemperatureHeightLevel11 == "yes" and strTMP == "yes":
         LTHGT11 = grib_dict["NAT"]["temp"]["grib_codes"][10]
 
-    if TemperatureHeightLevel12_Herbie == "yes" and strTMP == "yes":
+    if TemperatureHeightLevel12 == "yes" and strTMP == "yes":
         LTHGT12 = grib_dict["NAT"]["temp"]["grib_codes"][11]
 
 
-    if TKEHeightLevel1_Herbie == "yes" and strTKE == "yes":
+    if TKEHeightLevel1 == "yes" and strTKE == "yes":
         LTKEHGT1 = ":TKE:[1] hybrid level"
 
-    if TKEHeightLevel2_Herbie == "yes" and strTKE == "yes":
+    if TKEHeightLevel2 == "yes" and strTKE == "yes":
         LTKEHGT2 = ":TKE:[2] hybrid level"
 
-    if TKEHeightLevel3_Herbie == "yes" and strTKE == "yes":
+    if TKEHeightLevel3 == "yes" and strTKE == "yes":
         LTKEHGT3 = ":TKE:[3] hybrid level"
 
-    if TKEHeightLevel4_Herbie == "yes" and strTKE == "yes":
+    if TKEHeightLevel4 == "yes" and strTKE == "yes":
         LTKEHGT4 = ":TKE:[4] hybrid level"
 
-    if TKEHeightLevel5_Herbie == "yes" and strTKE == "yes":
+    if TKEHeightLevel5 == "yes" and strTKE == "yes":
         LTKEHGT5 = ":TKE:[5] hybrid level"
 
-    if TKEHeightLevel6_Herbie == "yes" and strTKE == "yes":
+    if TKEHeightLevel6 == "yes" and strTKE == "yes":
         LTKEHGT6 = ":TKE:[6] hybrid level"
 
-    if TKEHeightLevel7_Herbie == "yes" and strTKE == "yes":
+    if TKEHeightLevel7 == "yes" and strTKE == "yes":
         LTKEHGT7 = ":TKE:[7] hybrid level"
 
-    if TKEHeightLevel8_Herbie == "yes" and strTKE == "yes":
+    if TKEHeightLevel8 == "yes" and strTKE == "yes":
         LTKEHGT8 = ":TKE:[8] hybrid level"
 
-    if TKEHeightLevel9_Herbie == "yes" and strTKE == "yes":
+    if TKEHeightLevel9 == "yes" and strTKE == "yes":
         LTKEHGT9 = ":TKE:[9] hybrid level"
 
-    if TKEHeightLevel10_Herbie == "yes" and strTKE == "yes":
+    if TKEHeightLevel10 == "yes" and strTKE == "yes":
         LTKEHGT10 = ":TKE:10 hybrid level"
 
-    if TKEHeightLevel11_Herbie == "yes" and strTKE == "yes":
+    if TKEHeightLevel11 == "yes" and strTKE == "yes":
         LTKEHGT11 = ":TKE:11 hybrid level"
 
-    if TKEHeightLevel12_Herbie == "yes" and strTKE == "yes":
+    if TKEHeightLevel12 == "yes" and strTKE == "yes":
         LTKEHGT12 = ":TKE:12 hybrid level"
 
-    if PRESHeightLevel1_Herbie == "yes" and strPRES == "yes":
+    if PRESHeightLevel1 == "yes" and strPRES == "yes":
         LPRESHGT1 = ":PRES:[1] hybrid level"
 
-    if PRESHeightLevel2_Herbie == "yes" and strPRES == "yes":
+    if PRESHeightLevel2 == "yes" and strPRES == "yes":
         LPRESHGT2 = ":PRES:[2] hybrid level"
 
-    if PRESHeightLevel3_Herbie == "yes" and strPRES == "yes":
+    if PRESHeightLevel3 == "yes" and strPRES == "yes":
         LPRESHGT3 = ":PRES:[3] hybrid level"
 
-    if PRESHeightLevel4_Herbie == "yes" and strPRES == "yes":
+    if PRESHeightLevel4 == "yes" and strPRES == "yes":
         LPRESHGT4 = ":PRES:[4] hybrid level"
 
-    if PRESHeightLevel5_Herbie == "yes" and strPRES == "yes":
+    if PRESHeightLevel5 == "yes" and strPRES == "yes":
         LPRESHGT5 = ":PRES:[5] hybrid level"
 
-    if PRESHeightLevel6_Herbie == "yes" and strPRES == "yes":
+    if PRESHeightLevel6 == "yes" and strPRES == "yes":
         LPRESHGT6 = ":PRES:[6] hybrid level"
 
-    if PRESHeightLevel7_Herbie == "yes" and strPRES == "yes":
+    if PRESHeightLevel7 == "yes" and strPRES == "yes":
         LPRESHGT7 = ":PRES:[7] hybrid level"
 
-    if PRESHeightLevel8_Herbie == "yes" and strPRES == "yes":
+    if PRESHeightLevel8 == "yes" and strPRES == "yes":
         LPRESHGT8 = ":PRES:[8] hybrid level"
 
-    if PRESHeightLevel9_Herbie == "yes" and strPRES == "yes":
+    if PRESHeightLevel9 == "yes" and strPRES == "yes":
         LPRESHGT9 = ":PRES:[9] hybrid level"
 
-    if PRESHeightLevel10_Herbie == "yes" and strPRES == "yes":
+    if PRESHeightLevel10 == "yes" and strPRES == "yes":
         LPRESHGT10 = ":PRES:10 hybrid level"
 
-    if PRESHeightLevel11_Herbie == "yes" and strPRES == "yes":
+    if PRESHeightLevel11 == "yes" and strPRES == "yes":
         LPRESHGT11 = ":PRES:11 hybrid level"
 
-    if PRESHeightLevel12_Herbie == "yes" and strPRES == "yes":
+    if PRESHeightLevel12 == "yes" and strPRES == "yes":
         LPRESHGT12 = ":PRES:12 hybrid level"
 
-    if SPFHHeightLevel1_Herbie == "yes" and strSPFH == "yes":
+    if SPFHHeightLevel1 == "yes" and strSPFH == "yes":
         LSPFHHGT1 = ":SPFH:[1] hybrid level"
 
-    if SPFHHeightLevel2_Herbie == "yes" and strSPFH == "yes":
+    if SPFHHeightLevel2 == "yes" and strSPFH == "yes":
         LSPFHHGT2 = ":SPFH:[2] hybrid level"
 
-    if SPFHHeightLevel3_Herbie == "yes" and strSPFH == "yes":
+    if SPFHHeightLevel3 == "yes" and strSPFH == "yes":
         LSPFHHGT3 = ":SPFH:[3] hybrid level"
 
-    if SPFHHeightLevel4_Herbie == "yes" and strSPFH == "yes":
+    if SPFHHeightLevel4 == "yes" and strSPFH == "yes":
         LSPFHHGT4 = ":SPFH:[4] hybrid level"
 
-    if SPFHHeightLevel5_Herbie == "yes" and strSPFH == "yes":
+    if SPFHHeightLevel5 == "yes" and strSPFH == "yes":
         LSPFHHGT5 = ":SPFH:[5] hybrid level"
 
-    if SPFHHeightLevel6_Herbie == "yes" and strSPFH == "yes":
+    if SPFHHeightLevel6 == "yes" and strSPFH == "yes":
         LSPFHHGT6 = ":SPFH:[6] hybrid level"
 
-    if SPFHHeightLevel7_Herbie == "yes" and strSPFH == "yes":
+    if SPFHHeightLevel7 == "yes" and strSPFH == "yes":
         LSPFHHGT7 = ":SPFH:[7] hybrid level"
 
-    if SPFHHeightLevel8_Herbie == "yes" and strSPFH == "yes":
+    if SPFHHeightLevel8 == "yes" and strSPFH == "yes":
         LSPFHHGT8 = ":SPFH:[8] hybrid level"
 
-    if SPFHHeightLevel9_Herbie == "yes" and strSPFH == "yes":
+    if SPFHHeightLevel9 == "yes" and strSPFH == "yes":
         LSPFHHGT9 = ":SPFH:[9] hybrid level"
 
-    if SPFHHeightLevel10_Herbie == "yes" and strSPFH == "yes":
+    if SPFHHeightLevel10 == "yes" and strSPFH == "yes":
         LSPFHHGT10 = ":SPFH:10 hybrid level"
 
-    if SPFHHeightLevel11_Herbie == "yes" and strSPFH == "yes":
+    if SPFHHeightLevel11 == "yes" and strSPFH == "yes":
         LSPFHHGT11 = ":SPFH:11 hybrid level"
 
-    if SPFHHeightLevel12_Herbie == "yes" and strSPFH == "yes":
+    if SPFHHeightLevel12 == "yes" and strSPFH == "yes":
         LSPFHHGT12 = ":SPFH:12 hybrid level"
 
 
