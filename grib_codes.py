@@ -6,7 +6,7 @@
 # GRIB codes obtained from the pressure file will hereafter be called
 # "Surface" or "SFC" since the only thing we will take from the pressure
 # file will be either surface parameters or parameters associated with
-# the surface layer.
+# the surface/near surface layer.
 
 # List of codes:
 
@@ -21,28 +21,34 @@
 # par2
 # par3
 
+
 # Example (not finished)
 def create_grib_code_dict():
     levels = list(range(1, 51))
-    temp_grib_codes = [f":TMP:{level}" for level in levels]
-    uv_grib_codes = [f":[U|V]GRD:{level}" for level in levels]
+    hgt_grib_codes = [f":HGT:{level} hybrid level" for level in levels]
+    pres_grib_codes = [f":PRES:{level} hybrid level" for level in levels]
+    temp_grib_codes = [f":TMP:{level} hybrid level" for level in levels]
 
     grib_dict = {
         "SFC": {
-            "skin_temp": ":TMP:1013.2 mb",
-            "ground": ":SOILW:0.01-0.01",
-            "soil": ":TSOIL:1",
-            "snow": ":SNOWH:0",
+            "2m_temp": ":TMP:2 m above ground",
+            "2m_spfh": ":SPFH:2 m above ground",
+            "2m_rh": ":RH:2 m above ground",
+            "10m_u_and_v": ":[U|V]GRD:10 m above ground",
         },
         "NAT": {
-            "UV": {
+            "hgt": {
                 "levels": levels,
-                "grib_codes": uv_grib_codes
+                "grib_codes": hgt_grib_codes,
             },
-            "Temp": {
+            "pres": {
                 "levels": levels,
-                "grib_codes": temp_grib_codes
-            }
+                "grib_codes": pres_grib_codes,
+            },
+            "temp": {
+                "levels": levels,
+                "grib_codes": temp_grib_codes,
+            },
         }
     }
 
@@ -51,5 +57,8 @@ def create_grib_code_dict():
 
 grib_dict_call = create_grib_code_dict()
 
-print(grib_dict_call["NAT"]["UV"]["grib_codes"][49])
-print(grib_dict_call["SFC"]["ground"])
+print(grib_dict_call["SFC"]["2m_temp"])
+print(grib_dict_call["SFC"]["2m_rh"])
+print(grib_dict_call["NAT"]["hgt"]["grib_codes"][49])
+print(grib_dict_call["NAT"]["pres"]["grib_codes"][49])
+print(grib_dict_call["NAT"]["temp"]["grib_codes"][49])
