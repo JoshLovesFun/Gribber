@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 from herbie import Herbie
 # We should think about using FastHerbie in the future.
-
+from grib_codes import create_grib_code_dict
 from read_control_module import process_control_data
 
 
@@ -230,6 +230,8 @@ def fetch_herbie_data(date_str, processed_data):
     LSPFHHGT11 = ""
     LSPFHHGT12 = ""
 
+    grib_dict = create_grib_code_dict()
+
     if BoundaryLayerHeight_Herbie == "yes":
         LBLH = ":HPBL:surface"
 
@@ -269,8 +271,11 @@ def fetch_herbie_data(date_str, processed_data):
     if WindHeightLevel12_Herbie == "yes" and strUandV == "yes":
         LWHGT12 = ":[U|V]GRD:12 hybrid"
 
+    #if TemperatureHeightLevel1_Herbie == "yes" and strTMP == "yes":
+    #    LTHGT1 = ":TMP:[1] hybrid level"
+
     if TemperatureHeightLevel1_Herbie == "yes" and strTMP == "yes":
-        LTHGT1 = ":TMP:[1] hybrid level"
+        LTHGT1 = grib_dict["NAT"]["temp"]["grib_codes"][0]
 
     if TemperatureHeightLevel2_Herbie == "yes" and strTMP == "yes":
         LTHGT2 = ":TMP:[2] hybrid level"

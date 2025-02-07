@@ -5,8 +5,8 @@ GRIB_files_location: C:\Other\GRIB\Test\hrrr\
 latitude: 36.25
 inputlongitude: -86.57
 calculatedlongitude: 273.43
-BoundaryLayerHeight: yes
-U_and_V_WindComponent: yes
+BoundaryLayerHeight: no
+U_and_V_WindComponent: no
 WindHeightLevel1: yes
 WindHeightLevel2: yes
 WindHeightLevel3: yes
@@ -22,7 +22,7 @@ WindHeightLevel12: yes
 Temperature: yes
 TemperatureHeightLevel1: yes
 TemperatureHeightLevel2: yes
-TemperatureHeightLevel3: no
+TemperatureHeightLevel3: yes
 TemperatureHeightLevel4: no
 TemperatureHeightLevel5: no
 TemperatureHeightLevel6: no
@@ -32,7 +32,7 @@ TemperatureHeightLevel9: no
 TemperatureHeightLevel10: no
 TemperatureHeightLevel11: no
 TemperatureHeightLevel12: no
-TKE: yes
+TKE: no
 TKEHeightLevel1: yes
 TKEHeightLevel2: yes
 TKEHeightLevel3: yes
@@ -45,7 +45,7 @@ TKEHeightLevel9: yes
 TKEHeightLevel10: yes
 TKEHeightLevel11: yes
 TKEHeightLevel12: yes
-PRES: yes
+PRES: no
 PRESHeightLevel1: yes
 PRESHeightLevel2: yes
 PRESHeightLevel3: yes
@@ -58,7 +58,7 @@ PRESHeightLevel9: yes
 PRESHeightLevel10: yes
 PRESHeightLevel11: yes
 PRESHeightLevel12: yes
-SPFH: yes
+SPFH: no
 SPFHHeightLevel1: yes
 SPFHHeightLevel2: yes
 SPFHHeightLevel3: yes
@@ -73,4 +73,4 @@ SPFHHeightLevel11: yes
 SPFHHeightLevel12: yes
 StartDate: 2021-12-31
 EndDate: 2021-12-31
-HerbieAlreadyDone: yes
+HerbieAlreadyDone: no
