@@ -316,6 +316,9 @@ def write_all_data(years, months, days, hours, hours_ending,
             break
     df['FilePath'] = file_paths
 
+    #print("Length of file_paths:", len(file_paths))
+    #print("File paths:", file_paths)
+
     grib_time = []
     for key, value in extracted_data.items():
         if value:

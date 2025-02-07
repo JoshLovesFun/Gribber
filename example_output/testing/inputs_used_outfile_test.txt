@@ -5,7 +5,7 @@ GRIB_files_location: C:\Other\GRIB\Test\hrrr\
 latitude: 36.25
 inputlongitude: -86.57
 calculatedlongitude: 273.43
-BoundaryLayerHeight: yes
+BoundaryLayerHeight: no
 U_and_V_WindComponent: no
 WindHeightLevel1: yes
 WindHeightLevel2: yes
