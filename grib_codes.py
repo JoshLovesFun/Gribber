@@ -10,7 +10,7 @@
 
 def create_grib_code_dict():
     levels = list(range(1, 51))
-    hybrid = " hybrid level"
+    hybrid = " hybrid"
     hgt_grib_codes = [f":HGT:{level}{hybrid}" for level in levels]
     pres_grib_codes = [f":PRES:{level}{hybrid}" for level in levels]
     temp_grib_codes = [f":TMP:{level}{hybrid}" for level in levels]
