@@ -26,241 +26,68 @@ def fetch_herbie_data(date_str, processed_data):
 
     LBLH = None
 
-    LWHGT1 = LWHGT2 = LWHGT3 = LWHGT4 = LWHGT5 = LWHGT6 = None
-    LWHGT7 = LWHGT8 = LWHGT9 = LWHGT10 = LWHGT11 = LWHGT12 = None
-
-    LTHGT1 = LTHGT2 = LTHGT3 = LTHGT4 = LTHGT5 = LTHGT6 = None
-    LTHGT7 = LTHGT8 = LTHGT9 = LTHGT10 = LTHGT11 = LTHGT12 = None
-
-    LTKEHGT1 = LTKEHGT2 = LTKEHGT3 = LTKEHGT4 = LTKEHGT5 = LTKEHGT6 = None
-    LTKEHGT7 = LTKEHGT8 = LTKEHGT9 = LTKEHGT10 = LTKEHGT11 = LTKEHGT12 = None
-
-    LPRESHGT1 = LPRESHGT2 = LPRESHGT3 = LPRESHGT4 = None
-    LPRESHGT5 = LPRESHGT6 = LPRESHGT7 = LPRESHGT8 = None
-    LPRESHGT9 = LPRESHGT10 = LPRESHGT11 = LPRESHGT12 = None
-
-    LSPFHHGT1 = LSPFHHGT2 = LSPFHHGT3 = LSPFHHGT4 = None
-    LSPFHHGT5 = LSPFHHGT6 = LSPFHHGT7 = LSPFHHGT8 = None
-    LSPFHHGT9 = LSPFHHGT10 = LSPFHHGT11 = LSPFHHGT12 = None
-
+    LPRESHGT, LTHGT, LSPFHHGT, LWHGT, LTKEHGT, = {}, {}, {}, {}, {}
 
     grib_dict = create_grib_code_dict()
 
+
+
     if processed_data.get('BoundaryLayerHeight') == "yes":
-        LBLH = ":HPBL:surface"
-
-    if processed_data.get('WindHeightLevel1') == "yes" and strUandV == "yes":
-        LWHGT1 = ":[U|V]GRD:[1] hybrid"
-
-    if processed_data.get('WindHeightLevel2') == "yes" and strUandV == "yes":
-        LWHGT2 = ":[U|V]GRD:[2] hybrid"
-
-    if processed_data.get('WindHeightLevel3') == "yes" and strUandV == "yes":
-        LWHGT3 = ":[U|V]GRD:[3] hybrid"
-
-    if processed_data.get('WindHeightLevel4') == "yes" and strUandV == "yes":
-        LWHGT4 = ":[U|V]GRD:[4] hybrid"
-
-    if processed_data.get('WindHeightLevel5') == "yes" and strUandV == "yes":
-        LWHGT5 = ":[U|V]GRD:[5] hybrid"
-
-    if processed_data.get('WindHeightLevel6') == "yes" and strUandV == "yes":
-        LWHGT6 = ":[U|V]GRD:[6] hybrid"
-
-    if processed_data.get('WindHeightLevel7') == "yes" and strUandV == "yes":
-        LWHGT7 = ":[U|V]GRD:[7] hybrid"
-
-    if processed_data.get('WindHeightLevel8') == "yes" and strUandV == "yes":
-        LWHGT8 = ":[U|V]GRD:[8] hybrid"
-
-    if processed_data.get('WindHeightLevel9') == "yes" and strUandV == "yes":
-        LWHGT9 = ":[U|V]GRD:[9] hybrid"
-
-    if processed_data.get('WindHeightLevel10') == "yes" and strUandV == "yes":
-        LWHGT10 = ":[U|V]GRD:10 hybrid"
-
-    if processed_data.get('WindHeightLevel11') == "yes" and strUandV == "yes":
-        LWHGT11 = ":[U|V]GRD:11 hybrid"
-
-    if processed_data.get('WindHeightLevel12') == "yes" and strUandV == "yes":
-        LWHGT12 = ":[U|V]GRD:12 hybrid"
+        LBLH = grib_dict["SFC"]["bound_lyr_hgt"]
+        #LBLH = ":HPBL:surface"
 
 
 
-#    """
-
+    if strPRES == "yes":
+        for level in range(1, 13):
+            if processed_data.get(f'PRESHeightLevel{level}') == "yes":
+                LPRESHGT[f'LPRESHGT{level}'] = (
+                    grib_dict["NAT"]["pres"]["grib_codes"][level - 1])
 
     if strTMP == "yes":
-        LTHGT = {}
-        for level in range(1, 13):  # Adjusted range to include 12 levels
+        for level in range(1, 13):
             if processed_data.get(f'TemperatureHeightLevel{level}') == "yes":
-                LTHGT[f'LTHGT{level}'] = \
-                grib_dict["NAT"]["temp"]["grib_codes"][level - 1]
-                print(LTHGT[f'LTHGT{level}'])
+                LTHGT[f'LTHGT{level}'] = (
+                    grib_dict["NAT"]["temp"]["grib_codes"][level - 1])
 
-    """
+    if strSPFH == "yes":
+        for level in range(1, 13):
+            if processed_data.get(f'SPFHHeightLevel{level}') == "yes":
+                LSPFHHGT[f'LSPFHHGT{level}'] = (
+                    grib_dict["NAT"]["spfh"]["grib_codes"][level - 1])
 
+    if strUandV == "yes":
+        for level in range(1, 13):
+            if processed_data.get(f'WindHeightLevel{level}') == "yes":
+                LWHGT[f'LWHGT{level}'] = (
+                    grib_dict["NAT"]["u_v"]["grib_codes"][level - 1])
 
-
-    if processed_data.get('TemperatureHeightLevel1') == "yes" and strTMP == "yes":
-        LTHGT1 = grib_dict["NAT"]["temp"]["grib_codes"][0]
-        print(LTHGT1)
-
-    if processed_data.get('TemperatureHeightLevel2') == "yes" and strTMP == "yes":
-        LTHGT2 = grib_dict["NAT"]["temp"]["grib_codes"][1]
-
-    if processed_data.get('TemperatureHeightLevel3') == "yes" and strTMP == "yes":
-        LTHGT3 = grib_dict["NAT"]["temp"]["grib_codes"][2]
-
-    if processed_data.get('TemperatureHeightLevel4') == "yes" and strTMP == "yes":
-        LTHGT4 = grib_dict["NAT"]["temp"]["grib_codes"][3]
-
-    if processed_data.get('TemperatureHeightLevel5') == "yes" and strTMP == "yes":
-        LTHGT5 = grib_dict["NAT"]["temp"]["grib_codes"][4]
-
-    if processed_data.get('TemperatureHeightLevel6') == "yes" and strTMP == "yes":
-        LTHGT6 = grib_dict["NAT"]["temp"]["grib_codes"][5]
-
-    if processed_data.get('TemperatureHeightLevel7') == "yes" and strTMP == "yes":
-        LTHGT7 = grib_dict["NAT"]["temp"]["grib_codes"][6]
-
-    if processed_data.get('TemperatureHeightLevel8') == "yes" and strTMP == "yes":
-        LTHGT8 = grib_dict["NAT"]["temp"]["grib_codes"][7]
-
-    if processed_data.get('TemperatureHeightLevel9') == "yes" and strTMP == "yes":
-        LTHGT9 = grib_dict["NAT"]["temp"]["grib_codes"][8]
-
-    if processed_data.get('TemperatureHeightLevel10') == "yes" and strTMP == "yes":
-        LTHGT10 = grib_dict["NAT"]["temp"]["grib_codes"][9]
-
-    if processed_data.get('TemperatureHeightLevel11') == "yes" and strTMP == "yes":
-        LTHGT11 = grib_dict["NAT"]["temp"]["grib_codes"][10]
-
-    if processed_data.get('TemperatureHeightLevel12') == "yes" and strTMP == "yes":
-        LTHGT12 = grib_dict["NAT"]["temp"]["grib_codes"][11]
-
-    """
-
-    if processed_data.get('TKEHeightLevel1') == "yes" and strTKE == "yes":
-        LTKEHGT1 = ":TKE:[1] hybrid level"
-
-    if processed_data.get('TKEHeightLevel2') == "yes" and strTKE == "yes":
-        LTKEHGT2 = ":TKE:[2] hybrid level"
-
-    if processed_data.get('TKEHeightLevel3') == "yes" and strTKE == "yes":
-        LTKEHGT3 = ":TKE:[3] hybrid level"
-
-    if processed_data.get('TKEHeightLevel4') == "yes" and strTKE == "yes":
-        LTKEHGT4 = ":TKE:[4] hybrid level"
-
-    if processed_data.get('TKEHeightLevel5') == "yes" and strTKE == "yes":
-        LTKEHGT5 = ":TKE:[5] hybrid level"
-
-    if processed_data.get('TKEHeightLevel6') == "yes" and strTKE == "yes":
-        LTKEHGT6 = ":TKE:[6] hybrid level"
-
-    if processed_data.get('TKEHeightLevel7') == "yes" and strTKE == "yes":
-        LTKEHGT7 = ":TKE:[7] hybrid level"
-
-    if processed_data.get('TKEHeightLevel8') == "yes" and strTKE == "yes":
-        LTKEHGT8 = ":TKE:[8] hybrid level"
-
-    if processed_data.get('TKEHeightLevel9') == "yes" and strTKE == "yes":
-        LTKEHGT9 = ":TKE:[9] hybrid level"
-
-    if processed_data.get('TKEHeightLevel10') == "yes" and strTKE == "yes":
-        LTKEHGT10 = ":TKE:10 hybrid level"
-
-    if processed_data.get('TKEHeightLevel11') == "yes" and strTKE == "yes":
-        LTKEHGT11 = ":TKE:11 hybrid level"
-
-    if processed_data.get('TKEHeightLevel12') == "yes" and strTKE == "yes":
-        LTKEHGT12 = ":TKE:12 hybrid level"
-
-    if processed_data.get('PRESHeightLevel1') == "yes" and strPRES == "yes":
-        LPRESHGT1 = ":PRES:[1] hybrid level"
-
-    if processed_data.get('PRESHeightLevel2') == "yes" and strPRES == "yes":
-        LPRESHGT2 = ":PRES:[2] hybrid level"
-
-    if processed_data.get('PRESHeightLevel3') == "yes" and strPRES == "yes":
-        LPRESHGT3 = ":PRES:[3] hybrid level"
-
-    if processed_data.get('PRESHeightLevel4') == "yes" and strPRES == "yes":
-        LPRESHGT4 = ":PRES:[4] hybrid level"
-
-    if processed_data.get('PRESHeightLevel5') == "yes" and strPRES == "yes":
-        LPRESHGT5 = ":PRES:[5] hybrid level"
-
-    if processed_data.get('PRESHeightLevel6') == "yes" and strPRES == "yes":
-        LPRESHGT6 = ":PRES:[6] hybrid level"
-
-    if processed_data.get('PRESHeightLevel7') == "yes" and strPRES == "yes":
-        LPRESHGT7 = ":PRES:[7] hybrid level"
-
-    if processed_data.get('PRESHeightLevel8') == "yes" and strPRES == "yes":
-        LPRESHGT8 = ":PRES:[8] hybrid level"
-
-    if processed_data.get('PRESHeightLevel9') == "yes" and strPRES == "yes":
-        LPRESHGT9 = ":PRES:[9] hybrid level"
-
-    if processed_data.get('PRESHeightLevel10') == "yes" and strPRES == "yes":
-        LPRESHGT10 = ":PRES:10 hybrid level"
-
-    if processed_data.get('PRESHeightLevel11') == "yes" and strPRES == "yes":
-        LPRESHGT11 = ":PRES:11 hybrid level"
-
-    if processed_data.get('PRESHeightLevel12') == "yes" and strPRES == "yes":
-        LPRESHGT12 = ":PRES:12 hybrid level"
-
-    if processed_data.get('SPFHHeightLevel1') == "yes" and strSPFH == "yes":
-        LSPFHHGT1 = ":SPFH:[1] hybrid level"
-
-    if processed_data.get('SPFHHeightLevel2') == "yes" and strSPFH == "yes":
-        LSPFHHGT2 = ":SPFH:[2] hybrid level"
-
-    if processed_data.get('SPFHHeightLevel3') == "yes" and strSPFH == "yes":
-        LSPFHHGT3 = ":SPFH:[3] hybrid level"
-
-    if processed_data.get('SPFHHeightLevel4') == "yes" and strSPFH == "yes":
-        LSPFHHGT4 = ":SPFH:[4] hybrid level"
-
-    if processed_data.get('SPFHHeightLevel5') == "yes" and strSPFH == "yes":
-        LSPFHHGT5 = ":SPFH:[5] hybrid level"
-
-    if processed_data.get('SPFHHeightLevel6') == "yes" and strSPFH == "yes":
-        LSPFHHGT6 = ":SPFH:[6] hybrid level"
-
-    if processed_data.get('SPFHHeightLevel7') == "yes" and strSPFH == "yes":
-        LSPFHHGT7 = ":SPFH:[7] hybrid level"
-
-    if processed_data.get('SPFHHeightLevel8') == "yes" and strSPFH == "yes":
-        LSPFHHGT8 = ":SPFH:[8] hybrid level"
-
-    if processed_data.get('SPFHHeightLevel9') == "yes" and strSPFH == "yes":
-        LSPFHHGT9 = ":SPFH:[9] hybrid level"
-
-    if processed_data.get('SPFHHeightLevel10') == "yes" and strSPFH == "yes":
-        LSPFHHGT10 = ":SPFH:10 hybrid level"
-
-    if processed_data.get('SPFHHeightLevel11') == "yes" and strSPFH == "yes":
-        LSPFHHGT11 = ":SPFH:11 hybrid level"
-
-    if processed_data.get('SPFHHeightLevel12') == "yes" and strSPFH == "yes":
-        LSPFHHGT12 = ":SPFH:12 hybrid level"
+    if strTKE == "yes":
+        for level in range(1, 13):
+            if processed_data.get(f'TKEHeightLevel{level}') == "yes":
+                LTKEHGT[f'LTKEHGT{level}'] = (
+                    grib_dict["NAT"]["tke"]["grib_codes"][level - 1])
 
     search_patterns = [
-        LBLH, LWHGT1, LWHGT2, LWHGT3, LWHGT4, LWHGT5, LWHGT6, LWHGT7, LWHGT8,
-        LWHGT9, LWHGT10, LWHGT11, LWHGT12,
+        LBLH,
+
         *[LTHGT[f'LTHGT{level}'] for level in range(1, 13) if
-          f'LTHGT{level}' in LTHGT],  # Dynamically include LTHGT values
-        LTKEHGT1, LTKEHGT2, LTKEHGT3, LTKEHGT4, LTKEHGT5, LTKEHGT6, LTKEHGT7,
-        LTKEHGT8, LTKEHGT9, LTKEHGT10, LTKEHGT11, LTKEHGT12,
-        LPRESHGT1, LPRESHGT2, LPRESHGT3, LPRESHGT4, LPRESHGT5, LPRESHGT6,
-        LPRESHGT7, LPRESHGT8, LPRESHGT9, LPRESHGT10, LPRESHGT11, LPRESHGT12,
-        LSPFHHGT1, LSPFHHGT2, LSPFHHGT3, LSPFHHGT4, LSPFHHGT5, LSPFHHGT6,
-        LSPFHHGT7, LSPFHHGT8, LSPFHHGT9, LSPFHHGT10, LSPFHHGT11, LSPFHHGT12
+          f'LTHGT{level}' in LTHGT],
+
+        *[LWHGT[f'LWHGT{level}'] for level in range(1, 13) if
+          f'LWHGT{level}' in LWHGT],
+
+        *[LPRESHGT[f'LPRESHGT{level}'] for level in range(1, 13) if
+          f'LPRESHGT{level}' in LPRESHGT],
+
+        *[LSPFHHGT[f'LSPFHHGT{level}'] for level in range(1, 13) if
+          f'LSPFHHGT{level}' in LSPFHHGT],
+
+        *[LTKEHGT[f'LTKEHGT{level}'] for level in range(1, 13) if
+          f'LTKEHGT{level}' in LTKEHGT],
     ]
+
+
 
     # Note there is an important file here: /home/joshua/.config/herbie/config.toml
     # It has the following contents (as an example):
