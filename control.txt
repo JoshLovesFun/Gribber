@@ -3,6 +3,52 @@ GRIB files location: C:\Other\GRIB\Test\hrrr\
 # For now, the above path should include the "hrrr" part.
 Inputs Used Outfile Name: inputs_used_outfile_test.txt
 Main output file name: All_output.csv
+
+Regional Subset?: no      # Options are "yes" or "no"
+
+Flow: h
+Options for "Flow" are the following strings within quotes:
+"h", "e", "he", "hw", "hew", "hwa", "hewa", "p", "ps", "s"
+
+# h = Run Herbie only.
+
+# e = Run program to process GRIB data and write to csv file.
+# Note that Herbie must already have been run, or GRIB files must be
+# available for "e" to work.
+
+# he = Run Herbie and process GRIB data and write to csv file.
+
+# hw = Run Herbie only, to obtain all variables at all heights needed to
+# initialize Weather Research & Forecasting (WRF) model.
+
+# hew = Run Herbie to obtain all variables at all heights needed to
+# initialize WRF model. Then process GRIB data and write to csv file.
+
+# hwa = Run Herbie only, to obtain all variables at all heights needed to
+# initialize WRF model. Also allows other variables (available below)
+# to be downloaded.
+
+# hewa = Run Herbie to obtain all variables at all heights needed to
+# initialize WRF model. Also allows other variables (available below)
+# to be downloaded. Then process GRIB data and write to csv file.
+
+# p = Plot variable. Note that Herbie must already have been run, or one
+# or more GRIB files must be available for "p" to work.
+
+# ps = Plot variable within regional subset region. Note that Herbie must
+# already have been run, or one or more GRIB files must be available for
+# "ps" to work. Additionally, wgrib2 must be available and work on your
+# system. This option is only activated if the "Regional Subset?" is set
+# to "yes".
+
+# s = Regional subset is applied to eliminate GRIB data not needed after
+# the GRIB files are downloaded. For "s" to work, wgrib2 must be available
+# and work on your system. This option is only activated if the
+# "Regional Subset?" is set to "yes". If the "Regional Subset?" is set
+# to yes, all data that is requested to be downloaded in the "Flow" section,
+# will be trimmed to the domain of interest.
+
+
 Latitude: 36.25
 Longitude: -86.57
 Boundary Layer Height?: yes              # Options are "yes" or "no"
