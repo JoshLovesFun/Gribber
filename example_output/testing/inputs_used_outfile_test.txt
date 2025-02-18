@@ -3,7 +3,7 @@ Input_Out_File: inputs_used_outfile_test.txt
 output_directory: C:\Code\GitHub\Gribber\example_output\testing\
 GRIB_files_location: C:\Other\GRIB\Test\hrrr\
 regional_subset: no
-flow_options: h
+flow_options: e
 latitude: 36.25
 inputlongitude: -86.57
 calculatedlongitude: 273.43
@@ -75,4 +75,3 @@ SPFHHeightLevel11: no
 SPFHHeightLevel12: no
 StartDate: 2021-12-31
 EndDate: 2021-12-31
-HerbieAlreadyDone: no

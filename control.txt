@@ -6,7 +6,7 @@ Main output file name: All_output.csv
 
 Regional Subset?: no      # Options are "yes" or "no"
 
-Flow: h
+Flow: e
 Options for "Flow" are the following strings within quotes:
 "h", "e", "he", "hw", "hew", "hwa", "hewa", "p", "ps", "s"
 

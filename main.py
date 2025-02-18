@@ -35,7 +35,7 @@ def main():
     output_module.write_processed_input_data_to_file(processed_data,
                                                      output_file_path)
 
-    if processed_data.get('flow_options') == "e":
+    if processed_data.get('flow_options') == "h":
         herbie_module.fetch_herbie_data_in_range(processed_data)
     else:
         main_output = processed_data.get('main_output')

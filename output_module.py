@@ -22,14 +22,15 @@ def write_processed_input_data_to_file(processed_data, output_file_name):
 
 
 def print_input_data(processed_data):
-    HerbieAlreadyDone = processed_data['HerbieAlreadyDone']
+    run_herbie = processed_data['flow_options']
 
-    run_herbie = "no"
-    if HerbieAlreadyDone == "no":
+    if run_herbie == "h":
         run_herbie = "yes"
+    else:
+        run_herbie = "no"
 
     print("Will Herbie be run?:", run_herbie)
-    if HerbieAlreadyDone == "no":
+    if run_herbie == "yes":
         print("Warning: This may take a while. You must have stable internet.")
         print("Warning: Lots of disk space may be required.")
 

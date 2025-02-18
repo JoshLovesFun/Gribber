@@ -107,12 +107,3 @@ def create_grib_code_dict():
     }
 
     return grib_dict
-
-
-grib_dict_call = create_grib_code_dict()
-
-print(grib_dict_call["SFC"]["2m_temp"])
-print(grib_dict_call["SFC"]["2m_rh"])
-print(grib_dict_call["NAT"]["hgt"]["grib_codes"][49])
-print(grib_dict_call["NAT"]["pres"]["grib_codes"][49])
-print(grib_dict_call["NAT"]["temp"]["grib_codes"][49])

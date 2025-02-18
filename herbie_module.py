@@ -34,7 +34,6 @@ def fetch_herbie_data(date_str, processed_data):
 
     if processed_data.get('BoundaryLayerHeight') == "yes":
         LBLH = grib_dict["SFC"]["bound_lyr_hgt"]
-        #LBLH = ":HPBL:surface"
 
 
 
