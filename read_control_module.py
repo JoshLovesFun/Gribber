@@ -42,6 +42,8 @@ def process_control_data(control_data):
         'Input_Out_File': control_data.get('Inputs Used Outfile Name', None),
         'output_directory': control_data.get('Output Directory', None),
         'GRIB_files_location': control_data.get('GRIB files location', None),
+        'regional_subset': control_data.get('Regional Subset?', None),
+        'flow_options': control_data.get('Flow', None),
         'latitude': lat,
         'inputlongitude': inputlong,
         'calculatedlongitude': calclong,
@@ -152,6 +154,5 @@ def process_control_data(control_data):
 
         'StartDate': control_data.get('Start Date', None),
         'EndDate': control_data.get('End Date', None),
-        'HerbieAlreadyDone': control_data.get('Herbie Already Done?', None)
     }
     return processed_data

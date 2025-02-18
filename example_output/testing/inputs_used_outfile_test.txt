@@ -2,10 +2,12 @@ main_output: All_output.csv
 Input_Out_File: inputs_used_outfile_test.txt
 output_directory: C:\Code\GitHub\Gribber\example_output\testing\
 GRIB_files_location: C:\Other\GRIB\Test\hrrr\
+regional_subset: no
+flow_options: h
 latitude: 36.25
 inputlongitude: -86.57
 calculatedlongitude: 273.43
-BoundaryLayerHeight: no
+BoundaryLayerHeight: yes
 U_and_V_WindComponent: no
 WindHeightLevel1: no
 WindHeightLevel2: yes
@@ -19,7 +21,7 @@ WindHeightLevel9: no
 WindHeightLevel10: no
 WindHeightLevel11: no
 WindHeightLevel12: yes
-Temperature: yes
+Temperature: no
 TemperatureHeightLevel1: no
 TemperatureHeightLevel2: no
 TemperatureHeightLevel3: no
@@ -45,7 +47,7 @@ TKEHeightLevel9: no
 TKEHeightLevel10: no
 TKEHeightLevel11: yes
 TKEHeightLevel12: yes
-PRES: yes
+PRES: no
 PRESHeightLevel1: no
 PRESHeightLevel2: no
 PRESHeightLevel3: no
@@ -73,4 +75,4 @@ SPFHHeightLevel11: no
 SPFHHeightLevel12: no
 StartDate: 2021-12-31
 EndDate: 2021-12-31
-HerbieAlreadyDone: yes
+HerbieAlreadyDone: no
