@@ -120,7 +120,6 @@ Specific Humidity Level 12: no         # Options are "yes" or "no"
 
 Start Date: 2021-12-31                # Start date of data request.
 End Date: 2021-12-31                  # End date of data request. (inclusive)
-Herbie Already Done?: no              # Options are "yes" or "no"
 
 # Since HRRR GRIB files cover the contiguous U.S., lat. and long. values
 # should represent those areas. However, GRIB longitude values are
