@@ -24,7 +24,7 @@ def write_processed_input_data_to_file(processed_data, output_file_name):
 def print_input_data(processed_data):
     run_herbie = processed_data['flow_options']
 
-    if run_herbie == "h":
+    if run_herbie in ("h", "hw", "hwa"):
         run_herbie = "yes"
     else:
         run_herbie = "no"

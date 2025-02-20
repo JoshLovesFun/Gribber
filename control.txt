@@ -6,9 +6,15 @@ Main output file name: All_output.csv
 
 Regional Subset?: no      # Options are "yes" or "no"
 
+# Regional subset is applied to eliminate GRIB data not needed after
+# the GRIB files are downloaded. For the regional subset to work,
+# wgrib2 must be available and work on your system. If the
+# "Regional Subset?" is set to yes, all data that is requested to be
+# downloaded in the "Flow" section, will be trimmed to the domain of interest.
+
 Flow: e
 Options for "Flow" are the following strings within quotes:
-"h", "e", "he", "hw", "hew", "hwa", "hewa", "p", "ps", "s"
+"h", "e", "hw", "hwa", "p", "ps"
 
 # h = Run Herbie only.
 
@@ -16,21 +22,15 @@ Options for "Flow" are the following strings within quotes:
 # Note that Herbie must already have been run, or GRIB files must be
 # available for "e" to work.
 
-# he = Run Herbie and process GRIB data and write to csv file.
-
 # hw = Run Herbie only, to obtain all variables at all heights needed to
-# initialize Weather Research & Forecasting (WRF) model.
-
-# hew = Run Herbie to obtain all variables at all heights needed to
-# initialize WRF model. Then process GRIB data and write to csv file.
+# initialize the Weather Research & Forecasting (WRF) model. If this
+# option is selected, the requests to specify the variables and levels
+# listed below are ignored.
 
 # hwa = Run Herbie only, to obtain all variables at all heights needed to
-# initialize WRF model. Also allows other variables (available below)
-# to be downloaded.
-
-# hewa = Run Herbie to obtain all variables at all heights needed to
-# initialize WRF model. Also allows other variables (available below)
-# to be downloaded. Then process GRIB data and write to csv file.
+# initialize the WRF model. Also allows other variables (available below)
+# to be downloaded. Unlike the "hw" option above, the requests to specify
+# the variables and levels listed below are not ignored.
 
 # p = Plot variable. Note that Herbie must already have been run, or one
 # or more GRIB files must be available for "p" to work.
@@ -40,13 +40,6 @@ Options for "Flow" are the following strings within quotes:
 # "ps" to work. Additionally, wgrib2 must be available and work on your
 # system. This option is only activated if the "Regional Subset?" is set
 # to "yes".
-
-# s = Regional subset is applied to eliminate GRIB data not needed after
-# the GRIB files are downloaded. For "s" to work, wgrib2 must be available
-# and work on your system. This option is only activated if the
-# "Regional Subset?" is set to "yes". If the "Regional Subset?" is set
-# to yes, all data that is requested to be downloaded in the "Flow" section,
-# will be trimmed to the domain of interest.
 
 
 Latitude: 36.25

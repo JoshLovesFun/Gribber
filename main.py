@@ -29,15 +29,20 @@ def main():
     output_file_path = os.path.join(working_directory_main,
                                     output_filename_with_inputs_used)
 
+    if (processed_data.get('flow_options') not in
+            ("h", "e", "hw", "hwa", "p", "ps")):
+        print('Invalid input entered for "Flow:" option. Try again.')
+        sys.exit(1)
+
     output_module.print_input_data(processed_data)
 
     # Write the processed input data to the specified file
     output_module.write_processed_input_data_to_file(processed_data,
                                                      output_file_path)
 
-    if processed_data.get('flow_options') == "h":
+    if processed_data.get('flow_options') in ("h", "hw", "hwa"):
         herbie_module.fetch_herbie_data_in_range(processed_data)
-    else:
+    elif processed_data.get('flow_options') == "e":
         main_output = processed_data.get('main_output')
 
         grib_module.match_strings_and_add_dummy_files(working_directory_grib)
@@ -62,14 +67,16 @@ def main():
             extracted_time_values,
             build_dict
         )
-
-        years, months, days, hours, hours_ending = output_module.make_all_times(
-            processed_data)
+        years, months, days, hours, hours_ending = (
+            output_module.make_all_times(processed_data))
 
         output_module.write_all_data(
             years, months, days, hours, hours_ending,
             working_directory_main, main_output, extracted_data
         )
+
+    elif processed_data.get('flow_options') in ("p", "ps"):
+        print("Will add this capability later")
 
 
 if __name__ == "__main__":

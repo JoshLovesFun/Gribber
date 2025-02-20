@@ -88,8 +88,8 @@ def match_strings_and_add_dummy_files(working_directory_grib):
                     'z', 'NoData')}_missing_file.grib2"
                 file_path = os.path.join(subdir_path, file_name)
                 with open(file_path, 'w') as dummy_file:
-                    dummy_file.write("This is a dummy file that"
-                                     "serves as a placeholder"
+                    dummy_file.write("This is a dummy file that "
+                                     "serves as a placeholder "
                                      "for a missing GRIB file.")
 
                 dummy_files_made = True
@@ -98,7 +98,8 @@ def match_strings_and_add_dummy_files(working_directory_grib):
         print("There is currently no way to proceed without having\n"
               "all the required files and/or have them named properly.\n"
               "This likely means Herbie failed to download a file,\n"
-              "but I am not sure.")
+              "but I am not sure. It could also mean that you forgot\n"
+              "to run Herbie.")
         sys.exit(1)
 
 
