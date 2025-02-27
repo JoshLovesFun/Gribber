@@ -31,7 +31,7 @@ def create_grib_code_dict():
             "10m_u_and_v": ":[U|V]GRD:10 m above ground",
             "sfc_pres": ":PRES:surface",
             "mslp": ":MSLMA:mean sea level",
-            "water_equiv_sd": ":WEASD:surface",
+            "water_equiv_sd": ":WEASD:surface:anl",
             "snow_depth": ":SNOD:surface",
             "skin_temp": ":TMP:surface",
             "plant": ":CNWAT:surface",
