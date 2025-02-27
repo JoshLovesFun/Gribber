@@ -22,13 +22,13 @@ WindHeightLevel10: no
 WindHeightLevel11: no
 WindHeightLevel12: yes
 Temperature: no
-TemperatureHeightLevel1: no
+TemperatureHeightLevel1: yes
 TemperatureHeightLevel2: no
-TemperatureHeightLevel3: no
+TemperatureHeightLevel3: yes
 TemperatureHeightLevel4: no
-TemperatureHeightLevel5: yes
+TemperatureHeightLevel5: no
 TemperatureHeightLevel6: no
-TemperatureHeightLevel7: yes
+TemperatureHeightLevel7: no
 TemperatureHeightLevel8: no
 TemperatureHeightLevel9: no
 TemperatureHeightLevel10: no

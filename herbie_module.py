@@ -86,8 +86,6 @@ def fetch_herbie_data(date_str, processed_data):
           f'LTKEHGT{level}' in LTKEHGT],
     ]
 
-
-
     # Note there is an important file here: /home/joshua/.config/herbie/config.toml
     # It has the following contents (as an example):
 
@@ -98,19 +96,44 @@ def fetch_herbie_data(date_str, processed_data):
     # overwrite = false
     # verbose = true
 
-    H = Herbie(
-        date_str,
-        product="nat",
-        priority="aws",
-    )
+    hybrid_patterns = []
+    prs_patterns = []
+    h_nat = None
+    search_string_hybrid = None
 
-    searchString = '|'.join(pattern for pattern in search_patterns if pattern)
+    # Loop through each search pattern
+    for pattern in search_patterns:
+        # Skip None values
+        if pattern is None:
+            continue
 
-    # invent = H.inventory(searchString=searchString)
-    H.download(searchString, verbose=True)
-    # print(invent) # Trust me bro :) I got your inventory ;)
+        # Check if the pattern contains 'hybrid' for h_nat
+        if 'hybrid' in pattern:
+            hybrid_patterns.append(
+                pattern)  # Add hybrid variables
 
+        # Check if the pattern contains anything else for use in h_prs
+        # TODO: Add other variables but make sure hybrid's are not included.
+        if 'HPBL' in pattern or 'XYZ' in pattern:
+            prs_patterns.append(pattern)
 
+    # Now, download all hybrid patterns using h_nat, if there are any.
+    # The goal is to put the hybrid level variables in the nat files.
+    if hybrid_patterns:
+        h_nat = Herbie(date_str, product="nat", priority="aws")
+        search_string_hybrid = '|'.join(hybrid_patterns)
+        h_nat.download(search_string_hybrid, verbose=True)
+
+    # Now, download all other (surface) patterns using h_prs, if there are any.
+    # The goal is to put the surface level variables in the prs files.
+    if prs_patterns:
+        h_prs = Herbie(date_str, product="prs", priority="aws")
+        search_string_prs = '|'.join(prs_patterns)
+        h_prs.download(search_string_prs, verbose=True)
+
+    # if h_nat is not None:
+        # invent = h_nat.inventory(searchString=search_string_hybrid)
+        # print(invent)  # Trust me bro :) I got your inventory ;)
 
 
 def fetch_herbie_data_in_range(processed_data):
