@@ -24,8 +24,23 @@ def fetch_herbie_data(date_str, processed_data):
     if processed_data.get('SPFH') == "yes":
         strSPFH = "yes"
 
-    _2m_temp = None
-    _2m_spfh = None
+    # For WRF prs
+    _2m_temp, _2m_spfh, _2m_rh = None, None, None
+    _10m_u_and_v = None
+    sfc_pres, mslp, water_equiv_sd, snow_depth = None, None, None, None
+    skin_temp, plant = None, None
+
+    soil_moist_0, soil_moist_1, soil_moist_2 = None, None, None
+    soil_moist_3, soil_moist_4, soil_moist_5 = None, None, None
+    soil_moist_6, soil_moist_7, soil_moist_8 = None, None, None
+
+    soil_temp_0, soil_temp_1, soil_temp_2 = None, None, None
+    soil_temp_3, soil_temp_4, soil_temp_5 = None, None, None
+    soil_temp_6, soil_temp_7, soil_temp_8 = None, None, None
+
+    ice_flag, land_sea_flag, soil_height = None, None, None
+    # End WRF prs
+
     LBLH = None
 
     LPRESHGT, LTHGT, LSPFHHGT, LWHGT, LTKEHGT, = {}, {}, {}, {}, {}
@@ -35,11 +50,41 @@ def fetch_herbie_data(date_str, processed_data):
     if processed_data.get('wrf') == "yes":
         _2m_temp = grib_dict["SFC"]["2m_temp"]
         _2m_spfh = grib_dict["SFC"]["2m_spfh"]
+        _2m_rh = grib_dict["SFC"]["2m_rh"]
+        _10m_u_and_v = grib_dict["SFC"]["10m_u_and_v"]
+        sfc_pres = grib_dict["SFC"]["sfc_pres"]
+        mslp = grib_dict["SFC"]["mslp"]
+        water_equiv_sd = grib_dict["SFC"]["water_equiv_sd"]
+        snow_depth = grib_dict["SFC"]["snow_depth"]
+        skin_temp = grib_dict["SFC"]["skin_temp"]
+        plant = grib_dict["SFC"]["plant"]
+
+        soil_moist_0 = grib_dict["SFC"]["soil_moist_0"]
+        soil_moist_1 = grib_dict["SFC"]["soil_moist_1"]
+        soil_moist_2 = grib_dict["SFC"]["soil_moist_2"]
+        soil_moist_3 = grib_dict["SFC"]["soil_moist_3"]
+        soil_moist_4 = grib_dict["SFC"]["soil_moist_4"]
+        soil_moist_5 = grib_dict["SFC"]["soil_moist_5"]
+        soil_moist_6 = grib_dict["SFC"]["soil_moist_6"]
+        soil_moist_7 = grib_dict["SFC"]["soil_moist_7"]
+        soil_moist_8 = grib_dict["SFC"]["soil_moist_8"]
+
+        soil_temp_0 = grib_dict["SFC"]["soil_temp_0"]
+        soil_temp_1 = grib_dict["SFC"]["soil_temp_1"]
+        soil_temp_2 = grib_dict["SFC"]["soil_temp_2"]
+        soil_temp_3 = grib_dict["SFC"]["soil_temp_3"]
+        soil_temp_4 = grib_dict["SFC"]["soil_temp_4"]
+        soil_temp_5 = grib_dict["SFC"]["soil_temp_5"]
+        soil_temp_6 = grib_dict["SFC"]["soil_temp_6"]
+        soil_temp_7 = grib_dict["SFC"]["soil_temp_7"]
+        soil_temp_8 = grib_dict["SFC"]["soil_temp_8"]
+
+        ice_flag = grib_dict["SFC"]["ice_flag"]
+        land_sea_flag = grib_dict["SFC"]["land_sea_flag"]
+        soil_height = grib_dict["SFC"]["soil_height"]
 
     if processed_data.get('BoundaryLayerHeight') == "yes":
         LBLH = grib_dict["SFC"]["bound_lyr_hgt"]
-
-
 
     if strPRES == "yes":
         for level in range(1, 13):
@@ -72,7 +117,16 @@ def fetch_herbie_data(date_str, processed_data):
                     grib_dict["NAT"]["tke"]["grib_codes"][level - 1])
 
     search_patterns = [
-        LBLH, _2m_temp, _2m_spfh,
+        LBLH, _2m_temp, _2m_spfh, _2m_rh, _10m_u_and_v, sfc_pres, mslp,
+        water_equiv_sd, snow_depth, skin_temp, plant,
+
+        soil_moist_0, soil_moist_1, soil_moist_2, soil_moist_3,  soil_moist_4,
+        soil_moist_5, soil_moist_6, soil_moist_7, soil_moist_8,
+
+        soil_temp_0, soil_temp_1, soil_temp_2, soil_temp_3, soil_temp_4,
+        soil_temp_5, soil_temp_6, soil_temp_7, soil_temp_8,
+
+        ice_flag, land_sea_flag, soil_height,
 
         *[LTHGT[f'LTHGT{level}'] for level in range(1, 13) if
           f'LTHGT{level}' in LTHGT],
@@ -90,7 +144,8 @@ def fetch_herbie_data(date_str, processed_data):
           f'LTKEHGT{level}' in LTKEHGT],
     ]
 
-    # Note there is an important file here: /home/joshua/.config/herbie/config.toml
+    # Note there is an important file here:
+    # /home/joshua/.config/herbie/config.toml
     # It has the following contents (as an example):
 
     # [default]
