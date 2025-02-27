@@ -112,9 +112,8 @@ def fetch_herbie_data(date_str, processed_data):
             hybrid_patterns.append(
                 pattern)  # Add hybrid variables
 
-        # Check if the pattern contains anything else for use in h_prs
-        # TODO: Add other variables but make sure hybrid's are not included.
-        if 'HPBL' in pattern or 'XYZ' in pattern:
+        # Check if the pattern contains anything else (for use in h_prs)
+        else:
             prs_patterns.append(pattern)
 
     # Now, download all hybrid patterns using h_nat, if there are any.
