@@ -12,7 +12,7 @@ Regional Subset?: no      # Options are "yes" or "no"
 # "Regional Subset?" is set to yes, all data that is requested to be
 # downloaded in the "Flow" section, will be trimmed to the domain of interest.
 
-Flow: e
+Flow: h
 Options for "Flow" are the following strings within quotes:
 "h", "e", "hw", "hwa", "p", "ps"
 
@@ -41,10 +41,11 @@ Options for "Flow" are the following strings within quotes:
 # system. This option is only activated if the "Regional Subset?" is set
 # to "yes".
 
+WRF suite?: no                      # Options are "yes" or "no"
 
 Latitude: 36.25
 Longitude: -86.57
-Boundary Layer Height?: yes              # Options are "yes" or "no"
+Boundary Layer Height?: no              # Options are "yes" or "no"
 U and V Wind Component?: no             # Options are "yes" or "no"
 Wind Height Level 1: no                # Options are "yes" or "no"
 Wind Height Level 2: yes                # Options are "yes" or "no"
@@ -58,7 +59,7 @@ Wind Height Level 9: no                # Options are "yes" or "no"
 Wind Height Level 10: no               # Options are "yes" or "no"
 Wind Height Level 11: no               # Options are "yes" or "no"
 Wind Height Level 12: yes               # Options are "yes" or "no"
-Temperature?: no                     # Options are "yes" or "no"
+Temperature?: yes                     # Options are "yes" or "no"
 Temperature Height Level 1: yes          # Options are "yes" or "no"
 Temperature Height Level 2: no          # Options are "yes" or "no"
 Temperature Height Level 3: yes          # Options are "yes" or "no"

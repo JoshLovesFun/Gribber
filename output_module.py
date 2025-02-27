@@ -35,6 +35,9 @@ def print_input_data(processed_data):
         print("Warning: Lots of disk space may be required.")
 
     print("")
+    print("Was WRF suite requested?:",
+          processed_data['wrf'])
+    print("")
     print("The input latitude is:", processed_data['latitude'])
     print("The input longitude is:", processed_data['inputlongitude'])
     print("The calculated longitude is:",

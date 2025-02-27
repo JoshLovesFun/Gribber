@@ -24,13 +24,17 @@ def fetch_herbie_data(date_str, processed_data):
     if processed_data.get('SPFH') == "yes":
         strSPFH = "yes"
 
+    _2m_temp = None
+    _2m_spfh = None
     LBLH = None
 
     LPRESHGT, LTHGT, LSPFHHGT, LWHGT, LTKEHGT, = {}, {}, {}, {}, {}
 
     grib_dict = create_grib_code_dict()
 
-
+    if processed_data.get('wrf') == "yes":
+        _2m_temp = grib_dict["SFC"]["2m_temp"]
+        _2m_spfh = grib_dict["SFC"]["2m_spfh"]
 
     if processed_data.get('BoundaryLayerHeight') == "yes":
         LBLH = grib_dict["SFC"]["bound_lyr_hgt"]
@@ -68,7 +72,7 @@ def fetch_herbie_data(date_str, processed_data):
                     grib_dict["NAT"]["tke"]["grib_codes"][level - 1])
 
     search_patterns = [
-        LBLH,
+        LBLH, _2m_temp, _2m_spfh,
 
         *[LTHGT[f'LTHGT{level}'] for level in range(1, 13) if
           f'LTHGT{level}' in LTHGT],

@@ -44,6 +44,7 @@ def process_control_data(control_data):
         'GRIB_files_location': control_data.get('GRIB files location', None),
         'regional_subset': control_data.get('Regional Subset?', None),
         'flow_options': control_data.get('Flow', None),
+        'wrf': control_data.get('WRF suite?', None),
         'latitude': lat,
         'inputlongitude': inputlong,
         'calculatedlongitude': calclong,
