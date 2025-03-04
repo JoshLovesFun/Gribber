@@ -16,7 +16,7 @@ def create_grib_code_dict():
     temp_grib_codes = [f":TMP:{level}{hybrid}" for level in levels]
     spfh_grib_codes = [f":SPFH:{level}{hybrid}" for level in levels]
     u_v_grib_codes = [f":[U|V]GRD:{level}{hybrid}" for level in levels]
-    clwmr_grib_codes = [f":CLWMR:{level}{hybrid}" for level in levels]
+    clmr_grib_codes = [f":CLMR:{level}{hybrid}" for level in levels]
     rwmr_grib_codes = [f":RWMR:{level}{hybrid}" for level in levels]
     cimixr_grib_codes = [f":CIMIXR:{level}{hybrid}" for level in levels]
     snmr_grib_codes = [f":SNMR:{level}{hybrid}" for level in levels]
@@ -79,9 +79,9 @@ def create_grib_code_dict():
                 "levels": levels,
                 "grib_codes": u_v_grib_codes,
             },
-            "clwmr": {
+            "clmr": {
                 "levels": levels,
-                "grib_codes": clwmr_grib_codes,
+                "grib_codes": clmr_grib_codes,
             },
             "rwmr": {
                 "levels": levels,

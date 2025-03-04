@@ -43,7 +43,7 @@ def fetch_herbie_data(date_str, processed_data):
 
 
     # For WRF nat
-    hgt, clwmr, rwmr, cimixr, snmr, grle = {}, {}, {}, {}, {}, {}
+    hgt, clmr, rwmr, cimixr, snmr, grle = {}, {}, {}, {}, {}, {}
     # End WRF nat
 
 
@@ -102,8 +102,8 @@ def fetch_herbie_data(date_str, processed_data):
                 grib_dict["NAT"]["spfh"]["grib_codes"][level - 1])
             LWHGT[f'LWHGT{level}'] = (
                 grib_dict["NAT"]["u_v"]["grib_codes"][level - 1])
-            clwmr[f'clwmr{level}'] = (
-                grib_dict["NAT"]["clwmr"]["grib_codes"][level - 1])
+            clmr[f'clmr{level}'] = (
+                grib_dict["NAT"]["clmr"]["grib_codes"][level - 1])
             rwmr[f'rwmr{level}'] = (
                 grib_dict["NAT"]["rwmr"]["grib_codes"][level - 1])
             cimixr[f'cimixr{level}'] = (
@@ -177,8 +177,8 @@ def fetch_herbie_data(date_str, processed_data):
         *[LTKEHGT[f'LTKEHGT{level}'] for level in range(1, 13) if
           f'LTKEHGT{level}' in LTKEHGT],
 
-        *[clwmr[f'clwmr{level}'] for level in range(1, 21) if
-          f'clwmr{level}' in clwmr],
+        *[clmr[f'clmr{level}'] for level in range(1, 21) if
+          f'clmr{level}' in clmr],
 
         *[rwmr[f'rwmr{level}'] for level in range(1, 21) if
           f'rwmr{level}' in rwmr],
@@ -192,7 +192,6 @@ def fetch_herbie_data(date_str, processed_data):
         *[grle[f'grle{level}'] for level in range(1, 21) if
           f'grle{level}' in grle],
     ]
-    print(search_patterns)
 
     # Note there is an important file here:
     # /home/joshua/.config/herbie/config.toml
