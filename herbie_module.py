@@ -41,6 +41,12 @@ def fetch_herbie_data(date_str, processed_data):
     ice_flag, land_sea_flag, soil_height = None, None, None
     # End WRF prs
 
+
+    # For WRF nat
+    hgt, clwmr, rwmr, cimixr, snmr, grle = {}, {}, {}, {}, {}, {}
+    # End WRF nat
+
+
     LBLH = None
 
     LPRESHGT, LTHGT, LSPFHHGT, LWHGT, LTKEHGT, = {}, {}, {}, {}, {}
@@ -83,28 +89,53 @@ def fetch_herbie_data(date_str, processed_data):
         land_sea_flag = grib_dict["SFC"]["land_sea_flag"]
         soil_height = grib_dict["SFC"]["soil_height"]
 
+
+    if processed_data.get('wrf') == "yes":
+        for level in range(1, 4):
+            hgt[f'hgt{level}'] = (
+                grib_dict["NAT"]["hgt"]["grib_codes"][level - 1])
+            LPRESHGT[f'LPRESHGT{level}'] = (
+                grib_dict["NAT"]["pres"]["grib_codes"][level - 1])
+            LTHGT[f'LTHGT{level}'] = (
+                grib_dict["NAT"]["temp"]["grib_codes"][level - 1])
+            LSPFHHGT[f'LSPFHHGT{level}'] = (
+                grib_dict["NAT"]["spfh"]["grib_codes"][level - 1])
+            LWHGT[f'LWHGT{level}'] = (
+                grib_dict["NAT"]["u_v"]["grib_codes"][level - 1])
+            clwmr[f'clwmr{level}'] = (
+                grib_dict["NAT"]["clwmr"]["grib_codes"][level - 1])
+            rwmr[f'rwmr{level}'] = (
+                grib_dict["NAT"]["rwmr"]["grib_codes"][level - 1])
+            cimixr[f'cimixr{level}'] = (
+                grib_dict["NAT"]["cimixr"]["grib_codes"][level - 1])
+            snmr[f'snmr{level}'] = (
+                grib_dict["NAT"]["snmr"]["grib_codes"][level - 1])
+            grle[f'grle{level}'] = (
+                grib_dict["NAT"]["grle"]["grib_codes"][level - 1])
+
+
     if processed_data.get('BoundaryLayerHeight') == "yes":
         LBLH = grib_dict["SFC"]["bound_lyr_hgt"]
 
-    if strPRES == "yes":
+    if strPRES == "yes" and processed_data.get('wrf') != "yes":
         for level in range(1, 13):
             if processed_data.get(f'PRESHeightLevel{level}') == "yes":
                 LPRESHGT[f'LPRESHGT{level}'] = (
                     grib_dict["NAT"]["pres"]["grib_codes"][level - 1])
 
-    if strTMP == "yes":
+    if strTMP == "yes" and processed_data.get('wrf') != "yes":
         for level in range(1, 13):
             if processed_data.get(f'TemperatureHeightLevel{level}') == "yes":
                 LTHGT[f'LTHGT{level}'] = (
                     grib_dict["NAT"]["temp"]["grib_codes"][level - 1])
 
-    if strSPFH == "yes":
+    if strSPFH == "yes" and processed_data.get('wrf') != "yes":
         for level in range(1, 13):
             if processed_data.get(f'SPFHHeightLevel{level}') == "yes":
                 LSPFHHGT[f'LSPFHHGT{level}'] = (
                     grib_dict["NAT"]["spfh"]["grib_codes"][level - 1])
 
-    if strUandV == "yes":
+    if strUandV == "yes" and processed_data.get('wrf') != "yes":
         for level in range(1, 13):
             if processed_data.get(f'WindHeightLevel{level}') == "yes":
                 LWHGT[f'LWHGT{level}'] = (
@@ -128,13 +159,16 @@ def fetch_herbie_data(date_str, processed_data):
 
         ice_flag, land_sea_flag, soil_height,
 
-        *[LTHGT[f'LTHGT{level}'] for level in range(1, 13) if
+        *[hgt[f'hgt{level}'] for level in range(1, 21) if
+          f'hgt{level}' in hgt],
+
+        *[LTHGT[f'LTHGT{level}'] for level in range(1, 21) if
           f'LTHGT{level}' in LTHGT],
 
         *[LWHGT[f'LWHGT{level}'] for level in range(1, 13) if
           f'LWHGT{level}' in LWHGT],
 
-        *[LPRESHGT[f'LPRESHGT{level}'] for level in range(1, 13) if
+        *[LPRESHGT[f'LPRESHGT{level}'] for level in range(1, 21) if
           f'LPRESHGT{level}' in LPRESHGT],
 
         *[LSPFHHGT[f'LSPFHHGT{level}'] for level in range(1, 13) if
@@ -142,7 +176,23 @@ def fetch_herbie_data(date_str, processed_data):
 
         *[LTKEHGT[f'LTKEHGT{level}'] for level in range(1, 13) if
           f'LTKEHGT{level}' in LTKEHGT],
+
+        *[clwmr[f'clwmr{level}'] for level in range(1, 21) if
+          f'clwmr{level}' in clwmr],
+
+        *[rwmr[f'rwmr{level}'] for level in range(1, 21) if
+          f'rwmr{level}' in rwmr],
+
+        *[cimixr[f'cimixr{level}'] for level in range(1, 21) if
+          f'cimixr{level}' in cimixr],
+
+        *[snmr[f'snmr{level}'] for level in range(1, 21) if
+          f'snmr{level}' in snmr],
+
+        *[grle[f'grle{level}'] for level in range(1, 21) if
+          f'grle{level}' in grle],
     ]
+    print(search_patterns)
 
     # Note there is an important file here:
     # /home/joshua/.config/herbie/config.toml

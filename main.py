@@ -6,6 +6,7 @@
 import sys
 import os
 import read_control_module
+import file_and_time_control
 import herbie_module
 import grib_module
 import output_module
@@ -21,6 +22,9 @@ def main():
     control_data = (read_control_module.read_control_file
                     (default_working_directory, control_filename))
     processed_data = read_control_module.process_control_data(control_data)
+
+    file_and_time_control.expected_file_count(processed_data)
+
     working_directory_grib = processed_data.get('GRIB_files_location')
     working_directory_main = processed_data.get('output_directory')
     output_filename_with_inputs_used = processed_data.get('Input_Out_File')

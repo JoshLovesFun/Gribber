@@ -41,12 +41,12 @@ Options for "Flow" are the following strings within quotes:
 # system. This option is only activated if the "Regional Subset?" is set
 # to "yes".
 
-WRF suite?: no                      # Options are "yes" or "no"
+WRF suite?: yes                      # Options are "yes" or "no"
 
 Latitude: 36.25
 Longitude: -86.57
-Boundary Layer Height?: no              # Options are "yes" or "no"
-U and V Wind Component?: no             # Options are "yes" or "no"
+Boundary Layer Height?: yes              # Options are "yes" or "no"
+U and V Wind Component?: yes             # Options are "yes" or "no"
 Wind Height Level 1: no                # Options are "yes" or "no"
 Wind Height Level 2: yes                # Options are "yes" or "no"
 Wind Height Level 3: no                # Options are "yes" or "no"
@@ -98,7 +98,7 @@ Pressure Level 9: no                   # Options are "yes" or "no"
 Pressure Level 10: no                  # Options are "yes" or "no"
 Pressure Level 11: no                  # Options are "yes" or "no"
 Pressure Level 12: no                  # Options are "yes" or "no"
-Specific Humidity?: no                  # Options are "yes" or "no"
+Specific Humidity?: no                 # Options are "yes" or "no"
 Specific Humidity Level 1: no          # Options are "yes" or "no"
 Specific Humidity Level 2: no          # Options are "yes" or "no"
 Specific Humidity Level 3: yes          # Options are "yes" or "no"
@@ -112,8 +112,8 @@ Specific Humidity Level 10: no         # Options are "yes" or "no"
 Specific Humidity Level 11: no         # Options are "yes" or "no"
 Specific Humidity Level 12: no         # Options are "yes" or "no"
 
-Start Date: 2021-12-31                # Start date of data request.
-End Date: 2021-12-31                  # End date of data request. (inclusive)
+Start Date: 2025-02-04                # Start date of data request.
+End Date: 2025-02-04                  # End date of data request. (inclusive)
 
 # Since HRRR GRIB files cover the contiguous U.S., lat. and long. values
 # should represent those areas. However, GRIB longitude values are
