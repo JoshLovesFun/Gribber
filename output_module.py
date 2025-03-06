@@ -315,9 +315,11 @@ def write_all_data(years, months, days, hours, hours_ending,
 
     file_paths = []
     for key, value in extracted_data.items():
+        print(extracted_data.items())
         if value:
             file_paths = [item[0] for item in value]
             break
+    #print(file_paths)
     df['FilePath'] = file_paths
 
     #print("Length of file_paths:", len(file_paths))

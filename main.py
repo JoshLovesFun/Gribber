@@ -51,20 +51,22 @@ def main():
 
         grib_module.match_strings_and_add_dummy_files(working_directory_grib)
 
-        all_files = grib_module.files_to_do_work_for(working_directory_grib,
+        all_files_prs, all_files_nat = grib_module.files_to_do_work_for(working_directory_grib,
                                                      processed_data)
         grid_cell_data = grib_module.process_grib_files(working_directory_main,
                                                         processed_data,
-                                                        all_files)
+                                                        all_files_prs,
+                                                        all_files_nat)
         extracted_time_values = grib_module.extract_time_info_from_grib_files(
-            all_files)
+            all_files_prs, all_files_nat)
 
         grib_short_name, grib_level = grib_module.grib_dictionary_from_inputs(
             processed_data)
         build_dict = grib_module.dict_constructor()
 
         extracted_data = grib_module.extract_value_at_grid_index(
-            all_files,
+            all_files_prs,
+            all_files_nat,
             grid_cell_data,
             grib_short_name,
             grib_level,
@@ -74,10 +76,28 @@ def main():
         years, months, days, hours, hours_ending = (
             output_module.make_all_times(processed_data))
 
+
+        # Creating an instance of the GridDataExtractor class
+        grid_extractor = grib_module.GridDataExtractor(
+            all_files_prs,
+            all_files_nat,
+            grid_cell_data,
+            grib_short_name,  # Using grib_short_name
+            grib_level,  # Using grib_level
+            extracted_time_values
+        )
+
+        # Calling the method to print values
+        grid_extractor.print_values()
+
         output_module.write_all_data(
             years, months, days, hours, hours_ending,
             working_directory_main, main_output, extracted_data
         )
+
+
+
+
 
     elif processed_data.get('flow_options') in ("p", "ps"):
         print("Will add this capability later")

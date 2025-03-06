@@ -29,7 +29,8 @@ def extract_hour_from_filename(file_name):
 def files_to_do_work_for(working_directory_grib, processed_data):
     ForGRIB_StartDate = processed_data.get('StartDate')
     ForGRIB_EndDate = processed_data.get('EndDate')
-    all_files = []
+    all_files_prs = []
+    all_files_nat = []
     ForGRIB_StartDateNodash = int(ForGRIB_StartDate.replace("-", ""))
     ForGRIB_EndDateNodash = int(ForGRIB_EndDate.replace("-", ""))
 
@@ -46,19 +47,26 @@ def files_to_do_work_for(working_directory_grib, processed_data):
             dirs.remove(subdir)
 
         for file in files:
-            if file.endswith(".grib2"):
+            if file.endswith("prsf00.grib2"):
                 file_path = os.path.join(root, file)
-                all_files.append(file_path)
+                all_files_prs.append(file_path)
+            if file.endswith("natf00.grib2"):
+                file_path = os.path.join(root, file)
+                all_files_nat.append(file_path)
 
         # Sort all files based on the date and hour components in the
         # directory and file names
-        all_files.sort(
+        all_files_prs.sort(
+            key=lambda x: (os.path.basename(os.path.dirname(x)),
+                           extract_hour_from_filename(os.path.basename(x))))
+        all_files_nat.sort(
             key=lambda x: (os.path.basename(os.path.dirname(x)),
                            extract_hour_from_filename(os.path.basename(x))))
         # Print for debugging
-        # print(all_files)
+        print(all_files_prs)
+        print(all_files_nat)
 
-    return all_files
+    return all_files_prs, all_files_nat
 
 
 def match_strings_and_add_dummy_files(working_directory_grib):
@@ -139,7 +147,7 @@ def nearest_coordinates_from_GRIB_files(working_directory_main, all_files,
             file.write(formatted_line + '\n')
 
 
-def process_grib_files(working_directory_main, processed_data, all_files):
+def process_grib_files(working_directory_main, processed_data, all_files_prs, all_files_nat):
     delete_coordinates_file(working_directory_main)
 
     skip_file_path = "missing_file"
@@ -148,7 +156,7 @@ def process_grib_files(working_directory_main, processed_data, all_files):
 
     resultsGRIBsetup = []
 
-    for file_path in all_files:
+    for file_path in all_files_prs + all_files_nat:
         if skip_file_path in file_path:
             nearest_index = int(-999)
             nearest_distance = int(-999)
@@ -821,12 +829,47 @@ def dict_constructor():
     return build_dict
 
 
+
+
+class GridDataExtractor:
+    def __init__(self, all_files_prs, all_files_nat, grid_cell_data,
+                 GRIB_shortName, GRIB_level, extracted_time_values):
+        # Initialize attributes with the passed parameters
+        self.all_files_prs = all_files_prs
+        self.all_files_nat = all_files_nat
+        self.grid_cell_data = grid_cell_data
+        self.GRIB_shortName = GRIB_shortName
+        self.GRIB_level = GRIB_level
+        self.extracted_time_values = extracted_time_values
+
+    def print_values(self):
+        # Method to print the values of the attributes
+        print("All files PRS:", self.all_files_prs)
+        print("All files NAT:", self.all_files_nat)
+        print("Grid cell data:", self.grid_cell_data)
+        print("GRIB short name:", self.GRIB_shortName)
+        print("GRIB level:", self.GRIB_level)
+        print("Extracted time values:", self.extracted_time_values)
+
+
+
+
+
+
+
+
+
+
+
+
+
 # The code for this function is somewhat messy, but it functions as intended.
 # If future improvements are planned, it would be advisable to explore
 # alternative approaches.
-def extract_value_at_grid_index(all_files, grid_cell_data,
+def extract_value_at_grid_index(all_files_prs, all_files_nat, grid_cell_data,
                                 GRIB_shortName, GRIB_level,
                                 extracted_time_values, build_dict):
+    all_files = all_files_prs + all_files_nat
     """
     Extracts values at a given grid index from GRIB files and
     populates a dictionary.
@@ -944,12 +987,12 @@ def extract_value_at_grid_index(all_files, grid_cell_data,
     return extracted_values_dict
 
 
-def extract_time_info_from_grib_files(all_files):
+def extract_time_info_from_grib_files(all_files_prs, all_files_nat):
     VERBOSE = 1  # verbose error reporting
     skip_file_path = "missing_file"
     extracted_time_values = []
 
-    for file_path in all_files:
+    for file_path in all_files_prs + all_files_nat:
         if skip_file_path in file_path:
             time = str("Not_Available")
             data_date = str("Not_Available")
