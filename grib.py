@@ -683,6 +683,122 @@ def grib_dictionary_from_inputs(processed_data):
     return GRIB_shortName, GRIB_level
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import pprint
+
+# Function to populate the dictionary based on given inputs
+def populate_files(prs_files, sub_files, nat_files, shortnames, strings1, strings2):
+    # Initialize the dictionary
+    test = {
+        "prs": {},
+        "nat": {},
+        "sub": {}
+    }
+
+    # Loop through the prs files and assign metadata
+    for i, file in enumerate(prs_files):
+        file_name = file
+        test["prs"][file_name] = []
+        for shortname in shortnames:
+            # Assign the corresponding string1 and string2 based on file index
+            test["prs"][file_name].append(
+                (shortname, strings1[i], strings2[i], None))
+
+    # Loop through the nat files and assign metadata
+    for i, file in enumerate(nat_files):
+        file_name = file
+        test["nat"][file_name] = []
+        for shortname in shortnames:
+            # Assign the corresponding string1 and string2 based on file index
+            test["nat"][file_name].append(
+                (shortname, strings1[i], strings2[i], None))
+
+    # Loop through the sub files and assign metadata
+    for i, file in enumerate(sub_files):
+        file_name = file
+        test["sub"][file_name] = []
+        for shortname in shortnames:
+            # Assign the corresponding string1 and string2 based on file index
+            test["sub"][file_name].append(
+                (shortname, strings1[i], strings2[i], None))
+
+    return test
+
+# Fake calculation function that mimics your real one
+def fake_calculate_value(file_name, shortname, string1, string2):
+    # Example "fake" calculation: sum of the lengths of string1 and string2
+    return len(file_name) + len(shortname) + len(string1) + len(string2)  # Just a simple fake calculation
+
+# Function to apply the fake calculation to the dictionary
+def apply_fake_calculation(test):
+    for major_key in test:
+        for minor_key in test[major_key]:
+            for i in range(len(test[major_key][minor_key])):
+                shortname, string1, string2, _ = test[major_key][minor_key][i]
+                # Apply the fake calculation
+                calculated_value = fake_calculate_value(minor_key, shortname, string1, string2)
+                # Update the value in the dictionary
+                test[major_key][minor_key][i] = (shortname, string1, string2, calculated_value)
+    return test
+
+
+# Example data
+prs_files = ["file1.prs", "file20.prs", "file200.prs"]
+sub_files = ["f1.sub", "file2.sub", "file50.sub"]
+nat_files = ["fi1.nat", "file2.nat", "file3.nat"]
+shortnames = ["blh", "t", "shortname3"]
+strings1 = ["001234", "0012345", "00123456"]
+strings2 = ["1234", "12345", "123456"]
+
+# Populate the dictionary with the input data
+test = populate_files(prs_files, sub_files, nat_files, shortnames, strings1, strings2)
+
+# Apply the fake calculation
+test = apply_fake_calculation(test)
+
+# Use pprint to print in a readable format
+pprint.pprint(test)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def combine_files(all_files_prs, all_files_nat):
     return all_files_prs + all_files_nat
 
@@ -703,6 +819,8 @@ def process_grib_file(file_path, GRIB_shortName, GRIB_level_int,
     time, data_date = extracted_time_values[idx]
     grid_index = grid_cell_data[idx]
 
+    #print(build_dict)
+
     with open(file_path, 'rb') as f:
         for shortName, level in zip(GRIB_shortName, GRIB_level_int):
             try:
@@ -712,10 +830,10 @@ def process_grib_file(file_path, GRIB_shortName, GRIB_level_int,
                     gid = codes_grib_new_from_file(f)
                     if gid is None:
                         break
-
+                    #print(build_dict)
                     if (shortName, level) not in build_dict:
                         build_dict[(shortName, level)] = []
-
+                        #print(build_dict)
                     if (codes_get(gid, 'level') == int(level) and
                             codes_get(gid, 'shortName') == shortName):
 
@@ -729,6 +847,7 @@ def process_grib_file(file_path, GRIB_shortName, GRIB_level_int,
                                 build_dict[(shortName, level)].append((
                                     file_path, level, shortName,
                                     value_at_index, time, data_date))
+                                #print(build_dict)
                                 print(f'File: {file_path}'
                                       f'Date: {data_date} Time: {time}'
                                       f' Variable: {shortName} Level: {level}'
@@ -763,10 +882,32 @@ def extract_value_at_grid_index(all_files_prs, all_files_nat, grid_cell_data,
     all_files = combine_files(all_files_prs, all_files_nat)
     GRIB_level_int = convert_grib_levels_to_int(GRIB_level)
 
-    for idx, file_path in enumerate(all_files):
+    print(build_dict)  # Print the dictionary before modification
+
+    # Add two new keys: "nat" and "prs"
+    build_dict["prs"] = []  # You can initialize with an empty list or other structure
+    build_dict["nat"] = []
+
+    print("After adding 'nat' and 'prs':", build_dict)  # Verify changes
+
+
+    for idx, file_path in enumerate(all_files_prs):
         process_grib_file(file_path, GRIB_shortName, GRIB_level_int,
                           grid_cell_data, extracted_time_values,
                           idx, build_dict)
+
+
+        # Collect all values stored in build_dict[(shortName, level)]
+        #prs_entries = []
+        for key in build_dict:
+            if isinstance(key, tuple):  # Avoid "prs" and "nat" keys
+                build_dict["prs"].extend(build_dict[key])
+
+
+
+        # Print build_dict after the 2nd iteration (idx == 1 means the 2nd iteration)
+        if idx == 1:
+            print("After 2nd iteration:", build_dict)
 
     return build_dict
 

@@ -102,8 +102,8 @@ def files_to_do_work_for(working_directory_grib, processed_data):
             key=lambda x: (os.path.basename(os.path.dirname(x)),
                            extract_hour_from_filename(os.path.basename(x))))
         # Print for debugging
-        print(all_files_prs)
-        print(all_files_nat)
+        #print(all_files_prs)
+        #print(all_files_nat)
 
     return all_files_prs, all_files_nat
 
