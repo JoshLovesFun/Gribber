@@ -680,6 +680,9 @@ def grib_dictionary_from_inputs(processed_data):
     print(f'GRIB level list requested:     {GRIB_level}')
     print("\n\n")
 
+
+    #print(type(GRIB_shortName))
+    #print(type(GRIB_level))
     return GRIB_shortName, GRIB_level
 
 
@@ -705,7 +708,10 @@ def grib_dictionary_from_inputs(processed_data):
 import pprint
 
 # Function to populate the dictionary based on given inputs
-def populate_files(prs_files, sub_files, nat_files, shortnames, strings1, strings2):
+def populate_files(prs_files, sub_files, nat_files,
+                   shortnames_for_prs, level_for_prs, grid_cell_for_prs, hour_date_for_prs,
+                   shortnames_for_nat, level_for_nat, grid_cell_for_nat, hour_date_for_nat,
+                   shortnames_for_sub, level_for_sub, grid_cell_for_sub, hour_date_for_sub):
     # Initialize the dictionary
     test = {
         "prs": {},
@@ -713,34 +719,29 @@ def populate_files(prs_files, sub_files, nat_files, shortnames, strings1, string
         "sub": {}
     }
 
-    # Loop through the prs files and assign metadata
-    for i, file in enumerate(prs_files):
-        file_name = file
-        test["prs"][file_name] = []
-        for shortname in shortnames:
-            # Assign the corresponding string1 and string2 based on file index
-            test["prs"][file_name].append(
-                (shortname, strings1[i], strings2[i], None))
+    # Function to assign data to a given dictionary key
+    def assign_data(file_list, key, shortnames, levels, grid_cells, hour_dates):
+        for i, file in enumerate(file_list):
+            file_name = file
+            test[key][file_name] = []
 
-    # Loop through the nat files and assign metadata
-    for i, file in enumerate(nat_files):
-        file_name = file
-        test["nat"][file_name] = []
-        for shortname in shortnames:
-            # Assign the corresponding string1 and string2 based on file index
-            test["nat"][file_name].append(
-                (shortname, strings1[i], strings2[i], None))
+            for j, shortname in enumerate(shortnames):
+                # Assign the corresponding grid_cell and hour_date based on file index
+                test[key][file_name].append(
+                    (shortname, levels[j], grid_cells[i], hour_dates[i])
+                )
 
-    # Loop through the sub files and assign metadata
-    for i, file in enumerate(sub_files):
-        file_name = file
-        test["sub"][file_name] = []
-        for shortname in shortnames:
-            # Assign the corresponding string1 and string2 based on file index
-            test["sub"][file_name].append(
-                (shortname, strings1[i], strings2[i], None))
+    # Populate all three categories with their respective lists
+    assign_data(prs_files, "prs", shortnames_for_prs, level_for_prs, grid_cell_for_prs, hour_date_for_prs)
+    assign_data(nat_files, "nat", shortnames_for_nat, level_for_nat, grid_cell_for_nat, hour_date_for_nat)
+    assign_data(sub_files, "sub", shortnames_for_sub, level_for_sub, grid_cell_for_sub, hour_date_for_sub)
 
     return test
+
+
+
+
+
 
 # Fake calculation function that mimics your real one
 def fake_calculate_value(file_name, shortname, string1, string2):
@@ -759,7 +760,7 @@ def apply_fake_calculation(test):
                 test[major_key][minor_key][i] = (shortname, string1, string2, calculated_value)
     return test
 
-
+'''
 # Example data
 prs_files = ["file1.prs", "file20.prs", "file200.prs"]
 sub_files = ["f1.sub", "file2.sub", "file50.sub"]
@@ -777,7 +778,7 @@ test = apply_fake_calculation(test)
 # Use pprint to print in a readable format
 pprint.pprint(test)
 
-
+'''
 
 
 
@@ -819,6 +820,11 @@ def process_grib_file(file_path, GRIB_shortName, GRIB_level_int,
     time, data_date = extracted_time_values[idx]
     grid_index = grid_cell_data[idx]
 
+
+
+    print(f"the idx is?: {idx}")
+    #print(extracted_time_values[idx])
+    #print(f"type(extracted_time_values): {type(extracted_time_values)}")
     #print(build_dict)
 
     with open(file_path, 'rb') as f:

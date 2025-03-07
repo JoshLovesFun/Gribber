@@ -5,6 +5,7 @@ import my_herbie
 import grib
 import file_and_time_control
 
+import pprint
 
 import constants
 import read_control
@@ -74,6 +75,68 @@ elif processed_data.get('flow_options') == "e":
     grib_short_name, grib_level = grib.grib_dictionary_from_inputs(
         processed_data)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # Example data
+    prs_files = ["file1.prs", "file2.prs", "file3.prs"]
+    sub_files = ["file1.sub", "file2.sub", "file3.sub"]
+    nat_files = ["file1.nat", "file2.nat", "file3.nat"]
+
+    # Separate lists for each category
+    shortnames_for_prs = ["blh", "t", "t", "t", "other"]
+    grid_cell_for_prs = [150, 150, 150]
+    level_for_prs = ["0", "1", "2", "11", "7"]
+    hour_date_for_prs = [(11, 202501), (12, 202501), (13, 202501)]
+
+    shortnames_for_nat = ["blh", "test"]
+    grid_cell_for_nat = [140, 140, 140]
+    level_for_nat = ["0", "15"]
+    hour_date_for_nat = [(5, 202501), (6, 202501), (7, 202501)]
+
+    shortnames_for_sub = ["v", "v", "v"]
+    grid_cell_for_sub = [130, 130, 130]
+    level_for_sub = ["5", "6", "9"]
+    hour_date_for_sub = [(1, 202501), (2, 202501), (3, 202501)]
+
+    # Populate the dictionary with the input data
+    test = grib.populate_files(
+        prs_files, sub_files, nat_files,
+        shortnames_for_prs, level_for_prs, grid_cell_for_prs,
+        hour_date_for_prs,
+        shortnames_for_nat, level_for_nat, grid_cell_for_nat,
+        hour_date_for_nat,
+        shortnames_for_sub, level_for_sub, grid_cell_for_sub, hour_date_for_sub
+    )
+
+    # Apply the fake calculation
+    #test = grib.apply_fake_calculation(test)
+
+    # Use pprint to print in a readable format
+    pprint.pprint(test)
+
+
+
+
+
+
+
+
     build_dict = {}
     extracted_data = grib.extract_value_at_grid_index(
         all_files_prs,
@@ -89,10 +152,10 @@ elif processed_data.get('flow_options') == "e":
         file_and_time_control.make_all_times(processed_data))
 
 
-    output.write_all_data(
-        years, months, days, hours, hours_ending,
-        working_directory_main, main_output, extracted_data, dir_file_count
-    )
+    #output.write_all_data(
+    #    years, months, days, hours, hours_ending,
+    #    working_directory_main, main_output, extracted_data, dir_file_count
+    #)
 
 elif processed_data.get('flow_options') in ("p", "ps"):
     print("Will add this capability later")
