@@ -11,144 +11,19 @@ from eccodes import (
     codes_grib_new_from_file, codes_grib_find_nearest,
     codes_get, codes_get_array, codes_release, CodesInternalError
 )
-import os
-import re
+
 import sys
 import traceback
 
-
-def extract_hour_from_filename(file_name):
-    # Search for a pattern "tXX" within the file name
-    match = re.search(r't(\d{2})', file_name)
-
-    if match:
-        return int(match.group(1))
-    return -1
+from file_and_time_control import (delete_coordinates_file,
+                                   nearest_coordinates_from_GRIB_files,
+                                   match_strings_and_add_dummy_files)
 
 
-def files_to_do_work_for(working_directory_grib, processed_data):
-    ForGRIB_StartDate = processed_data.get('StartDate')
-    ForGRIB_EndDate = processed_data.get('EndDate')
-    all_files_prs = []
-    all_files_nat = []
-    ForGRIB_StartDateNodash = int(ForGRIB_StartDate.replace("-", ""))
-    ForGRIB_EndDateNodash = int(ForGRIB_EndDate.replace("-", ""))
-
-    for root, dirs, files in os.walk(working_directory_grib):
-
-        subdirs_to_remove = []
-        for dir_name in dirs:
-
-            if (int(dir_name) > ForGRIB_EndDateNodash or
-                    int(dir_name) < ForGRIB_StartDateNodash):
-                subdirs_to_remove.append(dir_name)
-
-        for subdir in subdirs_to_remove:
-            dirs.remove(subdir)
-
-        for file in files:
-            if file.endswith("prsf00.grib2"):
-                file_path = os.path.join(root, file)
-                all_files_prs.append(file_path)
-            if file.endswith("natf00.grib2"):
-                file_path = os.path.join(root, file)
-                all_files_nat.append(file_path)
-
-        # Sort all files based on the date and hour components in the
-        # directory and file names
-        all_files_prs.sort(
-            key=lambda x: (os.path.basename(os.path.dirname(x)),
-                           extract_hour_from_filename(os.path.basename(x))))
-        all_files_nat.sort(
-            key=lambda x: (os.path.basename(os.path.dirname(x)),
-                           extract_hour_from_filename(os.path.basename(x))))
-        # Print for debugging
-        print(all_files_prs)
-        print(all_files_nat)
-
-    return all_files_prs, all_files_nat
-
-
-def match_strings_and_add_dummy_files(working_directory_grib):
-    # Define the strings to match
-    strings_to_match = ["t00z", "t01z", "t02z", "t03z", "t04z", "t05z",
-                        "t06z", "t07z", "t08z", "t09z", "t10z", "t11z",
-                        "t12z", "t13z", "t14z", "t15z", "t16z", "t17z",
-                        "t18z", "t19z", "t20z",
-                        "t21z", "t22z", "t23z"]
-
-    dummy_files_made = False
-    for root, dirs, files in os.walk(working_directory_grib):
-        for subdir in dirs:
-            subdir_path = os.path.join(root, subdir)
-            files_in_subdir = os.listdir(subdir_path)
-
-            # Check if any of the strings are present in the file names
-            # using regular expressions
-            missing_strings = [string for string in strings_to_match
-                               if not any(re.search(rf"{string}", file)
-                                          for file in files_in_subdir)]
-
-            # Add missing strings to the subdirectory
-            for missing_string in missing_strings:
-                # Create a new file with the missing string
-                file_name = f"{missing_string.replace(
-                    'z', 'NoData')}_missing_file.grib2"
-                file_path = os.path.join(subdir_path, file_name)
-                with open(file_path, 'w') as dummy_file:
-                    dummy_file.write("This is a dummy file that "
-                                     "serves as a placeholder "
-                                     "for a missing GRIB file.")
-
-                dummy_files_made = True
-    if dummy_files_made:
-        print("WARNING: DUMMY FILE(S) MADE!\n")
-        print("There is currently no way to proceed without having\n"
-              "all the required files and/or have them named properly.\n"
-              "This likely means Herbie failed to download a file,\n"
-              "but I am not sure. It could also mean that you forgot\n"
-              "to run Herbie.")
-        sys.exit(1)
-
-
-def delete_coordinates_file(working_directory_main):
-    coordinates_filename = "GRIB_Nearest_Coordinates_Used.txt"
-    coordinates_file_path = os.path.join(working_directory_main,
-                                         coordinates_filename)
-
-    # Check if the file exists, and if it does, delete it
-    if os.path.exists(coordinates_file_path):
-        os.remove(coordinates_file_path)
-
-
-# This function gives the GRIB coordinates used, and sends them to
-# an output file. We can check this output file to see the exact latitude
-# and longitude that was chosen for each GRIB file. We would expect this
-# value to be the same unless there was a change in the HRRR (or other model)
-# grid cell locations or model resolution.
-def nearest_coordinates_from_GRIB_files(working_directory_main, all_files,
-                                        nearest_lat, nearest_lon):
-    if nearest_lon == -999:
-        nearest_lon_converted = nearest_lon
-    else:
-        nearest_lon_converted = nearest_lon - 360.0
-
-    coordinates_filename = "GRIB_Nearest_Coordinates_Used.txt"
-    coordinates_file_path = os.path.join(working_directory_main,
-                                         coordinates_filename)
-
-    # Open the file in append mode ('a') to write new data
-    with open(coordinates_file_path, 'a') as file:
-        for f in all_files:
-            formatted_line = "{:<10} {:<10} {:<10}".format(
-                f, nearest_lat, nearest_lon_converted)
-            # Print for debugging
-            # print(formatted_line)
-            file.write(formatted_line + '\n')
-
-
-def process_grib_files(working_directory_main, processed_data, all_files_prs, all_files_nat):
+def process_grib_files(working_directory_main, working_directory_grib,
+                       processed_data, all_files_prs, all_files_nat):
     delete_coordinates_file(working_directory_main)
+    match_strings_and_add_dummy_files(working_directory_grib)
 
     skip_file_path = "missing_file"
     ForGRIB_latitude = processed_data.get('latitude')
@@ -167,7 +42,7 @@ def process_grib_files(working_directory_main, processed_data, all_files_prs, al
                 grib_message_handle = codes_grib_new_from_file(f)
 
                 Nearestinfo = codes_grib_find_nearest(
-                    grib_message_handle,ForGRIB_latitude,
+                    grib_message_handle, ForGRIB_latitude,
                     ForGRIB_calculatedlongitude, is_lsm=False, npoints=1)
                 NearestinfoDict = Nearestinfo[0]
 
@@ -224,9 +99,12 @@ def grib_dictionary_from_inputs(processed_data):
     TemperatureHeightLevel7GRIB = processed_data.get('TemperatureHeightLevel7')
     TemperatureHeightLevel8GRIB = processed_data.get('TemperatureHeightLevel8')
     TemperatureHeightLevel9GRIB = processed_data.get('TemperatureHeightLevel9')
-    TemperatureHeightLevel10GRIB = processed_data.get('TemperatureHeightLevel10')
-    TemperatureHeightLevel11GRIB = processed_data.get('TemperatureHeightLevel11')
-    TemperatureHeightLevel12GRIB = processed_data.get('TemperatureHeightLevel12')
+    TemperatureHeightLevel10GRIB = processed_data.get(
+        'TemperatureHeightLevel10')
+    TemperatureHeightLevel11GRIB = processed_data.get(
+        'TemperatureHeightLevel11')
+    TemperatureHeightLevel12GRIB = processed_data.get(
+        'TemperatureHeightLevel12')
     TKEHeightLevel1GRIB = processed_data.get('TKEHeightLevel1')
     TKEHeightLevel2GRIB = processed_data.get('TKEHeightLevel2')
     TKEHeightLevel3GRIB = processed_data.get('TKEHeightLevel3')
@@ -703,7 +581,6 @@ def grib_dictionary_from_inputs(processed_data):
         SPFHHGT12 = "q"
         LSPFHHGT12 = "12"
 
-
     # Now we are trying to add the requested stuff to the dictionary.
     # The key should be the shortName and the value should be the level.
 
@@ -713,7 +590,6 @@ def grib_dictionary_from_inputs(processed_data):
         if key1 not in Dictionary_for_GRIB:
             Dictionary_for_GRIB[key1] = []
         Dictionary_for_GRIB[key1].append(value1)
-
 
     if strUandV == "yes":
         wind_height_levels = ["1", "2", "3", "4", "5", "6",
@@ -729,7 +605,6 @@ def grib_dictionary_from_inputs(processed_data):
                     if key not in Dictionary_for_GRIB:
                         Dictionary_for_GRIB[key] = []
                     Dictionary_for_GRIB[key].append(value)
-
 
     if strTMP == "yes":
         temp_height_levels = ["1", "2", "3", "4", "5", "6",
@@ -769,7 +644,7 @@ def grib_dictionary_from_inputs(processed_data):
                 key_tke = eval(f"TKEHGT{level}")
                 value = eval(f"LTKEHGT{level}")
 
-                for key in [key_tke]: # Note the [] instead of the ()
+                for key in [key_tke]:  # Note the [] instead of the ()
                     if key not in Dictionary_for_GRIB:
                         Dictionary_for_GRIB[key] = []
                     Dictionary_for_GRIB[key].append(value)
@@ -783,7 +658,7 @@ def grib_dictionary_from_inputs(processed_data):
                 key_pres = eval(f"PRESHGT{level}")
                 value = eval(f"LPRESHGT{level}")
 
-                for key in [key_pres]: # Note the [] instead of the ()
+                for key in [key_pres]:  # Note the [] instead of the ()
                     if key not in Dictionary_for_GRIB:
                         Dictionary_for_GRIB[key] = []
                     Dictionary_for_GRIB[key].append(value)
@@ -808,210 +683,114 @@ def grib_dictionary_from_inputs(processed_data):
     return GRIB_shortName, GRIB_level
 
 
-# Function not currently used.
-def file_identifier(all_files):
-    GRIB_files = []
-    missing_files = []
-
-    for file_name in all_files:
-        if "missing_file" in file_name:
-            missing_files.append(file_name)
-        else:
-            GRIB_files.append(file_name)
-        print(file_name)
-
-    return GRIB_files, missing_files
+def combine_files(all_files_prs, all_files_nat):
+    return all_files_prs + all_files_nat
 
 
-def dict_constructor():
-    build_dict = {}
-
-    return build_dict
-
-
-
-
-class GridDataExtractor:
-    def __init__(self, all_files_prs, all_files_nat, grid_cell_data,
-                 GRIB_shortName, GRIB_level, extracted_time_values):
-        # Initialize attributes with the passed parameters
-        self.all_files_prs = all_files_prs
-        self.all_files_nat = all_files_nat
-        self.grid_cell_data = grid_cell_data
-        self.GRIB_shortName = GRIB_shortName
-        self.GRIB_level = GRIB_level
-        self.extracted_time_values = extracted_time_values
-
-    def print_values(self):
-        # Method to print the values of the attributes
-        print("All files PRS:", self.all_files_prs)
-        print("All files NAT:", self.all_files_nat)
-        print("Grid cell data:", self.grid_cell_data)
-        print("GRIB short name:", self.GRIB_shortName)
-        print("GRIB level:", self.GRIB_level)
-        print("Extracted time values:", self.extracted_time_values)
-
-
-
-
-
-
-
-
-
-
-
-
-
-# The code for this function is somewhat messy, but it functions as intended.
-# If future improvements are planned, it would be advisable to explore
-# alternative approaches.
-def extract_value_at_grid_index(all_files_prs, all_files_nat, grid_cell_data,
-                                GRIB_shortName, GRIB_level,
-                                extracted_time_values, build_dict):
-    all_files = all_files_prs + all_files_nat
-    """
-    Extracts values at a given grid index from GRIB files and
-    populates a dictionary.
-
-    Args:
-        all_files (list): List of file paths.
-        grid_cell_data (list): List of grid indices.
-        GRIB_shortName (list): List of GRIB shorNames.
-        GRIB_level (list): List of GRIB levels.
-        extracted_time_values (list): List of (time, data_date) tuples.
-        build_dict (dict): Dictionary to store extracted data.
-
-    Returns:
-        dict: The populated dictionary.
-    """
-
-    VERBOSE = 1  # verbose error reporting
-    # This is used to handle "fake" (non-binary) GRIB files.
-    # I think we can delete this
-    skip_file_path = "missing_file"
-
-    GRIB_level_str = GRIB_level
+def convert_grib_levels_to_int(GRIB_level_str):
     GRIB_level_int = []
-
     for item in GRIB_level_str:
         try:
             integer_value = int(item)
             GRIB_level_int.append(integer_value)
         except ValueError:
             print(f"Unable to convert {item} to an integer")
+    return GRIB_level_int
 
-    for idx, file_path in enumerate(all_files):
-        # Access time and data_date from the extracted_time_values list
-        time, data_date = extracted_time_values[idx]
 
-        if skip_file_path in file_path:
-            for shortName, level in zip(GRIB_shortName, GRIB_level_int):
+def process_grib_file(file_path, GRIB_shortName, GRIB_level_int,
+                      grid_cell_data, extracted_time_values, idx, build_dict):
+    time, data_date = extracted_time_values[idx]
+    grid_index = grid_cell_data[idx]
 
-                if (shortName, level) not in build_dict:
-                    build_dict[(shortName, level)] = []
+    with open(file_path, 'rb') as f:
+        for shortName, level in zip(GRIB_shortName, GRIB_level_int):
+            try:
+                info_found = False
+                f.seek(0)  # Reset the file pointer to the beginning
+                while 1:
+                    gid = codes_grib_new_from_file(f)
+                    if gid is None:
+                        break
 
-                # Assign a string of "missing" without processing the file
-                build_dict[(shortName, level)].append((file_path,
-                                                       level, shortName,
-                                                       str("missing"), time,
-                                                       data_date))
-        else:
-            f = open(file_path, 'rb')
-            keys = [
-                'level',
-                'shortName',
-            ]
-            # Get the grid_index for the current file
-            grid_index = grid_cell_data[idx]
+                    if (shortName, level) not in build_dict:
+                        build_dict[(shortName, level)] = []
 
-            for shortName, level in zip(GRIB_shortName, GRIB_level_int):
-                try:
-
-                    # Flag to track whether the tuple was found in
-                    # the GRIB file.
-                    info_found = False
-                    f.seek(0)  # Reset the file pointer to the beginning
-                    while 1:
-                        gid = codes_grib_new_from_file(f)
-                        if gid is None:
-                            break
-
-                        if (shortName, level) not in build_dict:
-                            build_dict[(shortName, level)] = []
-
-                        if (codes_get(gid, 'level') == int(level) and
+                    if (codes_get(gid, 'level') == int(level) and
                             codes_get(gid, 'shortName') == shortName):
 
-                            # Get the values as a list
-                            values = codes_get_array(gid, 'values')
+                        values = codes_get_array(gid, 'values')
 
-                            if grid_index >= 0 and grid_index < len(values):
-                                value_at_index = values[grid_index]
-                                if ((file_path, level, shortName,
-                                     value_at_index, time, data_date) not in
-                                        build_dict[(shortName, level)]):
-                                    build_dict[(shortName, level)].append((
-                                        file_path, level, shortName,
-                                        value_at_index, time, data_date))
-                                    print(f'File: {file_path}'
-                                          f' Date: {data_date}'
-                                          f' Time: {time}'
-                                          f' Variable: {shortName}'
-                                          f' Level: {level}'
-                                          f' Value: {value_at_index}')
+                        if 0 <= grid_index < len(values):
+                            value_at_index = values[grid_index]
+                            if ((file_path, level, shortName, value_at_index,
+                                 time, data_date) not in
+                                    build_dict[(shortName, level)]):
+                                build_dict[(shortName, level)].append((
+                                    file_path, level, shortName,
+                                    value_at_index, time, data_date))
+                                print(f'File: {file_path}'
+                                      f'Date: {data_date} Time: {time}'
+                                      f' Variable: {shortName} Level: {level}'
+                                      f' Value: {value_at_index}')
+                        info_found = True
+                    codes_release(gid)
 
-                            # Flag to track whether the tuple was found in
-                            # the GRIB file.
-                            info_found = True
-                        codes_release(gid)
+            except CodesInternalError as err:
+                handle_grib_error(err)
 
-                except CodesInternalError as err:
-                    if VERBOSE:
-                        traceback.print_exc(file=sys.stderr)
-                    else:
-                        sys.stderr.write(err.msg + '\n')
+            if not info_found:
+                value_at_index = -9999.999
+            if ((file_path, level, shortName, value_at_index,
+                 time, data_date) not in build_dict[(shortName, level)]):
+                build_dict[(shortName, level)].append((
+                    file_path, level, shortName, value_at_index,
+                    time, data_date))
 
-                if not info_found:
-                    value_at_index = -9999.999
-                if ((file_path, level, shortName,
-                     value_at_index, time, data_date) not in
-                        build_dict[(shortName, level)]):
-                    build_dict[(shortName, level)].append((
-                        file_path, level, shortName, value_at_index,
-                        time, data_date))
 
-            f.close()
-    extracted_values_dict = build_dict
+def handle_grib_error(err):
+    """Handle errors during GRIB file processing."""
+    verbose = 1  # verbose error reporting
+    if verbose:
+        traceback.print_exc(file=sys.stderr)
+    else:
+        sys.stderr.write(err.msg + '\n')
 
-    return extracted_values_dict
+
+def extract_value_at_grid_index(all_files_prs, all_files_nat, grid_cell_data,
+                                GRIB_shortName, GRIB_level,
+                                extracted_time_values, build_dict):
+    all_files = combine_files(all_files_prs, all_files_nat)
+    GRIB_level_int = convert_grib_levels_to_int(GRIB_level)
+
+    for idx, file_path in enumerate(all_files):
+        process_grib_file(file_path, GRIB_shortName, GRIB_level_int,
+                          grid_cell_data, extracted_time_values,
+                          idx, build_dict)
+
+    return build_dict
 
 
 def extract_time_info_from_grib_files(all_files_prs, all_files_nat):
-    VERBOSE = 1  # verbose error reporting
-    skip_file_path = "missing_file"
     extracted_time_values = []
 
-    for file_path in all_files_prs + all_files_nat:
-        if skip_file_path in file_path:
-            time = str("Not_Available")
-            data_date = str("Not_Available")
-        else:
-            try:
-                f = open(file_path, 'rb')
-                gid = codes_grib_new_from_file(f)
+    all_files = combine_files(all_files_prs, all_files_nat)
+    for file_path in all_files:
+        time = "Not_Available"  # Default value
+        data_date = "Not_Available"  # Default value
 
-                time = codes_get(gid, 'time')
-                data_date = codes_get(gid, 'dataDate')
+        try:
+            f = open(file_path, 'rb')
+            gid = codes_grib_new_from_file(f)
 
-                codes_release(gid)
-                f.close()
+            time = codes_get(gid, 'time')
+            data_date = codes_get(gid, 'dataDate')
 
-            except CodesInternalError as err:
-                if VERBOSE:
-                    traceback.print_exc(file=sys.stderr)
-                else:
-                    sys.stderr.write(err.msg + '\n')
+            codes_release(gid)
+            f.close()
+
+        except CodesInternalError as err:
+            handle_grib_error(err)
 
         extracted_time_values.append((time, data_date))
         print(f"File: {file_path} --> The date is: {data_date}"

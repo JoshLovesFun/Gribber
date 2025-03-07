@@ -1,7 +1,8 @@
 # Goal: Download GRIB files into working directory using Herbie.
 
-from datetime import datetime, timedelta
 from herbie import Herbie
+
+from file_and_time_control import get_date_range, generate_datetime_range
 # We should think about using FastHerbie in the future.
 from grib_codes import create_grib_code_dict
 
@@ -244,32 +245,17 @@ def fetch_herbie_data(date_str, processed_data):
 
 
 def fetch_herbie_data_in_range(processed_data):
-    start_date_str = processed_data.get('StartDate', None)
-    end_date_str = processed_data.get('EndDate', None)
+    """Fetches Herbie data for each generated date-time."""
+    start_date, end_date = get_date_range(processed_data)
+    if start_date is None or end_date is None:
+        return  # Stop execution if dates are invalid
 
-    if start_date_str is None or end_date_str is None:
-        print("Error: StartDate or EndDate not found in processed_data.")
-        return
+    datetime_list = generate_datetime_range(start_date, end_date)
 
-    try:
-        start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
-        end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
-    except ValueError as e:
-        print(f"Error: Invalid date format - {e}")
-        return
+    for date_str in datetime_list:
+        try:
+            fetch_herbie_data(date_str, processed_data)
+        except Exception as e:
+            print(f"Error fetching Herbie data for {date_str}: {e}")
 
-    current_date = start_date
-
-    while current_date <= end_date:
-        # Loop through hours from 0 to 23
-        for hour in range(24):
-            date_str = current_date.replace(hour=hour).strftime("%Y-%m-%d %H")
-            try:
-                fetch_herbie_data(date_str, processed_data)
-            except Exception as e:
-                print(f"Error fetching Herbie data for {date_str}: {e}")
-
-        # Move to the next day
-        current_date += timedelta(days=1)
-    print("")
-    print("")
+    print("\n\n")  # Maintain output formatting

@@ -1,11 +1,9 @@
 # Goal: Record the inputs used, and write data to the main output csv file.
 
 import sys
-from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
 import os
-import math
 import time
 
 from met_calcs import (
@@ -214,30 +212,7 @@ def print_input_data(processed_data):
         sys.exit()
 
 
-# This function makes all times based on the requested range.
-# It makes the "reference" columns.
-def make_all_times(processed_data):
-    StartDate_Out = processed_data.get('StartDate')
-    EndDate_Out = processed_data.get('EndDate')
-    StartDate_OutNodash = int(StartDate_Out.replace("-", ""))
-    EndDate_OutNodash = int(EndDate_Out.replace("-", ""))
 
-    start_date = datetime.strptime(str(StartDate_OutNodash), "%Y%m%d")
-    end_date = datetime.strptime(str(EndDate_OutNodash), "%Y%m%d")
-
-    years, months, days, hours, hours_ending = [], [], [], [], []
-    current_date = start_date
-    while current_date <= end_date:
-        for hour in range(24):
-            years.append(current_date.year)
-            months.append(current_date.month)
-            days.append(current_date.day)
-            hours.append(hour)
-            # Convert to hour ending format
-            hours_ending.append(hour + 1 if hour < 23 else 24)
-            current_date += timedelta(hours=1)
-
-    return years, months, days, hours, hours_ending
 
 # Now we are trying to write all the data to the csv file.
 # If you get a "pandas" related error, the cause of the error may
@@ -247,12 +222,15 @@ def make_all_times(processed_data):
 
 
 def write_all_data(years, months, days, hours, hours_ending,
-                   working_directory_main, main_output, extracted_data):
+                   working_directory_main, main_output, extracted_data, dir_file_count):
     fingers_crossed = "\U0001F91E"
     print("")
     print("Now trying to write to the output file. Wait 3 or more seconds " +
           fingers_crossed)
     print("")
+
+
+    print(dir_file_count)
 
     # These column names will (should) always be made.
     column_names = ['Year', 'Month', 'Day', 'Hour_UTC', 'Hour_UTC_End',
@@ -319,7 +297,7 @@ def write_all_data(years, months, days, hours, hours_ending,
         if value:
             file_paths = [item[0] for item in value]
             break
-    #print(file_paths)
+    print(file_paths)
     df['FilePath'] = file_paths
 
     #print("Length of file_paths:", len(file_paths))

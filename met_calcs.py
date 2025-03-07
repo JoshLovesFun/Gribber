@@ -3,6 +3,13 @@ import math
 import constants
 
 
+def convert_longitude(nearest_lon):
+    if nearest_lon == -999:
+        return nearest_lon
+    else:
+        return nearest_lon - 360.0
+
+
 def kelvin_to_celsius(kelvin):
     if isinstance(kelvin, float):
         celsius = kelvin - constants.KELVIN_TO_CELSIUS_OFFSET

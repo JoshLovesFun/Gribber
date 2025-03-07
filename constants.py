@@ -1,5 +1,7 @@
 # All constants used are defined here.
 
+default_control_filename = "Control.txt"
+coordinates_filename = "GRIB_Nearest_Coordinates_Used.txt"
 KELVIN_TO_CELSIUS_OFFSET = 273.15
 MISSING_VALUE = -9999.999
 DEGREES_IN_A_CIRCLE = 360.0
