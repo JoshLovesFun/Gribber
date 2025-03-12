@@ -21,7 +21,7 @@ from file_and_time_control import (delete_coordinates_file,
 
 
 def process_grib_files(working_directory_main, working_directory_grib,
-                       processed_data, all_files_prs, all_files_nat):
+                       processed_data, files):
     delete_coordinates_file(working_directory_main)
     match_strings_and_add_dummy_files(working_directory_grib)
 
@@ -32,7 +32,7 @@ def process_grib_files(working_directory_main, working_directory_grib,
     resultsGRIBsetup = []
 
     # for file_path in all_files_prs + all_files_nat: (add this later)
-    for file_path in all_files_prs:
+    for file_path in files:
         if skip_file_path in file_path:
             nearest_index = int(-999)
             nearest_distance = int(-999)
@@ -745,6 +745,69 @@ def populate_files(prs_files, sub_files, nat_files,
 
 
 
+def extract_grib_data(test):
+    """Processes GRIB files using the provided dictionary and updates values."""
+    for category, files in test.items():  # Loop over "prs", "nat", "sub"
+        for file_name, data_entries in files.items():  # Loop over each file in the category
+
+            with open(file_name, 'rb') as f:
+                for idx, (
+                shortName, level, grid_cell, hour_date, _) in enumerate(
+                        data_entries):
+                    try:
+                        f.seek(0)  # Reset the file pointer
+                        info_found = False
+
+                        while True:
+                            gid = codes_grib_new_from_file(f)
+                            if gid is None:
+                                break  # End of file
+
+                            # Check if the GRIB record matches our expected shortName and level
+                            if (codes_get(gid, 'level') == int(level) and
+                                    codes_get(gid, 'shortName') == shortName):
+
+                                values = codes_get_array(gid, 'values')
+                                if 0 <= grid_cell < len(values):
+                                    value_at_index = values[grid_cell]
+                                else:
+                                    value_at_index = -9999.999  # Handle invalid grid index
+
+                                # Store the extracted value in place of None
+                                test[category][file_name][idx] = (
+                                    shortName, level, grid_cell, hour_date,
+                                    value_at_index
+                                )
+
+                                print(
+                                    f'File: {file_name} | Date: {hour_date[1]} Time: {hour_date[0]}'
+                                    f' | Var: {shortName} | Level: {level} | Value: {value_at_index}')
+
+                                info_found = True
+
+                            codes_release(gid)  # Clean up the GRIB handle
+
+                    except CodesInternalError as err:
+                        handle_grib_error(err)
+
+                    # If no matching data was found, store -9999.999
+                    if not info_found:
+                        test[category][file_name][idx] = (
+                            shortName, level, grid_cell, hour_date, -9999.999
+                        )
+
+    # We should return something here.
+    return test
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -772,6 +835,23 @@ def convert_grib_levels_to_int(GRIB_level_str):
     return GRIB_level_int
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 def process_grib_file(file_path, GRIB_shortName, GRIB_level_int,
                       grid_cell_data, extracted_time_values, idx, build_dict):
     time, data_date = extracted_time_values[idx]
@@ -828,6 +908,20 @@ def process_grib_file(file_path, GRIB_shortName, GRIB_level_int,
                 build_dict[(shortName, level)].append((
                     file_path, level, shortName, value_at_index,
                     time, data_date))
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def handle_grib_error(err):
@@ -838,7 +932,7 @@ def handle_grib_error(err):
     else:
         sys.stderr.write(err.msg + '\n')
 
-
+'''
 def extract_value_at_grid_index(all_files_prs, all_files_nat, grid_cell_data,
                                 GRIB_shortName, GRIB_level,
                                 extracted_time_values, build_dict):
@@ -873,14 +967,14 @@ def extract_value_at_grid_index(all_files_prs, all_files_nat, grid_cell_data,
             print("After 2nd iteration:", build_dict)
 
     return build_dict
+'''
 
-
-def extract_time_info_from_grib_files(all_files_prs, all_files_nat):
+def extract_time_info_from_grib_files(files):
     extracted_time_values = []
 
-    # all_files = combine_files(all_files_prs, all_files_nat) (add this later)
-    all_files = combine_files(all_files_prs, all_files_nat) #(use later)
-    for file_path in all_files_prs:
+
+
+    for file_path in files:
         time = "Not_Available"  # Default value
         data_date = "Not_Available"  # Default value
 
