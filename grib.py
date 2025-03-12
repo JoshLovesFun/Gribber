@@ -31,7 +31,8 @@ def process_grib_files(working_directory_main, working_directory_grib,
 
     resultsGRIBsetup = []
 
-    for file_path in all_files_prs + all_files_nat:
+    # for file_path in all_files_prs + all_files_nat: (add this later)
+    for file_path in all_files_prs:
         if skip_file_path in file_path:
             nearest_index = int(-999)
             nearest_distance = int(-999)
@@ -695,6 +696,7 @@ def grib_dictionary_from_inputs(processed_data):
 
 
 
+from collections import OrderedDict
 
 
 
@@ -702,11 +704,7 @@ def grib_dictionary_from_inputs(processed_data):
 
 
 
-
-
-
-import pprint
-
+# We use an ordered dictionary to be extra safe
 # Function to populate the dictionary based on given inputs
 def populate_files(prs_files, sub_files, nat_files,
                    shortnames_for_prs, level_for_prs, grid_cell_for_prs, hour_date_for_prs,
@@ -714,9 +712,9 @@ def populate_files(prs_files, sub_files, nat_files,
                    shortnames_for_sub, level_for_sub, grid_cell_for_sub, hour_date_for_sub):
     # Initialize the dictionary
     test = {
-        "prs": {},
-        "nat": {},
-        "sub": {}
+        "prs": OrderedDict(),
+        "nat": OrderedDict(),
+        "sub": OrderedDict()
     }
 
     # Function to assign data to a given dictionary key
@@ -728,7 +726,7 @@ def populate_files(prs_files, sub_files, nat_files,
             for j, shortname in enumerate(shortnames):
                 # Assign the corresponding grid_cell and hour_date based on file index
                 test[key][file_name].append(
-                    (shortname, levels[j], grid_cells[i], hour_dates[i])
+                    (shortname, levels[j], grid_cells[i], hour_dates[i], None)
                 )
 
     # Populate all three categories with their respective lists
@@ -738,47 +736,6 @@ def populate_files(prs_files, sub_files, nat_files,
 
     return test
 
-
-
-
-
-
-# Fake calculation function that mimics your real one
-def fake_calculate_value(file_name, shortname, string1, string2):
-    # Example "fake" calculation: sum of the lengths of string1 and string2
-    return len(file_name) + len(shortname) + len(string1) + len(string2)  # Just a simple fake calculation
-
-# Function to apply the fake calculation to the dictionary
-def apply_fake_calculation(test):
-    for major_key in test:
-        for minor_key in test[major_key]:
-            for i in range(len(test[major_key][minor_key])):
-                shortname, string1, string2, _ = test[major_key][minor_key][i]
-                # Apply the fake calculation
-                calculated_value = fake_calculate_value(minor_key, shortname, string1, string2)
-                # Update the value in the dictionary
-                test[major_key][minor_key][i] = (shortname, string1, string2, calculated_value)
-    return test
-
-'''
-# Example data
-prs_files = ["file1.prs", "file20.prs", "file200.prs"]
-sub_files = ["f1.sub", "file2.sub", "file50.sub"]
-nat_files = ["fi1.nat", "file2.nat", "file3.nat"]
-shortnames = ["blh", "t", "shortname3"]
-strings1 = ["001234", "0012345", "00123456"]
-strings2 = ["1234", "12345", "123456"]
-
-# Populate the dictionary with the input data
-test = populate_files(prs_files, sub_files, nat_files, shortnames, strings1, strings2)
-
-# Apply the fake calculation
-test = apply_fake_calculation(test)
-
-# Use pprint to print in a readable format
-pprint.pprint(test)
-
-'''
 
 
 
@@ -921,8 +878,9 @@ def extract_value_at_grid_index(all_files_prs, all_files_nat, grid_cell_data,
 def extract_time_info_from_grib_files(all_files_prs, all_files_nat):
     extracted_time_values = []
 
-    all_files = combine_files(all_files_prs, all_files_nat)
-    for file_path in all_files:
+    # all_files = combine_files(all_files_prs, all_files_nat) (add this later)
+    all_files = combine_files(all_files_prs, all_files_nat) #(use later)
+    for file_path in all_files_prs:
         time = "Not_Available"  # Default value
         data_date = "Not_Available"  # Default value
 
