@@ -135,10 +135,12 @@ def handle_flow_option_e():
         file_and_time_control.make_all_times(processed_data))
 
     # Commented out output part
-    # output.write_all_data(
-    #     years, months, days, hours, hours_ending,
-    #     working_directory_main, main_output, extracted_data, dir_file_count
-    # )
+    # DON'T WE NEED SUB FILES NAT AND PRS???????????????????
+    output.write_all_data_new(
+        years, months, days, hours, hours_ending,
+        working_directory_main, main_output, dir_file_count, extracted_time_values_prs, extracted_time_values_nat,
+        all_files_prs, all_files_nat, sub_files, grib_data
+    )
 
 
 # --- Main logic starts here ---

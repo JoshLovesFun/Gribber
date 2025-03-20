@@ -214,6 +214,120 @@ def print_input_data(processed_data):
 
 
 
+
+def pad_list(lst, length, fill_value=np.nan):
+    """Pads the list with `fill_value` to ensure it matches `length`."""
+    return lst + [fill_value] * (length - len(lst)) if len(lst) < length else lst
+
+
+def write_all_data_new(years, months, days, hours, hours_ending,
+                       working_directory_main, main_output, dir_file_count, extracted_time_values_prs, extracted_time_values_nat,
+                       all_files_prs, all_files_nat, sub_files, grib_data):
+    print(f'the years is {years}')
+    print(f'the months is {months}')
+    print(f'the days is {days}')
+    print(f'the hours is {hours}')
+    print(f'the hours ending is {hours_ending}')
+    print(f'the working_dir_main is {working_directory_main}')
+    print(f'the main_output is {main_output}')
+    print(f'the dir_file_count is {dir_file_count}')  # we don't need this for now
+    print(f'the extracted_time_values_prs is {extracted_time_values_prs}')
+    print(f'the extracted_time_values_nat is {extracted_time_values_nat}')
+
+    MAX_LEVEL = 12
+    # These column names will (should) always be made.
+    column_names = ['Year', 'Month', 'Day', 'Hour_UTC', 'Hour_UTC_End',
+                    'all_files_prs', 'all_files_nat', 'sub_files',
+                    'PRS_Extracted_1', 'PRS_Extracted_2',
+                    'NAT_Extracted_1', 'NAT_Extracted_2', 'BoundaryLayerHeight']
+
+    # Dynamically generate level-based column names
+    column_names += [f'TempLvl_{i}_K' for i in range(1, MAX_LEVEL + 1)]
+    column_names += [f'TempLvl_{i}_C' for i in range(1, MAX_LEVEL + 1)]
+    column_names += [f'U_WindLvl_{i}' for i in range(1, MAX_LEVEL + 1)]
+    column_names += [f'V_WindLvl_{i}' for i in range(1, MAX_LEVEL + 1)]
+    column_names += [f'WindSpeed{i}' for i in range(1, MAX_LEVEL + 1)]
+    column_names += [f'WindDir{i}' for i in range(1, MAX_LEVEL + 1)]
+    column_names += [f'TKE_Lvl_{i}' for i in range(1, MAX_LEVEL + 1)]
+    column_names += [f'PRES_Lvl_{i}' for i in range(1, MAX_LEVEL + 1)]
+    column_names += [f'SPFH_Lvl_{i}' for i in range(1, MAX_LEVEL + 1)]
+    column_names += [f'RH_Lvl_{i}' for i in range(1, MAX_LEVEL + 1)]
+    column_names += [f'Dew_Point_Lvl_{i}_C' for i in range(1, MAX_LEVEL + 1)]
+
+    # The max length is always the length of `years` (24 or whatever max_length is)
+    max_length = len(years)
+
+    # Extract time values from tuples
+    prs_extracted_1, prs_extracted_2 = zip(
+        *extracted_time_values_prs) if extracted_time_values_prs else ([], [])
+    nat_extracted_1, nat_extracted_2 = zip(
+        *extracted_time_values_nat) if extracted_time_values_nat else ([], [])
+
+    # Initialize DataFrame with all column names, filling with NaN
+    df = pd.DataFrame(columns=column_names)
+
+    # Assign padded lists to the DataFrame
+    df['Year'] = years
+    df['Month'] = pad_list(months, max_length)
+    df['Day'] = pad_list(days, max_length)
+    df['Hour_UTC'] = pad_list(hours, max_length)
+    df['Hour_UTC_End'] = pad_list(hours_ending, max_length)
+    df['all_files_prs'] = pad_list(all_files_prs, max_length)
+    df['all_files_nat'] = pad_list(all_files_nat, max_length)
+    df['sub_files'] = pad_list(sub_files, max_length)
+    df['PRS_Extracted_1'] = pad_list(list(prs_extracted_1), max_length)
+    df['PRS_Extracted_2'] = pad_list(list(prs_extracted_2), max_length)
+    df['NAT_Extracted_1'] = pad_list(list(nat_extracted_1), max_length)
+    df['NAT_Extracted_2'] = pad_list(list(nat_extracted_2), max_length)
+
+    # Extract Boundary Layer Height (BLH) values and pad the list only if it's shorter than max_length
+    df['BoundaryLayerHeight'] = pad_list(
+        [record[4] for key in ['prs', 'nat']
+         for file, records in grib_data.get(key, {}).items()
+         for record in records if
+         record[0] == 'blh' and record[4] != -9999.999],
+        max_length
+    )
+
+    # Initialize temp_values dictionary for each level from 1 to 12 (Kelvin and Celsius)
+    temp_values = {f'TempLvl_{i}_K': [] for i in range(1, 13)}
+    temp_values_C = {f'TempLvl_{i}_C': [] for i in range(1, 13)}
+
+    # Populate temp_values with valid data from the grib_data
+    for key in ['prs', 'nat']:
+        for file, records in grib_data.get(key, {}).items():
+            for record in records:
+                var_name, level, _, (_, _), value = record  # Extract values
+                if var_name == 't' and level.isdigit():
+                    level_index = int(level)
+                    if 1 <= level_index <= 12 and value != -9999.999:
+                        # Add Kelvin values to the temp_values dictionary
+                        temp_values[f'TempLvl_{level_index}_K'].append(value)
+
+                        # Convert Kelvin to Celsius and add to temp_values_C dictionary
+                        celsius_value = kelvin_to_celsius(value)
+                        temp_values_C[f'TempLvl_{level_index}_C'].append(
+                            celsius_value)
+
+    # Pad both Kelvin and Celsius values with NaN for missing levels and assign to the DataFrame
+    for col_dict in [temp_values, temp_values_C]:
+        for col, values in col_dict.items():
+            if len(values) < max_length:
+                values += [np.nan] * (max_length - len(values))
+            df[col] = values
+
+    # Save to CSV
+    output_path = os.path.join(working_directory_main, main_output)
+    df.to_csv(output_path, index=False)
+
+
+
+
+
+
+
+
+
 # Now we are trying to write all the data to the csv file.
 # If you get a "pandas" related error, the cause of the error may
 # be related to issues caused in the GRIB module and/or column
