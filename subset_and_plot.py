@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 
+import file_and_time_control
+#from main import working_directory_grib, processed_data
+
 
 def process_grib_file(wgrib2_path, input_grib, output_grib, lon_range,
                       lat_range, cygwin_path=None):
@@ -82,9 +85,10 @@ def plot_grib_temperature(grib_file, variable_name='Temperature', level=1):
         print(f"{grb.name}: Level {grb.level} (Type: {grb.typeOfLevel})")
 
     # Select the specified variable at the given level
+    # Select the specified variable at the given level
     try:
         grb = grbs.select(name=variable_name, level=level)[0]
-    except IndexError:
+    except (ValueError, IndexError):  # Catch ValueError instead
         print(
             f"Error: {variable_name} at level {level} not found in the GRIB file.")
         grbs.close()
@@ -124,7 +128,6 @@ def plot_grib_temperature(grib_file, variable_name='Temperature', level=1):
     grbs.close()
 
 
-# Example usage
-grib_file = r"C:\Other\GRIB\Test\hrrr\20211231\new_subset.grib2"
-plot_grib_temperature(grib_file)
+
+
 

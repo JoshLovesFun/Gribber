@@ -9,6 +9,7 @@ import pprint
 
 import constants
 import read_control
+from subset_and_plot import plot_grib_temperature
 
 
 def main():
@@ -150,7 +151,20 @@ if processed_data.get('flow_options') in ("h", "hw", "hwa"):
 elif processed_data.get('flow_options') == "e":
     handle_flow_option_e()
 
-elif processed_data.get('flow_options') in ("p", "ps"):
+elif processed_data.get('flow_options') in ("p"):
+    print("we always can do this if herbie was done")
+    _, all_files_nat = file_and_time_control.files_to_do_work_for(
+        working_directory_grib, processed_data)
+
+    first_file_nat = all_files_nat[0] if all_files_nat else None
+    print(first_file_nat)
+    plot_grib_temperature(grib_file=rf"{first_file_nat}", variable_name="Temperature",
+                          level=7)
+    # get first file in nat file list that is not a sub file or prs file
+    # on this file, perform the plotting
+    # but we can only plot a level and var available
+
+elif processed_data.get('flow_options') in ("ps"):
     print("Will add this capability later")
 
 
