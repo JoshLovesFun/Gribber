@@ -4,13 +4,15 @@ GRIB files location: C:\Other\GRIB\Test\hrrr\
 Inputs Used Outfile Name: inputs_used_outfile_test.txt
 Main output file name: All_output.csv
 
-Regional Subset?: no      # Options are "yes" or "no"
+Regional Subset?: yes      # Options are "yes" or "no"
 
 # Regional subset is applied to eliminate GRIB data not needed after
 # the GRIB files are downloaded. For the regional subset to work,
 # wgrib2 must be available and work on your system. If the
 # "Regional Subset?" is set to yes, all data that is requested to be
 # downloaded in the "Flow" section, will be trimmed to the domain of interest.
+wgrib2 path: C:\Code\wgrib2\grib2\wgrib2\wgrib2.exe
+Cygwin path: C:\Code\Cygwin\bin
 
 Flow: h
 Options for "Flow" are the following strings within quotes:
@@ -41,12 +43,12 @@ Options for "Flow" are the following strings within quotes:
 # system. This option is only activated if the "Regional Subset?" is set
 # to "yes".
 
-WRF suite?: yes                      # Options are "yes" or "no"
+WRF suite?: no                      # Options are "yes" or "no"
 
 Latitude: 36.25
 Longitude: -86.57
-Boundary Layer Height?: yes              # Options are "yes" or "no"
-U and V Wind Component?: yes             # Options are "yes" or "no"
+Boundary Layer Height?: no              # Options are "yes" or "no"
+U and V Wind Component?: no             # Options are "yes" or "no"
 Wind Height Level 1: no                # Options are "yes" or "no"
 Wind Height Level 2: yes                # Options are "yes" or "no"
 Wind Height Level 3: no                # Options are "yes" or "no"
@@ -60,13 +62,13 @@ Wind Height Level 10: no               # Options are "yes" or "no"
 Wind Height Level 11: no               # Options are "yes" or "no"
 Wind Height Level 12: yes               # Options are "yes" or "no"
 Temperature?: yes                     # Options are "yes" or "no"
-Temperature Height Level 1: yes          # Options are "yes" or "no"
+Temperature Height Level 1: no          # Options are "yes" or "no"
 Temperature Height Level 2: no          # Options are "yes" or "no"
-Temperature Height Level 3: yes          # Options are "yes" or "no"
-Temperature Height Level 4: no          # Options are "yes" or "no"
+Temperature Height Level 3: no          # Options are "yes" or "no"
+Temperature Height Level 4: yes          # Options are "yes" or "no"
 Temperature Height Level 5: no          # Options are "yes" or "no"
 Temperature Height Level 6: no          # Options are "yes" or "no"
-Temperature Height Level 7: no          # Options are "yes" or "no"
+Temperature Height Level 7: yes          # Options are "yes" or "no"
 Temperature Height Level 8: no          # Options are "yes" or "no"
 Temperature Height Level 9: no          # Options are "yes" or "no"
 Temperature Height Level 10: no         # Options are "yes" or "no"
@@ -85,15 +87,15 @@ Turbulent Kinetic Energy Level 9: no    # Options are "yes" or "no"
 Turbulent Kinetic Energy Level 10: no   # Options are "yes" or "no"
 Turbulent Kinetic Energy Level 11: yes   # Options are "yes" or "no"
 Turbulent Kinetic Energy Level 12: yes  # Options are "yes" or "no"
-Pressure?: no                           # Options are "yes" or "no"
+Pressure?: no                          # Options are "yes" or "no"
 Pressure Level 1: no                   # Options are "yes" or "no"
 Pressure Level 2: no                   # Options are "yes" or "no"
 Pressure Level 3: no                   # Options are "yes" or "no"
 Pressure Level 4: no                   # Options are "yes" or "no"
-Pressure Level 5: yes                   # Options are "yes" or "no"
+Pressure Level 5: no                   # Options are "yes" or "no"
 Pressure Level 6: no                   # Options are "yes" or "no"
-Pressure Level 7: no                   # Options are "yes" or "no"
-Pressure Level 8: yes                   # Options are "yes" or "no"
+Pressure Level 7: yes                   # Options are "yes" or "no"
+Pressure Level 8: no                   # Options are "yes" or "no"
 Pressure Level 9: no                   # Options are "yes" or "no"
 Pressure Level 10: no                  # Options are "yes" or "no"
 Pressure Level 11: no                  # Options are "yes" or "no"
@@ -101,11 +103,11 @@ Pressure Level 12: no                  # Options are "yes" or "no"
 Specific Humidity?: no                 # Options are "yes" or "no"
 Specific Humidity Level 1: no          # Options are "yes" or "no"
 Specific Humidity Level 2: no          # Options are "yes" or "no"
-Specific Humidity Level 3: yes          # Options are "yes" or "no"
+Specific Humidity Level 3: no          # Options are "yes" or "no"
 Specific Humidity Level 4: no          # Options are "yes" or "no"
-Specific Humidity Level 5: yes          # Options are "yes" or "no"
+Specific Humidity Level 5: no          # Options are "yes" or "no"
 Specific Humidity Level 6: no          # Options are "yes" or "no"
-Specific Humidity Level 7: no          # Options are "yes" or "no"
+Specific Humidity Level 7: yes          # Options are "yes" or "no"
 Specific Humidity Level 8: no          # Options are "yes" or "no"
 Specific Humidity Level 9: no          # Options are "yes" or "no"
 Specific Humidity Level 10: no         # Options are "yes" or "no"

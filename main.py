@@ -4,11 +4,14 @@ import output
 import my_herbie
 import grib
 import file_and_time_control
-
+from pathlib import Path
+import time
 import pprint
 
 import constants
 import read_control
+import region_subset
+from file_and_time_control import total_file_count
 from plot import plot_grib_temperature
 
 
@@ -27,6 +30,10 @@ default_working_directory, control_filename = main()
 control_data = read_control.read_control_file(default_working_directory,
                                               control_filename)
 processed_data = read_control.process_control_data(control_data)
+
+
+
+
 
 dir_file_count = file_and_time_control.expected_file_count(processed_data)
 
@@ -132,7 +139,7 @@ def handle_flow_option_e():
     #     build_dict
     # )
 
-    years, months, days, hours, hours_ending = (
+    years, months, days, hours, hours_ending, num_days = (
         file_and_time_control.make_all_times(processed_data))
 
     # Commented out output part
@@ -150,9 +157,47 @@ if processed_data.get('flow_options') in ("h", "hw", "hwa"):
         my_herbie.fetch_herbie_data_in_range(processed_data)
     if processed_data.get('regional_subset') == "yes":
         # wgrib required
+        # once started, herbie is to hard to stop.
+        # so we should, run herbie for 1 month,
+        # then subset
+        # then run again if needed
+        # then we need to know if we should delete the old files
         print("do stuff")
 
+        _, _, _, _, _, num_days = (
+            file_and_time_control.make_all_times(processed_data))
+        total = num_days * dir_file_count
+        #print(total)
 
+        fake_total = 24
+        all_files = file_and_time_control.files_to_subset(working_directory_grib)
+        print(all_files)
+        print(len(all_files))
+        first_file_to_sub = all_files[0]
+        print(first_file_to_sub)
+
+        wgrib2_path = processed_data.get('wgrib2_path')
+        cygwin_path = processed_data.get('cygwin_path')
+
+        wgrib2_path = rf"{wgrib2_path}"
+        cygwin_path = rf"{cygwin_path}"
+
+        for all_grib_files_to_subset in all_files:
+            input_grib = all_grib_files_to_subset
+            input_path = Path(input_grib)
+            print(f"Input file: {input_path}")
+
+            output_grib = input_path.parent / f"regional_{input_path.name}"
+            print(f"Output file that has been regionally subsetted: {output_grib}")
+
+            lon_range = (-79, -67)
+            lat_range = (37, 47)
+
+            result = region_subset.process_grib_file(wgrib2_path,
+                                                     input_grib, output_grib,
+                                                     lon_range, lat_range,
+                                                     cygwin_path)
+            print(f"Operation: {result}")
 
 
 

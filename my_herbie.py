@@ -251,6 +251,7 @@ def fetch_herbie_data_in_range(processed_data):
         return  # Stop execution if dates are invalid
 
     datetime_list = generate_datetime_range(start_date, end_date)
+    #print(datetime_list)
 
     for date_str in datetime_list:
         try:

@@ -43,6 +43,8 @@ def process_control_data(control_data):
         'output_directory': control_data.get('Output Directory', None),
         'GRIB_files_location': control_data.get('GRIB files location', None),
         'regional_subset': control_data.get('Regional Subset?', None),
+        'wgrib2_path': control_data.get('wgrib2 path', None),
+        'cygwin_path': control_data.get('Cygwin path', None),
         'flow_options': control_data.get('Flow', None),
         'wrf': control_data.get('WRF suite?', None),
         'latitude': lat,

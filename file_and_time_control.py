@@ -7,10 +7,17 @@ import constants
 from met_calcs import convert_longitude
 
 
+def total_file_count(hours_per_folder, dir_file_count):
+    x = len(hours_per_folder) / 3
+
+    #print(len(dir_file_count))
+    total = x * len(dir_file_count)
+    return total
+
+
 def expected_file_count(processed_data):
     # File count if we only produce nat or prs files.
     dir_file_count = 24
-
     if processed_data.get('wrf') == "yes":
         dir_file_count = 48
 
@@ -23,6 +30,40 @@ def expected_file_count(processed_data):
         dir_file_count = 48
 
     return dir_file_count
+
+
+
+def files_to_subset(working_directory_grib):
+    all_files = []
+
+    # Walk through the directory
+    for root, dirs, files in os.walk(working_directory_grib):
+        for subdir in dirs:
+            subdir_path = os.path.join(root, subdir)
+
+            # Get the list of files in the current subdirectory
+            files_in_subdir = os.listdir(subdir_path)
+
+            # Add files that do not contain the string "regional" in their name
+            for file in files_in_subdir:
+                if "regional" not in file:  # Only add files that do NOT contain "regional"
+                    all_files.append(os.path.join(subdir_path, file))
+
+    # Sort the files based on directory name and hour extracted from filename
+    all_files.sort(
+        key=lambda x: (
+            os.path.basename(os.path.dirname(x)),  # Sort by subdirectory name
+            extract_hour_from_filename(os.path.basename(x))  # Sort by hour
+        )
+    )
+
+    return all_files
+
+
+
+
+
+
 
 
 def get_date_range(processed_data):
@@ -46,11 +87,11 @@ def get_date_range(processed_data):
 def generate_datetime_range(start_date, end_date):
     current_date = start_date
     datetime_list = []
-
     while current_date <= end_date:
         for hour in range(24):
             date_str = current_date.replace(hour=hour).strftime("%Y-%m-%d %H")
             datetime_list.append(date_str)
+            #print(datetime_list)
         current_date += timedelta(days=1)  # Move to next day
 
     return datetime_list
@@ -106,6 +147,20 @@ def files_to_do_work_for(working_directory_grib, processed_data):
         #print(all_files_nat)
 
     return all_files_prs, all_files_nat
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def match_strings_and_add_dummy_files(working_directory_grib):
@@ -194,6 +249,8 @@ def make_all_times(processed_data):
     start_date = datetime.strptime(str(StartDate_OutNodash), "%Y%m%d")
     end_date = datetime.strptime(str(EndDate_OutNodash), "%Y%m%d")
 
+    num_days = (end_date - start_date).days + 1  # +1 to include the start date
+
     years, months, days, hours, hours_ending = [], [], [], [], []
     current_date = start_date
     while current_date <= end_date:
@@ -206,6 +263,6 @@ def make_all_times(processed_data):
             hours_ending.append(hour + 1 if hour < 23 else 24)
             current_date += timedelta(hours=1)
 
-    return years, months, days, hours, hours_ending
+    return years, months, days, hours, hours_ending, num_days
 
 
