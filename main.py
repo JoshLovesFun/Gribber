@@ -9,7 +9,7 @@ import pprint
 
 import constants
 import read_control
-from subset_and_plot import plot_grib_temperature
+from plot import plot_grib_temperature
 
 
 def main():
@@ -146,7 +146,17 @@ def handle_flow_option_e():
 
 # --- Main logic starts here ---
 if processed_data.get('flow_options') in ("h", "hw", "hwa"):
-    my_herbie.fetch_herbie_data_in_range(processed_data)
+    if processed_data.get('regional_subset') != "yes":
+        my_herbie.fetch_herbie_data_in_range(processed_data)
+    if processed_data.get('regional_subset') == "yes":
+        # wgrib required
+        print("do stuff")
+
+
+
+
+
+
 
 elif processed_data.get('flow_options') == "e":
     handle_flow_option_e()
@@ -160,9 +170,7 @@ elif processed_data.get('flow_options') in ("p"):
     print(first_file_nat)
     plot_grib_temperature(grib_file=rf"{first_file_nat}", variable_name="Temperature",
                           level=7)
-    # get first file in nat file list that is not a sub file or prs file
-    # on this file, perform the plotting
-    # but we can only plot a level and var available
+
 
 elif processed_data.get('flow_options') in ("ps"):
     print("Will add this capability later")
