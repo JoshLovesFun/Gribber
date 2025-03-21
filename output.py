@@ -292,6 +292,13 @@ def write_all_data_new(years, months, days, hours, hours_ending,
     # Initialize temp_values dictionary for each level from 1 to 12 (Kelvin and Celsius)
     temp_values = {f'TempLvl_{i}_K': [] for i in range(1, 13)}
     temp_values_C = {f'TempLvl_{i}_C': [] for i in range(1, 13)}
+    tke_values = {f'TKE_Lvl_{i}': [] for i in range(1, 13)}
+    pres_values = {f'PRES_Lvl_{i}': [] for i in range(1, 13)}
+    spfh_values = {f'SPFH_Lvl_{i}': [] for i in range(1, 13)}
+    u_values = {f'U_WindLvl_{i}': [] for i in range(1, 13)}
+    v_values = {f'V_WindLvl_{i}': [] for i in range(1, 13)}
+    wind_speed_values = {f'WindSpeed{i}': [] for i in range(1, 13)}
+    wind_dir_values = {f'WindDir{i}': [] for i in range(1, 13)}
 
     # Populate temp_values with valid data from the grib_data
     for key in ['prs', 'nat']:
@@ -309,12 +316,79 @@ def write_all_data_new(years, months, days, hours, hours_ending,
                         temp_values_C[f'TempLvl_{level_index}_C'].append(
                             celsius_value)
 
-    # Pad both Kelvin and Celsius values with NaN for missing levels and assign to the DataFrame
-    for col_dict in [temp_values, temp_values_C]:
+
+                if var_name == 'tke' and level.isdigit():
+                    level_index = int(level)
+                    if 1 <= level_index <= 12 and value != -9999.999:
+                        # Add tke values to the tke_values dictionary
+                        tke_values[f'TKE_Lvl_{level_index}'].append(value)
+
+
+                if var_name == 'pres' and level.isdigit():
+                    level_index = int(level)
+                    if 1 <= level_index <= 12 and value != -9999.999:
+                        # Add pres values to the pres_values dictionary
+                        pres_values[f'PRES_Lvl_{level_index}'].append(value)
+
+
+                if var_name == 'q' and level.isdigit():
+                    level_index = int(level)
+                    if 1 <= level_index <= 12 and value != -9999.999:
+                        spfh_values[f'SPFH_Lvl_{level_index}'].append(value)
+
+
+                if var_name == 'u' and level.isdigit():
+                    level_index = int(level)
+                    if 1 <= level_index <= 12 and value != -9999.999:
+                        u_values[f'U_WindLvl_{level_index}'].append(value)
+
+                if var_name == 'v' and level.isdigit():
+                    level_index = int(level)
+                    if 1 <= level_index <= 12 and value != -9999.999:
+                        v_values[f'V_WindLvl_{level_index}'].append(value)
+
+
+
+    # Pad values with NaN for missing levels and assign to the DataFrame
+    for col_dict in [temp_values, temp_values_C, tke_values, pres_values, spfh_values, u_values, v_values]:
         for col, values in col_dict.items():
             if len(values) < max_length:
                 values += [np.nan] * (max_length - len(values))
             df[col] = values
+
+
+
+
+
+    for x in range(1, 13):
+        df[[f'WindSpeed{x}', f'WindDir{x}']] = df.apply(
+            lambda row: pd.Series(calculate_wind_speed_and_direction(
+                row[f'U_WindLvl_{x}'], row[f'V_WindLvl_{x}'])),
+            axis=1
+        )
+
+    for x in range(1, 13):
+        df[f'RH_Lvl_{x}'] = df.apply(
+            lambda row: calculate_relative_humidity(
+                row[f'SPFH_Lvl_{x}'], row[f'TempLvl_{x}_K'],
+                row[f'PRES_Lvl_{x}']
+            ), axis=1
+        )
+
+
+    for x in range(1, 13):
+        df[f'Dew_Point_Lvl_{x}_C'] = df.apply(
+            lambda row: calculate_dew_point(
+                row[f'TempLvl_{x}_K'], row[f'RH_Lvl_{x}']
+            ), axis=1
+        )
+
+
+
+
+
+
+
 
     # Save to CSV
     output_path = os.path.join(working_directory_main, main_output)
