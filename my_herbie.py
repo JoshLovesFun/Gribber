@@ -8,22 +8,22 @@ from grib_codes import create_grib_code_dict
 
 
 def fetch_herbie_data(date_str, processed_data):
-    strUandV = strTMP = strTKE = strPRES = strSPFH = "no"
+    str_u_and_v = str_tmp = str_tke = str_pres = str_spfh = "no"
 
     if processed_data.get('U_and_V_WindComponent') == "yes":
-        strUandV = "yes"
+        str_u_and_v = "yes"
 
     if processed_data.get('Temperature') == "yes":
-        strTMP = "yes"
+        str_tmp = "yes"
 
     if processed_data.get('TKE') == "yes":
-        strTKE = "yes"
+        str_tke = "yes"
 
     if processed_data.get('PRES') == "yes":
-        strPRES = "yes"
+        str_pres = "yes"
 
     if processed_data.get('SPFH') == "yes":
-        strSPFH = "yes"
+        str_spfh = "yes"
 
     # For WRF prs
     _2m_temp, _2m_spfh, _2m_rh = None, None, None
@@ -42,15 +42,13 @@ def fetch_herbie_data(date_str, processed_data):
     ice_flag, land_sea_flag, soil_height = None, None, None
     # End WRF prs
 
-
     # For WRF nat
     hgt, clmr, rwmr, cimixr, snmr, grle = {}, {}, {}, {}, {}, {}
     # End WRF nat
 
+    lblh = None
 
-    LBLH = None
-
-    LPRESHGT, LTHGT, LSPFHHGT, LWHGT, LTKEHGT, = {}, {}, {}, {}, {}
+    lpreshgt, lthgt, lspfhhgt, lwhgt, ltkehgt, = {}, {}, {}, {}, {}
 
     grib_dict = create_grib_code_dict()
 
@@ -90,18 +88,17 @@ def fetch_herbie_data(date_str, processed_data):
         land_sea_flag = grib_dict["SFC"]["land_sea_flag"]
         soil_height = grib_dict["SFC"]["soil_height"]
 
-
     if processed_data.get('wrf') == "yes":
         for level in range(1, 4):
             hgt[f'hgt{level}'] = (
                 grib_dict["NAT"]["hgt"]["grib_codes"][level - 1])
-            LPRESHGT[f'LPRESHGT{level}'] = (
+            lpreshgt[f'LPRESHGT{level}'] = (
                 grib_dict["NAT"]["pres"]["grib_codes"][level - 1])
-            LTHGT[f'LTHGT{level}'] = (
+            lthgt[f'LTHGT{level}'] = (
                 grib_dict["NAT"]["temp"]["grib_codes"][level - 1])
-            LSPFHHGT[f'LSPFHHGT{level}'] = (
+            lspfhhgt[f'LSPFHHGT{level}'] = (
                 grib_dict["NAT"]["spfh"]["grib_codes"][level - 1])
-            LWHGT[f'LWHGT{level}'] = (
+            lwhgt[f'LWHGT{level}'] = (
                 grib_dict["NAT"]["u_v"]["grib_codes"][level - 1])
             clmr[f'clmr{level}'] = (
                 grib_dict["NAT"]["clmr"]["grib_codes"][level - 1])
@@ -114,42 +111,41 @@ def fetch_herbie_data(date_str, processed_data):
             grle[f'grle{level}'] = (
                 grib_dict["NAT"]["grle"]["grib_codes"][level - 1])
 
-
     if processed_data.get('BoundaryLayerHeight') == "yes":
-        LBLH = grib_dict["SFC"]["bound_lyr_hgt"]
+        lblh = grib_dict["SFC"]["bound_lyr_hgt"]
 
-    if strPRES == "yes" and processed_data.get('wrf') != "yes":
+    if str_pres == "yes" and processed_data.get('wrf') != "yes":
         for level in range(1, 13):
             if processed_data.get(f'PRESHeightLevel{level}') == "yes":
-                LPRESHGT[f'LPRESHGT{level}'] = (
+                lpreshgt[f'LPRESHGT{level}'] = (
                     grib_dict["NAT"]["pres"]["grib_codes"][level - 1])
 
-    if strTMP == "yes" and processed_data.get('wrf') != "yes":
+    if str_tmp == "yes" and processed_data.get('wrf') != "yes":
         for level in range(1, 13):
             if processed_data.get(f'TemperatureHeightLevel{level}') == "yes":
-                LTHGT[f'LTHGT{level}'] = (
+                lthgt[f'LTHGT{level}'] = (
                     grib_dict["NAT"]["temp"]["grib_codes"][level - 1])
 
-    if strSPFH == "yes" and processed_data.get('wrf') != "yes":
+    if str_spfh == "yes" and processed_data.get('wrf') != "yes":
         for level in range(1, 13):
             if processed_data.get(f'SPFHHeightLevel{level}') == "yes":
-                LSPFHHGT[f'LSPFHHGT{level}'] = (
+                lspfhhgt[f'LSPFHHGT{level}'] = (
                     grib_dict["NAT"]["spfh"]["grib_codes"][level - 1])
 
-    if strUandV == "yes" and processed_data.get('wrf') != "yes":
+    if str_u_and_v == "yes" and processed_data.get('wrf') != "yes":
         for level in range(1, 13):
             if processed_data.get(f'WindHeightLevel{level}') == "yes":
-                LWHGT[f'LWHGT{level}'] = (
+                lwhgt[f'LWHGT{level}'] = (
                     grib_dict["NAT"]["u_v"]["grib_codes"][level - 1])
 
-    if strTKE == "yes":
+    if str_tke == "yes":
         for level in range(1, 13):
             if processed_data.get(f'TKEHeightLevel{level}') == "yes":
-                LTKEHGT[f'LTKEHGT{level}'] = (
+                ltkehgt[f'LTKEHGT{level}'] = (
                     grib_dict["NAT"]["tke"]["grib_codes"][level - 1])
 
     search_patterns = [
-        LBLH, _2m_temp, _2m_spfh, _2m_rh, _10m_u_and_v, sfc_pres, mslp,
+        lblh, _2m_temp, _2m_spfh, _2m_rh, _10m_u_and_v, sfc_pres, mslp,
         water_equiv_sd, snow_depth, skin_temp, plant,
 
         soil_moist_0, soil_moist_1, soil_moist_2, soil_moist_3,  soil_moist_4,
@@ -163,20 +159,20 @@ def fetch_herbie_data(date_str, processed_data):
         *[hgt[f'hgt{level}'] for level in range(1, 21) if
           f'hgt{level}' in hgt],
 
-        *[LTHGT[f'LTHGT{level}'] for level in range(1, 21) if
-          f'LTHGT{level}' in LTHGT],
+        *[lthgt[f'LTHGT{level}'] for level in range(1, 21) if
+          f'LTHGT{level}' in lthgt],
 
-        *[LWHGT[f'LWHGT{level}'] for level in range(1, 13) if
-          f'LWHGT{level}' in LWHGT],
+        *[lwhgt[f'LWHGT{level}'] for level in range(1, 13) if
+          f'LWHGT{level}' in lwhgt],
 
-        *[LPRESHGT[f'LPRESHGT{level}'] for level in range(1, 21) if
-          f'LPRESHGT{level}' in LPRESHGT],
+        *[lpreshgt[f'LPRESHGT{level}'] for level in range(1, 21) if
+          f'LPRESHGT{level}' in lpreshgt],
 
-        *[LSPFHHGT[f'LSPFHHGT{level}'] for level in range(1, 13) if
-          f'LSPFHHGT{level}' in LSPFHHGT],
+        *[lspfhhgt[f'LSPFHHGT{level}'] for level in range(1, 13) if
+          f'LSPFHHGT{level}' in lspfhhgt],
 
-        *[LTKEHGT[f'LTKEHGT{level}'] for level in range(1, 13) if
-          f'LTKEHGT{level}' in LTKEHGT],
+        *[ltkehgt[f'LTKEHGT{level}'] for level in range(1, 13) if
+          f'LTKEHGT{level}' in ltkehgt],
 
         *[clmr[f'clmr{level}'] for level in range(1, 21) if
           f'clmr{level}' in clmr],
@@ -251,7 +247,6 @@ def fetch_herbie_data_in_range(processed_data):
         return  # Stop execution if dates are invalid
 
     datetime_list = generate_datetime_range(start_date, end_date)
-    #print(datetime_list)
 
     for date_str in datetime_list:
         try:
