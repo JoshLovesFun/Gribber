@@ -19,3 +19,5 @@ ScaleTempFactor1 = 17.625  # No units but used to account for the
 # temperature dependence of the saturation vapor pressure.
 ScaleTempFactor2 = 243.04  # No units but used to account for the
 # temperature dependence of the saturation vapor pressure.
+
+MAX_LVL = 12
