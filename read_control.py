@@ -27,15 +27,15 @@ def process_control_data(control_data):
     except ValueError:
         lat = None
 
-    inputlong = control_data.get('Longitude', None)
+    input_long = control_data.get('Longitude', None)
 
     long_str = control_data.get('Longitude', None)
     try:
-        calclong = float(long_str)
-        if calclong is not None:
-            calclong += 360
+        calc_long = float(long_str)
+        if calc_long is not None:
+            calc_long += 360
     except ValueError:
-        calclong = None
+        calc_long = None
 
     processed_data = {
         'main_output': control_data.get('Main output file name', None),
@@ -48,8 +48,8 @@ def process_control_data(control_data):
         'flow_options': control_data.get('Flow', None),
         'wrf': control_data.get('WRF suite?', None),
         'latitude': lat,
-        'input_longitude': inputlong,
-        'calculated_longitude': calclong,
+        'input_longitude': input_long,
+        'calculated_longitude': calc_long,
         'BoundaryLayerHeight': control_data.get('Boundary Layer Height?',
                                                 None),
         'U_and_V_WindComponent': control_data.get('U and V Wind Component?',
