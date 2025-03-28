@@ -6,9 +6,10 @@
 # Key/Value: level/1, shortName/pres,
 # Key/Value: packingType/grid_complex_spatial_differencing
 
-from collections import OrderedDict
 import sys
 import traceback
+from collections import OrderedDict
+from typing import Dict, List
 
 from eccodes import (
     codes_grib_new_from_file, codes_grib_find_nearest,
@@ -70,7 +71,8 @@ def process_grib_files(working_directory_main, working_directory_grib,
 
 
 def grib_dictionary_from_inputs(processed_data):
-    dictionary_for_grib = {}
+    # Define dictionary_for_grib with a type hint
+    dictionary_for_grib: Dict[str, List[str]] = {}
     string_levels = [str(i) for i in range(1, 13)]
 
     if processed_data.get('BoundaryLayerHeight') == "yes":
