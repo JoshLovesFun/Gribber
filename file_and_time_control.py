@@ -9,9 +9,8 @@ from met_calcs import convert_longitude
 
 def total_file_count(hours_per_folder, dir_file_count):
     x = len(hours_per_folder) / 3
-
-    #print(len(dir_file_count))
     total = x * len(dir_file_count)
+
     return total
 
 
@@ -32,21 +31,20 @@ def expected_file_count(processed_data):
     return dir_file_count
 
 
-
 def files_to_subset(working_directory_grib):
     all_files = []
 
     # Walk through the directory
     for root, dirs, files in os.walk(working_directory_grib):
         for subdir in dirs:
-            subdir_path = os.path.join(root, subdir)
+            subdir_path = str(os.path.join(root, subdir))
 
             # Get the list of files in the current subdirectory
             files_in_subdir = os.listdir(subdir_path)
 
             # Add files that do not contain the string "regional" in their name
             for file in files_in_subdir:
-                if "regional" not in file:  # Only add files that do NOT contain "regional"
+                if "regional" not in file:
                     all_files.append(os.path.join(subdir_path, file))
 
     # Sort the files based on directory name and hour extracted from filename
@@ -58,12 +56,6 @@ def files_to_subset(working_directory_grib):
     )
 
     return all_files
-
-
-
-
-
-
 
 
 def get_date_range(processed_data):
@@ -91,7 +83,6 @@ def generate_datetime_range(start_date, end_date):
         for hour in range(24):
             date_str = current_date.replace(hour=hour).strftime("%Y-%m-%d %H")
             datetime_list.append(date_str)
-            #print(datetime_list)
         current_date += timedelta(days=1)  # Move to next day
 
     return datetime_list
@@ -107,23 +98,23 @@ def extract_hour_from_filename(file_name):
 
 
 def files_to_do_work_for(working_directory_grib, processed_data):
-    ForGRIB_StartDate = processed_data.get('StartDate')
-    ForGRIB_EndDate = processed_data.get('EndDate')
+    for_grib_start_date = processed_data.get('StartDate')
+    for_grib_end_date = processed_data.get('EndDate')
     all_files_prs = []
     all_files_nat = []
-    ForGRIB_StartDateNodash = int(ForGRIB_StartDate.replace("-", ""))
-    ForGRIB_EndDateNodash = int(ForGRIB_EndDate.replace("-", ""))
+    for_grib_start_date_no_dash = int(for_grib_start_date.replace("-", ""))
+    for_grib_end_date_no_dash = int(for_grib_end_date.replace("-", ""))
 
     for root, dirs, files in os.walk(working_directory_grib):
 
-        subdirs_to_remove = []
+        sub_dirs_to_remove = []
         for dir_name in dirs:
 
-            if (int(dir_name) > ForGRIB_EndDateNodash or
-                    int(dir_name) < ForGRIB_StartDateNodash):
-                subdirs_to_remove.append(dir_name)
+            if (int(dir_name) > for_grib_end_date_no_dash or
+                    int(dir_name) < for_grib_start_date_no_dash):
+                sub_dirs_to_remove.append(dir_name)
 
-        for subdir in subdirs_to_remove:
+        for subdir in sub_dirs_to_remove:
             dirs.remove(subdir)
 
         for file in files:
@@ -142,25 +133,8 @@ def files_to_do_work_for(working_directory_grib, processed_data):
         all_files_nat.sort(
             key=lambda x: (os.path.basename(os.path.dirname(x)),
                            extract_hour_from_filename(os.path.basename(x))))
-        # Print for debugging
-        #print(all_files_prs)
-        #print(all_files_nat)
 
     return all_files_prs, all_files_nat
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def match_strings_and_add_dummy_files(working_directory_grib):
@@ -174,7 +148,7 @@ def match_strings_and_add_dummy_files(working_directory_grib):
     dummy_files_made = False
     for root, dirs, files in os.walk(working_directory_grib):
         for subdir in dirs:
-            subdir_path = os.path.join(root, subdir)
+            subdir_path = str(os.path.join(root, subdir))
             files_in_subdir = os.listdir(subdir_path)
 
             # Check if any of the strings are present in the file names
@@ -222,7 +196,7 @@ def write_coordinates_to_file(working_directory_main, all_files,
 # and longitude that was chosen for each GRIB file. We would expect this
 # value to be the same unless there was a change in the HRRR (or other model)
 # grid cell locations or model resolution.
-def nearest_coordinates_from_GRIB_files(working_directory_main, all_files,
+def nearest_coordinates_from_grib_files(working_directory_main, all_files,
                                         nearest_lat, nearest_lon):
     nearest_lon_converted = convert_longitude(nearest_lon)
     write_coordinates_to_file(working_directory_main, all_files,
@@ -241,15 +215,16 @@ def delete_coordinates_file(working_directory_main):
 # This function makes all times based on the requested range.
 # It makes the "reference" columns.
 def make_all_times(processed_data):
-    StartDate_Out = processed_data.get('StartDate')
-    EndDate_Out = processed_data.get('EndDate')
-    StartDate_OutNodash = int(StartDate_Out.replace("-", ""))
-    EndDate_OutNodash = int(EndDate_Out.replace("-", ""))
+    start_date_out = processed_data.get('StartDate')
+    end_date_out = processed_data.get('EndDate')
+    start_date_out_no_dash = int(start_date_out.replace("-", ""))
+    end_date_out_no_dash = int(end_date_out.replace("-", ""))
 
-    start_date = datetime.strptime(str(StartDate_OutNodash), "%Y%m%d")
-    end_date = datetime.strptime(str(EndDate_OutNodash), "%Y%m%d")
+    start_date = datetime.strptime(str(start_date_out_no_dash), "%Y%m%d")
+    end_date = datetime.strptime(str(end_date_out_no_dash), "%Y%m%d")
 
-    num_days = (end_date - start_date).days + 1  # +1 to include the start date
+    # + 1 to include the start date
+    num_days = (end_date - start_date).days + 1
 
     years, months, days, hours, hours_ending = [], [], [], [], []
     current_date = start_date
@@ -264,5 +239,3 @@ def make_all_times(processed_data):
             current_date += timedelta(hours=1)
 
     return years, months, days, hours, hours_ending, num_days
-
-

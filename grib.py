@@ -16,7 +16,7 @@ import sys
 import traceback
 
 from file_and_time_control import (delete_coordinates_file,
-                                   nearest_coordinates_from_GRIB_files,
+                                   nearest_coordinates_from_grib_files,
                                    match_strings_and_add_dummy_files)
 
 
@@ -61,7 +61,7 @@ def process_grib_files(working_directory_main, working_directory_grib,
 
         # This is for coordinates output file.
         # Call the function without assigning its result to a variable.
-        nearest_coordinates_from_GRIB_files(
+        nearest_coordinates_from_grib_files(
             working_directory_main, [file_path],
             nearest_lat, nearest_lon)
 
