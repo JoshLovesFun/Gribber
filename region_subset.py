@@ -3,7 +3,7 @@ import subprocess
 
 
 # While this function seems simple, it is very difficult to get
-# wgrib2 to work on Windows operating system.
+# wgrib2 to work on a Windows operating system.
 def process_grib_file(wgrib2_path, input_grib, output_grib, lon_range,
                       lat_range, cygwin_path=None):
     """
