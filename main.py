@@ -46,7 +46,7 @@ output_file_path = os.path.join(working_directory_main,
                                 output_filename_with_inputs_used)
 
 if (processed_data.get('flow_options') not in
-        ("h", "e", "hw", "hwa", "p", "ps")):
+        ("h", "e", "hw", "hwa", "p", "ps", "del")):
     print('Invalid input entered for "Flow:" option. Try again.')
     sys.exit(1)
 
@@ -206,19 +206,26 @@ if processed_data.get('flow_options') in ("h", "hw", "hwa"):
 elif processed_data.get('flow_options') == "e":
     handle_flow_option_e()
 
-elif processed_data.get('flow_options') in ("p"):
-    print("we always can do this if herbie was done")
-    _, all_files_nat = file_and_time_control.files_to_do_work_for(
-        working_directory_grib, processed_data)
+elif processed_data.get('flow_options') in ("p", "ps"):
 
-    first_file_nat = all_files_nat[0] if all_files_nat else None
-    print(first_file_nat)
-    plot_grib_temperature(grib_file=rf"{first_file_nat}", variable_name="Temperature",
-                          level=7)
+    nat_files, sub_files = file_and_time_control.files_to_subset(
+        working_directory_grib)
+    first_file_sub = sub_files[0] if sub_files else None
+    first_file_nat = nat_files[0] if nat_files else None
+
+    if processed_data.get('flow_options') == "p":
+        plot_grib_temperature(grib_file=rf"{first_file_nat}",
+                              variable_name="Temperature",
+                              level=7)
+    if processed_data.get('flow_options') == "ps":
+        plot_grib_temperature(grib_file=rf"{first_file_sub}",
+                              variable_name="Temperature",
+                              level=7)
 
 
-elif processed_data.get('flow_options') in ("ps"):
-    print("Will add this capability later")
+elif processed_data.get('flow_options') == "del":
+    print("Will add more of this capability to delete files later")
+    file_and_time_control.delete_files(working_directory_grib)
 
 
 if __name__ == "__main__":

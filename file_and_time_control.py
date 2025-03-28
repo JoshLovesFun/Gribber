@@ -33,6 +33,7 @@ def expected_file_count(processed_data):
 
 def files_to_subset(working_directory_grib):
     all_files = []
+    all_regional_nat_files = []
 
     # Walk through the directory
     for root, dirs, files in os.walk(working_directory_grib):
@@ -44,8 +45,10 @@ def files_to_subset(working_directory_grib):
 
             # Add files that do not contain the string "regional" in their name
             for file in files_in_subdir:
-                if "regional" not in file:
+                if "regional" not in file and "wrfprsf00" not in file:
                     all_files.append(os.path.join(subdir_path, file))
+                if "regional" in file and "wrfnatf00" in file:
+                    all_regional_nat_files.append(os.path.join(subdir_path, file))
 
     # Sort the files based on directory name and hour extracted from filename
     all_files.sort(
@@ -55,7 +58,14 @@ def files_to_subset(working_directory_grib):
         )
     )
 
-    return all_files
+    all_regional_nat_files.sort(
+        key=lambda x: (
+            os.path.basename(os.path.dirname(x)),  # Sort by subdirectory name
+            extract_hour_from_filename(os.path.basename(x))  # Sort by hour
+        )
+    )
+    print(all_regional_nat_files)
+    return all_files, all_regional_nat_files
 
 
 def get_date_range(processed_data):
@@ -239,3 +249,16 @@ def make_all_times(processed_data):
             current_date += timedelta(hours=1)
 
     return years, months, days, hours, hours_ending, num_days
+
+
+def delete_files(working_directory_grib):
+    # Walk through the directory and its subdirectories
+    for root, dirs, files in os.walk(working_directory_grib):
+        for file in files:
+            if "regional" in file:
+                file_path = os.path.join(root, file)
+                try:
+                    os.remove(file_path)
+                    print(f"Deleted: {file_path}")
+                except Exception as e:
+                    print(f"Error deleting {file_path}: {e}")
