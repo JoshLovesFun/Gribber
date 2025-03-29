@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import re
 import os
 import sys
+import shutil
 
 import constants
 from met_calcs import convert_longitude
@@ -48,7 +49,8 @@ def files_to_subset(working_directory_grib):
                 if "regional" not in file and "wrfprsf00" not in file:
                     all_files.append(os.path.join(subdir_path, file))
                 if "regional" in file and "wrfnatf00" in file:
-                    all_regional_nat_files.append(os.path.join(subdir_path, file))
+                    all_regional_nat_files.append(os.path.join(subdir_path,
+                                                               file))
 
     # Sort the files based on directory name and hour extracted from filename
     all_files.sort(
@@ -64,7 +66,6 @@ def files_to_subset(working_directory_grib):
             extract_hour_from_filename(os.path.basename(x))  # Sort by hour
         )
     )
-    print(all_regional_nat_files)
     return all_files, all_regional_nat_files
 
 
@@ -112,6 +113,7 @@ def files_to_do_work_for(working_directory_grib, processed_data):
     for_grib_end_date = processed_data.get('EndDate')
     all_files_prs = []
     all_files_nat = []
+    all_files_sub = []
     for_grib_start_date_no_dash = int(for_grib_start_date.replace("-", ""))
     for_grib_end_date_no_dash = int(for_grib_end_date.replace("-", ""))
 
@@ -134,6 +136,9 @@ def files_to_do_work_for(working_directory_grib, processed_data):
             if file.endswith("natf00.grib2"):
                 file_path = os.path.join(root, file)
                 all_files_nat.append(file_path)
+            if file.startswith("regional"):
+                file_path = os.path.join(root, file)
+                all_files_sub.append(file_path)
 
         # Sort all files based on the date and hour components in the
         # directory and file names
@@ -144,7 +149,11 @@ def files_to_do_work_for(working_directory_grib, processed_data):
             key=lambda x: (os.path.basename(os.path.dirname(x)),
                            extract_hour_from_filename(os.path.basename(x))))
 
-    return all_files_prs, all_files_nat
+        all_files_sub.sort(
+            key=lambda x: (os.path.basename(os.path.dirname(x)),
+                           extract_hour_from_filename(os.path.basename(x))))
+
+    return all_files_prs, all_files_nat, all_files_sub
 
 
 def match_strings_and_add_dummy_files(working_directory_grib):
@@ -251,14 +260,30 @@ def make_all_times(processed_data):
     return years, months, days, hours, hours_ending, num_days
 
 
-def delete_files(working_directory_grib):
-    # Walk through the directory and its subdirectories
-    for root, dirs, files in os.walk(working_directory_grib):
+def delete_files(working_directory_grib, delete_option):
+    # Walk through the directory
+    for root, dirs, files in os.walk(working_directory_grib, topdown=False):
         for file in files:
-            if "regional" in file:
-                file_path = os.path.join(root, file)
-                try:
-                    os.remove(file_path)
-                    print(f"Deleted: {file_path}")
-                except Exception as e:
-                    print(f"Error deleting {file_path}: {e}")
+            file_path = os.path.join(root, file)
+
+            # Handle different delete options
+            if delete_option == "del_r" and "regional" in file:
+                os.remove(file_path)
+                print(f"Deleted regional file: {file_path}")
+            elif delete_option == "del_n" and "wrfnatf00" in file:
+                os.remove(file_path)
+                print(f"Deleted wrfnatf00 file: {file_path}")
+            elif delete_option == "del_p" and "wrfprsf00" in file:
+                os.remove(file_path)
+                print(f"Deleted wrfprsf00 file: {file_path}")
+            elif delete_option == "del_all":
+                os.remove(file_path)
+                print(f"Deleted file: {file_path}")
+
+        # Now delete the subdirectories if the delete_option is 'del_all'
+        if delete_option == "del_all":
+            for subdir in dirs:
+                subdir_path = os.path.join(root, subdir)
+                # Deletes subdirectories and their contents
+                shutil.rmtree(subdir_path)
+                print(f"Deleted subdirectory: {subdir_path}")

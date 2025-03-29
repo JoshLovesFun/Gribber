@@ -116,7 +116,7 @@ def grib_dictionary_from_inputs(processed_data):
 
 # We use an ordered dictionary to be extra safe
 # Function to populate the dictionary based on given inputs
-def populate_files(prs_files, sub_files, nat_files,
+def populate_files(prs_files, nat_files, sub_files,
                    shortnames_for_prs, level_for_prs, grid_cell_for_prs,
                    hour_date_for_prs,
                    shortnames_for_nat, level_for_nat, grid_cell_for_nat,

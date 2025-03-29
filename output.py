@@ -229,11 +229,11 @@ def write_all_data_new(years, months, days, hours, hours_ending,
                        working_directory_main, main_output,
                        dir_file_count,
                        extracted_time_values_prs, extracted_time_values_nat,
-                       all_files_prs, all_files_nat, sub_files, grib_data):
+                       all_files_prs, all_files_nat, all_files_sub, grib_data):
 
     # These column names will (should) always be made.
     column_names = ['Year', 'Month', 'Day', 'Hour_UTC', 'Hour_UTC_End',
-                    'all_files_prs', 'all_files_nat', 'sub_files',
+                    'all_files_prs', 'all_files_nat', 'all_files_sub',
                     'PRS_Extracted_1', 'PRS_Extracted_2',
                     'NAT_Extracted_1', 'NAT_Extracted_2',
                     'BoundaryLayerHeight']
@@ -273,7 +273,8 @@ def write_all_data_new(years, months, days, hours, hours_ending,
     df['Hour_UTC_End'] = pad_list(hours_ending, max_length)
     df['all_files_prs'] = pad_list(all_files_prs, max_length)
     df['all_files_nat'] = pad_list(all_files_nat, max_length)
-    df['sub_files'] = pad_list(sub_files, max_length)
+    df['sub_files'] = pad_list(all_files_sub, max_length)
+    # TODO Write out column names of sub files but don't use them?
     df['PRS_Extracted_1'] = pad_list(list(prs_extracted_1), max_length)
     df['PRS_Extracted_2'] = pad_list(list(prs_extracted_2), max_length)
     df['NAT_Extracted_1'] = pad_list(list(nat_extracted_1), max_length)
@@ -289,8 +290,7 @@ def write_all_data_new(years, months, days, hours, hours_ending,
         max_length
     )
 
-    # Initialize temp_values dictionary for each level from 1 to 12
-    # (Kelvin and Celsius)
+    # Initialize variable dictionaries for each level from 1 to 12
     temp_values = {f'TempLvl_{i}_K': [] for i in range(1, 13)}
     temp_values_c = {f'TempLvl_{i}_C': [] for i in range(1, 13)}
     tke_values = {f'TKE_Lvl_{i}': [] for i in range(1, 13)}
@@ -298,8 +298,8 @@ def write_all_data_new(years, months, days, hours, hours_ending,
     spfh_values = {f'SPFH_Lvl_{i}': [] for i in range(1, 13)}
     u_values = {f'U_WindLvl_{i}': [] for i in range(1, 13)}
     v_values = {f'V_WindLvl_{i}': [] for i in range(1, 13)}
-    wind_speed_values = {f'WindSpeed{i}': [] for i in range(1, 13)}
-    wind_dir_values = {f'WindDir{i}': [] for i in range(1, 13)}
+    wind_speed_values = {f'WindSpeed{i}': [] for i in range(1, 13)}  # delete?
+    wind_dir_values = {f'WindDir{i}': [] for i in range(1, 13)}  # delete?
 
     # Populate temp_values with valid data from the grib_data
     for key in ['prs', 'nat']:

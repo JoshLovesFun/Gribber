@@ -5,23 +5,21 @@ import my_herbie
 import grib
 import file_and_time_control
 from pathlib import Path
-import time
 import pprint
 
 import constants
 import read_control
 import region_subset
-from file_and_time_control import total_file_count
 from plot import plot_grib_temperature
 
 
 def main():
-    default_working_directory = "."
+    default_working_dir = "."
     if len(sys.argv) > 1:
-        control_filename = sys.argv[1]
+        local_control_filename = sys.argv[1]
     else:
-        control_filename = constants.default_control_filename
-    return default_working_directory, control_filename
+        local_control_filename = constants.default_control_filename
+    return default_working_dir, local_control_filename
 
 
 # Call the main function to get the working directory and control filename
@@ -30,10 +28,6 @@ default_working_directory, control_filename = main()
 control_data = read_control.read_control_file(default_working_directory,
                                               control_filename)
 processed_data = read_control.process_control_data(control_data)
-
-
-
-
 
 dir_file_count = file_and_time_control.expected_file_count(processed_data)
 
@@ -46,11 +40,16 @@ output_file_path = os.path.join(working_directory_main,
                                 output_filename_with_inputs_used)
 
 if (processed_data.get('flow_options') not in
-        ("h", "e", "hw", "hwa", "p", "ps", "del")):
+        ("h", "e", "hw", "hwa", "p", "ps", "s",
+         "del_r", "del_n", "del_p", "del_all")):
     print('Invalid input entered for "Flow:" option. Try again.')
     sys.exit(1)
 
-output.print_input_data(processed_data)
+if (processed_data.get('flow_options') in
+        ("h", "e", "hw", "hwa")):
+    output.print_input_data(processed_data)
+else:
+    pass
 
 # Write the processed input data to the specified file
 output.write_processed_input_data_to_file(processed_data,
@@ -62,7 +61,8 @@ def handle_flow_option_e():
     main_output = processed_data.get('main_output')
 
     # Call files_to_do_work_for and unpack its result
-    all_files_prs, all_files_nat = file_and_time_control.files_to_do_work_for(
+    (all_files_prs, all_files_nat,
+     all_files_sub) = file_and_time_control.files_to_do_work_for(
         working_directory_grib, processed_data)
 
     # First, we call the function with prs files.
@@ -77,6 +77,12 @@ def handle_flow_option_e():
                                                  processed_data,
                                                  all_files_nat)
 
+    # Finally, we call the function with sub files.
+    grid_cell_data_sub = grib.process_grib_files(working_directory_main,
+                                                 working_directory_grib,
+                                                 processed_data,
+                                                 all_files_sub)
+
     # First, we call the function with prs files.
     extracted_time_values_prs = grib.extract_time_info_from_grib_files(
         all_files_prs)
@@ -85,31 +91,15 @@ def handle_flow_option_e():
     extracted_time_values_nat = grib.extract_time_info_from_grib_files(
         all_files_nat)
 
+    # Finally, we call the function with sub files.
+    extracted_time_values_sub = grib.extract_time_info_from_grib_files(
+        all_files_sub)
+
     grib_short_name, grib_level = grib.grib_dictionary_from_inputs(
         processed_data)
 
-    prs_files = ["file1.prs", "file2.prs", "file3.prs", "file4.prs"]
-    sub_files = []  # No actual sub files, pass an empty list
-    nat_files = ["file1.nat", "file2.nat", "file3.nat"]
-
-    shortnames_for_prs = ["blh", "t", "t", "t", "other"]
-    grid_cell_for_prs = [150, 150, 175, 121]
-    level_for_prs = ["0", "1", "2", "11", "7"]
-    hour_date_for_prs = [(11, 202501), (12, 202501), (13, 202501),
-                         (14, 202501)]
-
-    shortnames_for_nat = ["blh", "test"]
-    grid_cell_for_nat = [140, 119, 140]
-    level_for_nat = ["0", "15"]
-    hour_date_for_nat = [(5, 202502), (6, 202502), (7, 202502)]
-
-    shortnames_for_sub = ["v", "v", "v"]
-    grid_cell_for_sub = [133, 130, 130]
-    level_for_sub = ["5", "6", "9"]
-    hour_date_for_sub = [(1, 202507), (2, 202507), (3, 202507)]
-
     test = grib.populate_files(
-        all_files_prs, sub_files, all_files_nat,
+        all_files_prs, all_files_nat, all_files_sub,
 
         grib_short_name, grib_level, grid_cell_data_prs,
         extracted_time_values_prs,
@@ -117,8 +107,8 @@ def handle_flow_option_e():
         grib_short_name, grib_level, grid_cell_data_nat,
         extracted_time_values_nat,
 
-        shortnames_for_sub, level_for_sub, grid_cell_for_sub,
-        hour_date_for_sub
+        grib_short_name, grib_level, grid_cell_data_sub,
+        extracted_time_values_sub,
     )
 
     pprint.pprint(test)
@@ -127,81 +117,64 @@ def handle_flow_option_e():
 
     pprint.pprint(grib_data)
 
-    # Build dictionary code, commented out
-    # build_dict = {}
-    # extracted_data = grib.extract_value_at_grid_index(
-    #     all_files_prs,
-    #     all_files_nat,
-    #     grid_cell_data_prs,
-    #     grib_short_name,
-    #     grib_level,
-    #     extracted_time_values,
-    #     build_dict
-    # )
-
-    years, months, days, hours, hours_ending, num_days = (
+    years, months, days, hours, hours_ending, _ = (
         file_and_time_control.make_all_times(processed_data))
 
-    # Commented out output part
-    # DON'T WE NEED SUB FILES NAT AND PRS???????????????????
+    # TODO all_files_prs, all_files_nat, all_files_sub_prs, all_files_sub_nat?
+    # TODO We do not need to write any sub data to output if we think about it.
     output.write_all_data_new(
         years, months, days, hours, hours_ending,
-        working_directory_main, main_output, dir_file_count, extracted_time_values_prs, extracted_time_values_nat,
-        all_files_prs, all_files_nat, sub_files, grib_data
+        working_directory_main, main_output, dir_file_count,
+        extracted_time_values_prs, extracted_time_values_nat,
+        all_files_prs, all_files_nat, all_files_sub, grib_data
     )
 
 
 # --- Main logic starts here ---
 if processed_data.get('flow_options') in ("h", "hw", "hwa"):
-    if processed_data.get('regional_subset') != "yes":
-        my_herbie.fetch_herbie_data_in_range(processed_data)
-    if processed_data.get('regional_subset') == "yes":
-        # wgrib required
-        # once started, herbie is to hard to stop.
-        # so we should, run herbie for 1 month,
-        # then subset
-        # then run again if needed
-        # then we need to know if we should delete the old files
-        print("do stuff")
+    my_herbie.fetch_herbie_data_in_range(processed_data)
 
-        _, _, _, _, _, num_days = (
-            file_and_time_control.make_all_times(processed_data))
-        total = num_days * dir_file_count
-        #print(total)
+elif (processed_data.get('regional_subset') == "yes" and
+        processed_data.get('flow_options') == "s"):
 
-        fake_total = 24
-        all_files = file_and_time_control.files_to_subset(working_directory_grib)
-        print(all_files)
-        print(len(all_files))
-        first_file_to_sub = all_files[0]
-        print(first_file_to_sub)
+    _, _, _, _, _, num_days = (
+        file_and_time_control.make_all_times(processed_data))
+    total = num_days * dir_file_count
 
-        wgrib2_path = processed_data.get('wgrib2_path')
-        cygwin_path = processed_data.get('cygwin_path')
+    # TODO Update names of functions so they make more sense if needed.
+    all_files, _ = file_and_time_control.files_to_subset(
+        working_directory_grib)
 
-        wgrib2_path = rf"{wgrib2_path}"
-        cygwin_path = rf"{cygwin_path}"
+    if not all_files:
+        print("No files available to process.")
+        sys.exit(1)
 
-        for all_grib_files_to_subset in all_files:
-            input_grib = all_grib_files_to_subset
-            input_path = Path(input_grib)
-            print(f"Input file: {input_path}")
+    first_file_to_sub = all_files[0]
 
-            output_grib = input_path.parent / f"regional_{input_path.name}"
-            print(f"Output file that has been regionally subsetted: {output_grib}")
+    wgrib2_path = processed_data.get('wgrib2_path')
+    cygwin_path = processed_data.get('cygwin_path')
 
-            lon_range = (-79, -67)
-            lat_range = (37, 47)
+    wgrib2_path = rf"{wgrib2_path}"
+    cygwin_path = rf"{cygwin_path}"
 
-            result = region_subset.process_grib_file(wgrib2_path,
-                                                     input_grib, output_grib,
-                                                     lon_range, lat_range,
-                                                     cygwin_path)
-            print(f"Operation: {result}")
+    for all_grib_files_to_subset in all_files:
 
+        input_grib = all_grib_files_to_subset
+        input_path = Path(input_grib)
+        print(f"Input file: {input_path}")
 
+        output_grib = input_path.parent / f"regional_{input_path.name}"
+        print(f"Output file that has been regionally "
+              f"subsetted: {output_grib}")
 
+        lon_range = (-79, -67)
+        lat_range = (37, 47)
 
+        result = region_subset.process_grib_file(wgrib2_path,
+                                                 input_grib, output_grib,
+                                                 lon_range, lat_range,
+                                                 cygwin_path)
+        print(f"Operation: {result}")
 
 elif processed_data.get('flow_options') == "e":
     handle_flow_option_e()
@@ -222,10 +195,22 @@ elif processed_data.get('flow_options') in ("p", "ps"):
                               variable_name="Temperature",
                               level=7)
 
+elif (processed_data.get('flow_options') in
+      ("del_r", "del_n", "del_p", "del_all")):
+    # Ask for confirmation before proceeding.
+    confirm = input(
+        f"Are you sure you want to delete files based on "
+        f"{processed_data.get('flow_options')}? (yes/no): ")
 
-elif processed_data.get('flow_options') == "del":
-    print("Will add more of this capability to delete files later")
-    file_and_time_control.delete_files(working_directory_grib)
+    if confirm.lower() == "yes":
+        print(
+            f"Will delete files based on {processed_data.get('flow_options')}")
+        file_and_time_control.delete_files(working_directory_grib,
+                                           processed_data.get('flow_options'))
+    else:
+        print("Deletion cancelled.")
+else:
+    print("Try to select valid combination of options in the control file.")
 
 
 if __name__ == "__main__":
