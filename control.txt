@@ -5,6 +5,10 @@ Inputs Used Outfile Name: inputs_used_outfile_test.txt
 Main output file name: All_output.csv
 
 Regional Subset?: yes      # Options are "yes" or "no"
+Longitude range (west side): -79
+Longitude range (east side): -67
+Latitude range (south side): 37
+Latitude range (north side): 47
 
 # Regional subset is applied to eliminate GRIB data not needed after
 # the GRIB files are downloaded. For the regional subset to work,
@@ -14,9 +18,9 @@ Regional Subset?: yes      # Options are "yes" or "no"
 wgrib2 path: C:\Code\wgrib2\grib2\wgrib2\wgrib2.exe
 Cygwin path: C:\Code\Cygwin\bin
 
-Flow: h
+Flow: p
 Options for "Flow" are the following strings within quotes:
-"h", "e", "hw", "hwa", "p", "ps"
+"h", "e", "hw", "hwa", "p", "ps", "s" "del_r", "del_n", "del_p", "del_all"
 
 # h = Run Herbie only.
 
@@ -38,7 +42,8 @@ Options for "Flow" are the following strings within quotes:
 # or more GRIB files must be available for "p" to work.
 
 # ps = Plot variable within regional subset region. Note that Herbie must
-# already have been run, or one or more GRIB files must be available for
+# already have been run, or one or more regionally subsetted GRIB files must
+be available for
 # "ps" to work. Additionally, wgrib2 must be available and work on your
 # system. This option is only activated if the "Regional Subset?" is set
 # to "yes".

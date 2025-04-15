@@ -165,8 +165,10 @@ elif (processed_data.get('regional_subset') == "yes" and
         print(f"Output file that has been regionally "
               f"subsetted: {output_grib}")
 
-        lon_range = (-79, -67)
-        lat_range = (37, 47)
+        lon_range = (processed_data.get('left_long'),
+                     processed_data.get('right_long'))
+        lat_range = (processed_data.get('south_lat'),
+                     processed_data.get('north_lat'))
 
         result = region_subset.process_grib_file(wgrib2_path,
                                                  input_grib, output_grib,
@@ -178,18 +180,26 @@ elif processed_data.get('flow_options') == "e":
     handle_flow_option_e()
 
 elif processed_data.get('flow_options') in ("p", "ps"):
+    flow_option = processed_data.get('flow_options')
 
     nat_files, sub_files = file_and_time_control.files_to_subset(
         working_directory_grib)
-    first_file_sub = sub_files[0] if sub_files else None
-    first_file_nat = nat_files[0] if nat_files else None
 
-    if processed_data.get('flow_options') == "p":
-        plot_grib_temperature(grib_file=rf"{first_file_nat}",
+    if flow_option == "ps":
+        if not sub_files:
+            print("No regionally subsetted file available!")
+            sys.exit(1)
+        first_file_sub = sub_files[0]
+        plot_grib_temperature(grib_file=rf"{first_file_sub}",
                               variable_name="Temperature",
                               level=7)
-    if processed_data.get('flow_options') == "ps":
-        plot_grib_temperature(grib_file=rf"{first_file_sub}",
+
+    elif flow_option == "p":
+        if not nat_files:
+            print("No native level file available!")
+            sys.exit(1)
+        first_file_nat = nat_files[0]
+        plot_grib_temperature(grib_file=rf"{first_file_nat}",
                               variable_name="Temperature",
                               level=7)
 
