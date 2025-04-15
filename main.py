@@ -124,19 +124,14 @@ if processed_data.get('flow_options') in ("h", "hw", "hwa"):
 elif (processed_data.get('regional_subset') == "yes" and
         processed_data.get('flow_options') == "s"):
 
-    _, _, _, _, _, num_days = (
-        file_and_time_control.make_all_times(processed_data))
-    total = num_days * dir_file_count
+    (all_non_regional_prs_files, all_non_regional_nat_files,
+     _, _) = file_and_time_control.file_types(working_directory_grib)
 
-    # TODO Update names of functions so they make more sense if needed.
-    all_files, _ = file_and_time_control.files_to_subset(
-        working_directory_grib)
-
-    if not all_files:
+    if not all_non_regional_prs_files and not all_non_regional_nat_files:
         print("No files available to process.")
         sys.exit(1)
 
-    first_file_to_sub = all_files[0]
+    first_file_to_sub = all_non_regional_prs_files[0]
 
     wgrib2_path = processed_data.get('wgrib2_path')
     cygwin_path = processed_data.get('cygwin_path')
@@ -144,8 +139,8 @@ elif (processed_data.get('regional_subset') == "yes" and
     wgrib2_path = rf"{wgrib2_path}"
     cygwin_path = rf"{cygwin_path}"
 
-    for all_grib_files_to_subset in all_files:
-
+    for all_grib_files_to_subset in (all_non_regional_prs_files
+                                     + all_non_regional_nat_files):
         input_grib = all_grib_files_to_subset
         input_path = Path(input_grib)
         print(f"Input file: {input_path}")
@@ -171,23 +166,24 @@ elif processed_data.get('flow_options') == "e":
 elif processed_data.get('flow_options') in ("p", "ps"):
     flow_option = processed_data.get('flow_options')
 
-    nat_files, sub_files = file_and_time_control.files_to_subset(
+    (_, all_non_regional_nat_files,
+     _, all_regional_nat_files) = file_and_time_control.file_types(
         working_directory_grib)
 
     if flow_option == "ps":
-        if not sub_files:
+        if not all_regional_nat_files:
             print("No regionally subsetted file available!")
             sys.exit(1)
-        first_file_sub = sub_files[0]
+        first_file_sub = all_regional_nat_files[0]
         plot_grib_temperature(grib_file=rf"{first_file_sub}",
                               variable_name="Temperature",
                               level=7)
 
     elif flow_option == "p":
-        if not nat_files:
+        if not all_non_regional_nat_files:
             print("No native level file available!")
             sys.exit(1)
-        first_file_nat = nat_files[0]
+        first_file_nat = all_non_regional_nat_files[0]
         plot_grib_temperature(grib_file=rf"{first_file_nat}",
                               variable_name="Temperature",
                               level=7)

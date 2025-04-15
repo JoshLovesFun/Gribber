@@ -25,8 +25,10 @@ def expected_file_count(processed_data):
     return dir_file_count
 
 
-def files_to_subset(working_directory_grib):
-    all_files = []
+def file_types(working_directory_grib):
+    all_non_regional_prs_files = []
+    all_non_regional_nat_files = []
+    all_regional_prs_files = []
     all_regional_nat_files = []
 
     # Walk through the directory
@@ -37,29 +39,49 @@ def files_to_subset(working_directory_grib):
             # Get the list of files in the current subdirectory
             files_in_subdir = os.listdir(subdir_path)
 
-            # Add files that do not contain the string "regional" in their name
             for file in files_in_subdir:
+                if "regional" not in file and "wrfnatf00" not in file:
+                    all_non_regional_prs_files.append(os.path.join(subdir_path,
+                                                                   file))
                 if "regional" not in file and "wrfprsf00" not in file:
-                    all_files.append(os.path.join(subdir_path, file))
+                    all_non_regional_nat_files.append(os.path.join(subdir_path,
+                                                                   file))
+                if "regional" in file and "wrfprsf00" in file:
+                    all_regional_prs_files.append(os.path.join(subdir_path,
+                                                               file))
                 if "regional" in file and "wrfnatf00" in file:
                     all_regional_nat_files.append(os.path.join(subdir_path,
                                                                file))
 
     # Sort the files based on directory name and hour extracted from filename
-    all_files.sort(
+
+    all_non_regional_prs_files.sort(
         key=lambda x: (
             os.path.basename(os.path.dirname(x)),  # Sort by subdirectory name
             extract_hour_from_filename(os.path.basename(x))  # Sort by hour
         )
     )
-
+    all_non_regional_nat_files.sort(
+        key=lambda x: (
+            os.path.basename(os.path.dirname(x)),  # Sort by subdirectory name
+            extract_hour_from_filename(os.path.basename(x))  # Sort by hour
+        )
+    )
+    all_regional_prs_files.sort(
+        key=lambda x: (
+            os.path.basename(os.path.dirname(x)),  # Sort by subdirectory name
+            extract_hour_from_filename(os.path.basename(x))  # Sort by hour
+        )
+    )
     all_regional_nat_files.sort(
         key=lambda x: (
             os.path.basename(os.path.dirname(x)),  # Sort by subdirectory name
             extract_hour_from_filename(os.path.basename(x))  # Sort by hour
         )
     )
-    return all_files, all_regional_nat_files
+
+    return (all_non_regional_prs_files, all_non_regional_nat_files,
+            all_regional_prs_files, all_regional_nat_files)
 
 
 def get_date_range(processed_data):
