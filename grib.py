@@ -116,18 +116,15 @@ def grib_dictionary_from_inputs(processed_data):
 
 # We use an ordered dictionary to be extra safe
 # Function to populate the dictionary based on given inputs
-def populate_files(prs_files, nat_files, sub_files,
+def populate_files(prs_files, nat_files,
                    shortnames_for_prs, level_for_prs, grid_cell_for_prs,
                    hour_date_for_prs,
                    shortnames_for_nat, level_for_nat, grid_cell_for_nat,
-                   hour_date_for_nat,
-                   shortnames_for_sub, level_for_sub, grid_cell_for_sub,
-                   hour_date_for_sub):
+                   hour_date_for_nat):
     # Initialize the dictionary
     test = {
         "prs": OrderedDict(),
-        "nat": OrderedDict(),
-        "sub": OrderedDict()
+        "nat": OrderedDict()
     }
 
     # Function to assign data to a given dictionary key
@@ -149,8 +146,6 @@ def populate_files(prs_files, nat_files, sub_files,
                 grid_cell_for_prs, hour_date_for_prs)
     assign_data(nat_files, "nat", shortnames_for_nat, level_for_nat,
                 grid_cell_for_nat, hour_date_for_nat)
-    assign_data(sub_files, "sub", shortnames_for_sub, level_for_sub,
-                grid_cell_for_sub, hour_date_for_sub)
 
     return test
 

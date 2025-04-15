@@ -106,7 +106,6 @@ def files_to_do_work_for(working_directory_grib, processed_data):
     for_grib_end_date = processed_data.get('EndDate')
     all_files_prs = []
     all_files_nat = []
-    all_files_sub = []
     for_grib_start_date_no_dash = int(for_grib_start_date.replace("-", ""))
     for_grib_end_date_no_dash = int(for_grib_end_date.replace("-", ""))
 
@@ -123,15 +122,13 @@ def files_to_do_work_for(working_directory_grib, processed_data):
             dirs.remove(subdir)
 
         for file in files:
-            if file.endswith("prsf00.grib2"):
-                file_path = os.path.join(root, file)
-                all_files_prs.append(file_path)
-            if file.endswith("natf00.grib2"):
-                file_path = os.path.join(root, file)
-                all_files_nat.append(file_path)
-            if file.startswith("regional"):
-                file_path = os.path.join(root, file)
-                all_files_sub.append(file_path)
+            if not file.startswith("regional"):
+                if file.endswith("prsf00.grib2"):
+                    file_path = os.path.join(root, file)
+                    all_files_prs.append(file_path)
+                if file.endswith("natf00.grib2"):
+                    file_path = os.path.join(root, file)
+                    all_files_nat.append(file_path)
 
         # Sort all files based on the date and hour components in the
         # directory and file names
@@ -142,11 +139,7 @@ def files_to_do_work_for(working_directory_grib, processed_data):
             key=lambda x: (os.path.basename(os.path.dirname(x)),
                            extract_hour_from_filename(os.path.basename(x))))
 
-        all_files_sub.sort(
-            key=lambda x: (os.path.basename(os.path.dirname(x)),
-                           extract_hour_from_filename(os.path.basename(x))))
-
-    return all_files_prs, all_files_nat, all_files_sub
+    return all_files_prs, all_files_nat
 
 
 def match_strings_and_add_dummy_files(working_directory_grib):

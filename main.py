@@ -56,14 +56,16 @@ output.write_processed_input_data_to_file(processed_data,
                                           output_file_path)
 
 
+# Important: We don't currently handle or process regionally subsetted files
+# in the below function. We don't need to make things complicated.
 def handle_flow_option_e():
     """Handles the 'flow_options == "e"' case."""
     main_output = processed_data.get('main_output')
 
     # Call files_to_do_work_for and unpack its result
-    (all_files_prs, all_files_nat,
-     all_files_sub) = file_and_time_control.files_to_do_work_for(
-        working_directory_grib, processed_data)
+    (all_files_prs, all_files_nat) = (
+        file_and_time_control.files_to_do_work_for(working_directory_grib,
+                                                   processed_data))
 
     # First, we call the function with prs files.
     grid_cell_data_prs = grib.process_grib_files(working_directory_main,
@@ -77,12 +79,6 @@ def handle_flow_option_e():
                                                  processed_data,
                                                  all_files_nat)
 
-    # Finally, we call the function with sub files.
-    grid_cell_data_sub = grib.process_grib_files(working_directory_main,
-                                                 working_directory_grib,
-                                                 processed_data,
-                                                 all_files_sub)
-
     # First, we call the function with prs files.
     extracted_time_values_prs = grib.extract_time_info_from_grib_files(
         all_files_prs)
@@ -91,24 +87,17 @@ def handle_flow_option_e():
     extracted_time_values_nat = grib.extract_time_info_from_grib_files(
         all_files_nat)
 
-    # Finally, we call the function with sub files.
-    extracted_time_values_sub = grib.extract_time_info_from_grib_files(
-        all_files_sub)
-
     grib_short_name, grib_level = grib.grib_dictionary_from_inputs(
         processed_data)
 
     test = grib.populate_files(
-        all_files_prs, all_files_nat, all_files_sub,
+        all_files_prs, all_files_nat,
 
         grib_short_name, grib_level, grid_cell_data_prs,
         extracted_time_values_prs,
 
         grib_short_name, grib_level, grid_cell_data_nat,
-        extracted_time_values_nat,
-
-        grib_short_name, grib_level, grid_cell_data_sub,
-        extracted_time_values_sub,
+        extracted_time_values_nat
     )
 
     pprint.pprint(test)
