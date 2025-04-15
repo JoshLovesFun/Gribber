@@ -49,6 +49,7 @@ def process_control_data(control_data):
         'north_lat': control_data.get('Latitude range (north side)', None),
         'wgrib2_path': control_data.get('wgrib2 path', None),
         'cygwin_path': control_data.get('Cygwin path', None),
+        'fast_herbie': control_data.get('Fast Download?', None),
         'flow_options': control_data.get('Flow', None),
         'wrf': control_data.get('WRF suite?', None),
         'latitude': lat,

@@ -119,7 +119,14 @@ def handle_flow_option_e():
 
 # --- Main logic starts here ---
 if processed_data.get('flow_options') in ("h", "hw", "hwa"):
-    my_herbie.fetch_herbie_data_in_range(processed_data)
+    herbie_times = my_herbie.fetch_herbie_times(processed_data)
+    herbie_inputs = my_herbie.herbie_inputs(processed_data)
+
+    if processed_data.get('fast_herbie') != "yes":
+        my_herbie.fetch_herbie_data_normal(herbie_times, herbie_inputs)
+    else:
+        print("Using fast Herbie!")
+        my_herbie.fetch_herbie_data_fast(herbie_times, herbie_inputs)
 
 elif (processed_data.get('regional_subset') == "yes" and
         processed_data.get('flow_options') == "s"):

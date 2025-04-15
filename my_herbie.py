@@ -1,13 +1,12 @@
 # Goal: Download GRIB files into working directory using Herbie.
 
-from herbie import Herbie
+from herbie import Herbie, FastHerbie
 
 from file_and_time_control import get_date_range, generate_datetime_range
-# TODO We should think about using FastHerbie in the future.
 from grib_codes import create_grib_code_dict
 
 
-def fetch_herbie_data(date_str, processed_data):
+def herbie_inputs(processed_data):
     str_u_and_v = str_tmp = str_tke = str_pres = str_spfh = "no"
 
     if processed_data.get('U_and_V_WindComponent') == "yes":
@@ -189,7 +188,10 @@ def fetch_herbie_data(date_str, processed_data):
         *[grle[f'grle{level}'] for level in range(1, 21) if
           f'grle{level}' in grle],
     ]
+    return search_patterns
 
+
+def fetch_herbie_data_normal(dates, search_patterns):
     # Note there is an important file here:
     # /home/joshua/.config/herbie/config.toml
     # It has the following contents (as an example):
@@ -203,8 +205,6 @@ def fetch_herbie_data(date_str, processed_data):
 
     hybrid_patterns = []
     prs_patterns = []
-    h_nat = None
-    search_string_hybrid = None
 
     # Loop through each search pattern
     for pattern in search_patterns:
@@ -221,37 +221,65 @@ def fetch_herbie_data(date_str, processed_data):
         else:
             prs_patterns.append(pattern)
 
-    # Now, download all hybrid patterns using h_nat, if there are any.
-    # The goal is to put the hybrid level variables in the nat files.
+    for date_str in dates:
+        # Now, download all hybrid patterns using h_nat, if there are any.
+        # The goal is to put the hybrid level variables in the nat files.
+        if hybrid_patterns:
+            h_nat = Herbie(date_str, product="nat", priority="aws")
+            search_string_hybrid = '|'.join(hybrid_patterns)
+            h_nat.download(search_string_hybrid, verbose=True)
+
+        # Now, download all other (surface) patterns
+        # using h_prs, if there are any.
+        # The goal is to put the surface level variables in the prs files.
+        if prs_patterns:
+            h_prs = Herbie(date_str, product="prs", priority="aws")
+            search_string_prs = '|'.join(prs_patterns)
+            h_prs.download(search_string_prs, verbose=True)
+
+        '''
+        if h_nat is not None:
+            invent = h_nat.inventory(searchString=search_string_hybrid)
+            print(invent)  # Trust me bro :) I got your inventory ;)
+        '''
+
+
+def fetch_herbie_data_fast(dates, search_patterns):
+
+    hybrid_patterns = []
+    prs_patterns = []
+
+    # Loop through each search pattern
+    for pattern in search_patterns:
+        # Skip None values
+        if pattern is None:
+            continue
+
+        # Check if the pattern contains 'hybrid' for h_nat
+        if 'hybrid' in pattern:
+            hybrid_patterns.append(
+                pattern)  # Add hybrid variables
+
+        # Check if the pattern contains anything else (for use in h_prs)
+        else:
+            prs_patterns.append(pattern)
+
     if hybrid_patterns:
-        h_nat = Herbie(date_str, product="nat", priority="aws")
+        h_nat = FastHerbie(dates, product="nat", priority="aws")
         search_string_hybrid = '|'.join(hybrid_patterns)
         h_nat.download(search_string_hybrid, verbose=True)
 
-    # Now, download all other (surface) patterns using h_prs, if there are any.
-    # The goal is to put the surface level variables in the prs files.
     if prs_patterns:
-        h_prs = Herbie(date_str, product="prs", priority="aws")
+        h_prs = FastHerbie(dates, product="prs", priority="aws")
         search_string_prs = '|'.join(prs_patterns)
         h_prs.download(search_string_prs, verbose=True)
 
-    # if h_nat is not None:
-        # invent = h_nat.inventory(searchString=search_string_hybrid)
-        # print(invent)  # Trust me bro :) I got your inventory ;)
 
-
-def fetch_herbie_data_in_range(processed_data):
-    """Fetches Herbie data for each generated date-time."""
+def fetch_herbie_times(processed_data):
     start_date, end_date = get_date_range(processed_data)
     if start_date is None or end_date is None:
         return  # Stop execution if dates are invalid
 
     datetime_list = generate_datetime_range(start_date, end_date)
-
-    for date_str in datetime_list:
-        try:
-            fetch_herbie_data(date_str, processed_data)
-        except Exception as e:
-            print(f"Error fetching Herbie data for {date_str}: {e}")
-
-    print("\n\n")  # Maintain output formatting
+    # print(datetime_list)
+    return datetime_list
