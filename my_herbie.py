@@ -114,25 +114,25 @@ def fetch_herbie_data(date_str, processed_data):
     if processed_data.get('BoundaryLayerHeight') == "yes":
         lblh = grib_dict["SFC"]["bound_lyr_hgt"]
 
-    if str_pres == "yes" and processed_data.get('wrf') != "yes":
+    if str_pres == "yes":
         for level in range(1, 13):
             if processed_data.get(f'PRESHeightLevel{level}') == "yes":
                 lpreshgt[f'LPRESHGT{level}'] = (
                     grib_dict["NAT"]["pres"]["grib_codes"][level - 1])
 
-    if str_tmp == "yes" and processed_data.get('wrf') != "yes":
+    if str_tmp == "yes":
         for level in range(1, 13):
             if processed_data.get(f'TemperatureHeightLevel{level}') == "yes":
                 lthgt[f'LTHGT{level}'] = (
                     grib_dict["NAT"]["temp"]["grib_codes"][level - 1])
 
-    if str_spfh == "yes" and processed_data.get('wrf') != "yes":
+    if str_spfh == "yes":
         for level in range(1, 13):
             if processed_data.get(f'SPFHHeightLevel{level}') == "yes":
                 lspfhhgt[f'LSPFHHGT{level}'] = (
                     grib_dict["NAT"]["spfh"]["grib_codes"][level - 1])
 
-    if str_u_and_v == "yes" and processed_data.get('wrf') != "yes":
+    if str_u_and_v == "yes":
         for level in range(1, 13):
             if processed_data.get(f'WindHeightLevel{level}') == "yes":
                 lwhgt[f'LWHGT{level}'] = (

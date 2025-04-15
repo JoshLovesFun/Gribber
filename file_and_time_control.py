@@ -7,13 +7,6 @@ import shutil
 import constants
 from met_calcs import convert_longitude
 
-# TODO Verify if we need this function, and make sure Herbie download for WRF feature works.
-def total_file_count(hours_per_folder, dir_file_count):
-    x = len(hours_per_folder) / 3
-    total = x * len(dir_file_count)
-
-    return total
-
 
 def expected_file_count(processed_data):
     # File count if we only produce nat or prs files.
