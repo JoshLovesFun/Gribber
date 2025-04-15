@@ -229,11 +229,11 @@ def write_all_data_new(years, months, days, hours, hours_ending,
                        working_directory_main, main_output,
                        dir_file_count,
                        extracted_time_values_prs, extracted_time_values_nat,
-                       all_files_prs, all_files_nat, all_files_sub, grib_data):
+                       all_files_prs, all_files_nat, grib_data):
 
     # These column names will (should) always be made.
     column_names = ['Year', 'Month', 'Day', 'Hour_UTC', 'Hour_UTC_End',
-                    'all_files_prs', 'all_files_nat', 'all_files_sub',
+                    'all_files_prs', 'all_files_nat',
                     'PRS_Extracted_1', 'PRS_Extracted_2',
                     'NAT_Extracted_1', 'NAT_Extracted_2',
                     'BoundaryLayerHeight']
@@ -273,8 +273,6 @@ def write_all_data_new(years, months, days, hours, hours_ending,
     df['Hour_UTC_End'] = pad_list(hours_ending, max_length)
     df['all_files_prs'] = pad_list(all_files_prs, max_length)
     df['all_files_nat'] = pad_list(all_files_nat, max_length)
-    df['sub_files'] = pad_list(all_files_sub, max_length)
-    # TODO Write out column names of sub files but don't use them?
     df['PRS_Extracted_1'] = pad_list(list(prs_extracted_1), max_length)
     df['PRS_Extracted_2'] = pad_list(list(prs_extracted_2), max_length)
     df['NAT_Extracted_1'] = pad_list(list(nat_extracted_1), max_length)

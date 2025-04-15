@@ -120,13 +120,11 @@ def handle_flow_option_e():
     years, months, days, hours, hours_ending, _ = (
         file_and_time_control.make_all_times(processed_data))
 
-    # TODO all_files_prs, all_files_nat, all_files_sub_prs, all_files_sub_nat?
-    # TODO We do not need to write any sub data to output if we think about it.
     output.write_all_data_new(
         years, months, days, hours, hours_ending,
         working_directory_main, main_output, dir_file_count,
         extracted_time_values_prs, extracted_time_values_nat,
-        all_files_prs, all_files_nat, all_files_sub, grib_data
+        all_files_prs, all_files_nat, grib_data
     )
 
 
